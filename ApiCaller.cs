@@ -49,7 +49,7 @@ namespace RoItemKakakuChecker
                         item = new Item();
 
                         item.ItemId = Convert.ToInt32(array[i]["item_id"].ToString());
-                        item.Name = array[i]["item_name"].ToString();
+                        item.Name = System.Net.WebUtility.HtmlDecode(array[i]["item_name"].ToString());
                         break;
                     }
                     return item;
