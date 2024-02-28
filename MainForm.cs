@@ -491,31 +491,7 @@ namespace RoItemKakakuChecker
                 sb.Append("\n");
             }
 
-            var dialog = new SaveFileDialog();
-            dialog.FileName = "kakaku.csv";
-            dialog.InitialDirectory = Environment.CurrentDirectory;
-            dialog.Filter = "CSVファイル(*.csv)|*.csv";
-            dialog.FilterIndex = 1;
-            dialog.Title = "保存先のファイルを指定してください。";
-            dialog.RestoreDirectory = true;
-            dialog.OverwritePrompt = true;
-            dialog.CheckPathExists = true;
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    using (var writer = new StreamWriter(dialog.FileName, false, Encoding.UTF8))
-                    {
-                        writer.Write(sb.ToString());
-                        toolStripStatusLabel.Text = "ファイルを出力しました。";
-                    }
-                }
-                catch(IOException ex)
-                {
-                    MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-            }
+            OutputCsv(sb.ToString());
         }
 
         private void 結果をCSVファイルに出力ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -539,7 +515,11 @@ namespace RoItemKakakuChecker
                 sb.Append($"https://rotool.gungho.jp/item/{item.ItemId}/0/");
                 sb.Append("\n");
             }
+            OutputCsv(sb.ToString());
+        }
 
+        private void OutputCsv(string csv)
+        {
             var dialog = new SaveFileDialog();
             dialog.FileName = "kakaku.csv";
             dialog.InitialDirectory = Environment.CurrentDirectory;
@@ -555,7 +535,7 @@ namespace RoItemKakakuChecker
                 {
                     using (var writer = new StreamWriter(dialog.FileName, false, Encoding.UTF8))
                     {
-                        writer.Write(sb.ToString());
+                        writer.Write(csv);
                         toolStripStatusLabel.Text = "ファイルを出力しました。";
                     }
                 }
@@ -566,7 +546,5 @@ namespace RoItemKakakuChecker
             }
         }
     }
-
-
 
 }
