@@ -29,17 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelChatDir = new System.Windows.Forms.Label();
             this.txtChatDir = new System.Windows.Forms.TextBox();
             this.btnChatDir = new System.Windows.Forms.Button();
             this.btnLoadChatLog = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.comboApiLimit = new System.Windows.Forms.ComboBox();
             this.labelApiLimit = new System.Windows.Forms.Label();
             this.btnFetchKakaku = new System.Windows.Forms.Button();
@@ -53,13 +57,10 @@
             this.結果をCSVファイルに出力簡易ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.結果をCSVファイルに出力ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnHelp = new System.Windows.Forms.Button();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelChatDir
@@ -118,18 +119,62 @@
             this.dataGridView.Size = new System.Drawing.Size(512, 313);
             this.dataGridView.TabIndex = 4;
             // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            this.nameDataGridViewTextBoxColumn.HeaderText = "アイテム名";
+            this.nameDataGridViewTextBoxColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.nameDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.nameDataGridViewTextBoxColumn.TrackVisitedState = false;
+            // 
+            // countDataGridViewTextBoxColumn
+            // 
+            this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            dataGridViewCellStyle6.NullValue = null;
+            this.countDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            this.countDataGridViewTextBoxColumn.HeaderText = "個数";
+            this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
+            this.countDataGridViewTextBoxColumn.ReadOnly = true;
+            this.countDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.countDataGridViewTextBoxColumn.Width = 78;
+            // 
+            // eachPriceDataGridViewTextBoxColumn
+            // 
+            this.eachPriceDataGridViewTextBoxColumn.DataPropertyName = "EachPrice";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "N0";
+            dataGridViewCellStyle7.NullValue = null;
+            this.eachPriceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            this.eachPriceDataGridViewTextBoxColumn.HeaderText = "単体価格(中央値)";
+            this.eachPriceDataGridViewTextBoxColumn.Name = "eachPriceDataGridViewTextBoxColumn";
+            this.eachPriceDataGridViewTextBoxColumn.ReadOnly = true;
+            this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.eachPriceDataGridViewTextBoxColumn.Width = 85;
+            // 
             // TotalPrice
             // 
             this.TotalPrice.DataPropertyName = "TotalPrice";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            dataGridViewCellStyle8.NullValue = null;
+            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle8;
             this.TotalPrice.HeaderText = "合計金額";
             this.TotalPrice.Name = "TotalPrice";
             this.TotalPrice.ReadOnly = true;
             this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.TotalPrice.Width = 85;
+            // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
             // 
             // comboApiLimit
             // 
@@ -261,55 +306,21 @@
             this.btnHelp.UseVisualStyleBackColor = true;
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // nameDataGridViewTextBoxColumn
+            // label1
             // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.nameDataGridViewTextBoxColumn.HeaderText = "アイテム名";
-            this.nameDataGridViewTextBoxColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.nameDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.nameDataGridViewTextBoxColumn.TrackVisitedState = false;
-            // 
-            // countDataGridViewTextBoxColumn
-            // 
-            this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.countDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.countDataGridViewTextBoxColumn.HeaderText = "個数";
-            this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
-            this.countDataGridViewTextBoxColumn.ReadOnly = true;
-            this.countDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.countDataGridViewTextBoxColumn.Width = 78;
-            // 
-            // eachPriceDataGridViewTextBoxColumn
-            // 
-            this.eachPriceDataGridViewTextBoxColumn.DataPropertyName = "EachPrice";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N0";
-            dataGridViewCellStyle3.NullValue = null;
-            this.eachPriceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.eachPriceDataGridViewTextBoxColumn.HeaderText = "単体価格(中央値)";
-            this.eachPriceDataGridViewTextBoxColumn.Name = "eachPriceDataGridViewTextBoxColumn";
-            this.eachPriceDataGridViewTextBoxColumn.ReadOnly = true;
-            this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.eachPriceDataGridViewTextBoxColumn.Width = 85;
-            // 
-            // itemBindingSource
-            // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 411);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(512, 12);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "装備品はカード・エンチャントを考慮しない価格を表示しています。実際の値は公式ツールを確認してください。";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(542, 450);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.statusStrip1);
@@ -327,9 +338,9 @@
             this.Text = "RO価格確認機";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -360,6 +371,7 @@
         private System.Windows.Forms.ToolStripMenuItem 結果をクリップボードにコピーToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 結果をExcel形式でクリップボードにコピー簡易ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力簡易ToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
     }
 }
 

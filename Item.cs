@@ -11,8 +11,8 @@ namespace RoItemKakakuChecker
         public int ItemId { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
-        public int EachPrice {  get; set; }
+        public long EachPrice {  get; set; }
         public DateTime LastFetchedAt { get; set; }
-        public int TotalPrice { get; set; }
+        public long TotalPrice { get; set; }
     }
 }

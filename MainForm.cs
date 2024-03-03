@@ -133,6 +133,8 @@ namespace RoItemKakakuChecker
             }
         }
 
+
+
         /// <summary>
         /// チャットログ読み込みボタン押下時
         /// </summary>
@@ -140,6 +142,7 @@ namespace RoItemKakakuChecker
         /// <param name="e"></param>
         private void btnLoadChatLog_Click(object sender, EventArgs e)
         {
+
             if (!Directory.Exists(txtChatDir.Text))
             {
                 MessageBox.Show("ディレクトリが存在しません。");
