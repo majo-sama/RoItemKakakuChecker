@@ -17,7 +17,7 @@ namespace RoItemKakakuChecker
             var targetFiles = files.Where(f => f.CreationTime.AddSeconds(1.0) >= latestFileCreatetionTime);
 
             var targetItems = new List<Item>();
-            var regex = new Regex(@"^(.+) (\d) 個獲得$");
+            var regex = new Regex(@"^(.+) (\d+) 個獲得$");
 
             foreach (FileInfo file in targetFiles)
             {
