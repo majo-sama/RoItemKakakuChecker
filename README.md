@@ -2,6 +2,12 @@
 
 このツールは、チャットログに含まれるアイテム獲得メッセージを抽出して これを素にRO公式ツールが使用しているAPIから価格情報するものです。
 
+![31dd845e28b313d2](https://github.com/majo-sama/RoItemKakakuChecker/assets/157029319/46cd78a6-7df3-429a-aa6c-d239c7ad6cd6)
+
+## ダウンロード
+
+- [RoItemKakakuChecker_1.1.3.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.1.3/RoItemKakakuChecker_1.1.3.zip)
+
 ## 使い方
 
 1. ゲーム内でアイテムを獲得します（倉庫から取り出すなど）。
