@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RoItemKakakuChecker
 {
-    internal class AppSettings
+    public class AppSettings
     {
         private string settingFilePath = System.Windows.Forms.Application.StartupPath + @"\settings.json";
 

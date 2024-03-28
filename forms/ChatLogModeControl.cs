@@ -1,33 +1,31 @@
-﻿using System;
+﻿using RoItemKakakuChecker.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Runtime;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-
-// TODO: ログ読込時はキャッシュを読まない。APIアクセス時のみキャッシュを読むようにする！！！！
 
 namespace RoItemKakakuChecker
 {
-    public partial class MainForm : Form
+    public partial class ChatLogModeControl : UserControl
     {
-        private AppSettings settings;
+        private MainForm mainForm;
         private bool stopFlag = false;
         private bool isFetching = false;
 
-        public MainForm()
+        public ChatLogModeControl(Form parent)
         {
             InitializeComponent();
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.mainForm = parent as MainForm;
+            this.Load += ChatLogModeControl_Load;
+
             dataGridView.CellContentClick += DataGridView_CellContentClick;
             dataGridView.SelectionChanged += DataGridView_SelectionChanged;
             dataGridView.AllowUserToAddRows = false;
@@ -46,21 +44,15 @@ namespace RoItemKakakuChecker
             dataGridView.Columns[2].HeaderCell.Style.Padding = new Padding(0, 0, 0, 0);
         }
 
-        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        private void ChatLogModeControl_Load(object sender, EventArgs e)
         {
-            dataGridView.ClearSelection();
-        }
+            mainForm.UpdateToolStripLabel("");
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            toolStripStatusLabel.Text = "";
-
-            settings = new AppSettings();
-            bool isSucceeded = settings.ReadSettings();
+            bool isSucceeded = mainForm.settings.ReadSettings();
 
             if (isSucceeded)
             {
-                switch (settings.ApiLimit)
+                switch (mainForm.settings.ApiLimit)
                 {
                     case 0: comboApiLimit.SelectedIndex = 0; break;
                     case 1: comboApiLimit.SelectedIndex = 1; break;
@@ -72,7 +64,7 @@ namespace RoItemKakakuChecker
                     case 30: comboApiLimit.SelectedIndex = 7; break;
                     default: comboApiLimit.SelectedIndex = 0; break;
                 }
-                txtChatDir.Text = settings.ChatLogDir;
+                txtChatDir.Text = mainForm.settings.ChatLogDir;
             }
             else
             {
@@ -84,22 +76,29 @@ namespace RoItemKakakuChecker
             UpdateApiLimitMessageStatusLabel();
         }
 
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridView.ClearSelection();
+        }
+
+
         private void ComboApiLimit_SelectedValueChanged(object sender, EventArgs e)
         {
             UpdateApiLimitMessageStatusLabel();
 
-            settings.SaveSettings(Convert.ToInt32(comboApiLimit.SelectedItem.ToString()), txtChatDir.Text);
+            mainForm.settings.SaveSettings(Convert.ToInt32(comboApiLimit.SelectedItem.ToString()), txtChatDir.Text);
         }
 
         private void UpdateApiLimitMessageStatusLabel()
         {
             if (Convert.ToInt32(comboApiLimit.SelectedItem) < 3)
             {
-                toolStripStatusLabel.Text = "注意: 大量のデータを頻繁に再取得することは避けてください。ガンホーに怒られますよ！";
+                mainForm.UpdateToolStripLabel("注意: 大量のデータを頻繁に再取得することは避けてください。ガンホーに怒られますよ！");
+
             }
             else
             {
-                toolStripStatusLabel.Text = "";
+                mainForm.UpdateToolStripLabel("");
             }
         }
 
@@ -111,7 +110,7 @@ namespace RoItemKakakuChecker
         /// <param name="e"></param>
         private void btnChatDir_Click(object sender, EventArgs e)
         {
-            using(var openFileDialog = new OpenFileDialog()
+            using (var openFileDialog = new OpenFileDialog()
             {
                 FileName = "ChatLog",
                 Filter = "Folder|.",
@@ -151,10 +150,10 @@ namespace RoItemKakakuChecker
             var directoryInfo = new DirectoryInfo(txtChatDir.Text);
             IEnumerable<FileInfo> files = directoryInfo
                 .EnumerateFiles("*.txt", SearchOption.AllDirectories)
-                .OrderByDescending(f => f.CreationTime);
+            .OrderByDescending(f => f.CreationTime);
 
 
-            settings.SaveSettings(Convert.ToInt32(comboApiLimit.SelectedItem.ToString()), txtChatDir.Text);
+            mainForm.settings.SaveSettings(Convert.ToInt32(comboApiLimit.SelectedItem.ToString()), txtChatDir.Text);
 
 
 
@@ -196,7 +195,8 @@ namespace RoItemKakakuChecker
                     {
                         var cachedItems = JsonSerializer.Deserialize<IEnumerable<Item>>(sr.ReadToEnd());
 
-                        foreach (var item in items) {
+                        foreach (var item in items)
+                        {
                             var cachedItem = cachedItems.FirstOrDefault(ci => item.Name == ci.Name);
                             if (cachedItem != null)
                             {
@@ -234,7 +234,7 @@ namespace RoItemKakakuChecker
 
 
             dataGridView.DataSource = list;
-            
+
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
                 Item rowItem = row.DataBoundItem as Item;
@@ -269,9 +269,8 @@ namespace RoItemKakakuChecker
 
             LoadCache(items);
 
-            toolStripProgressBar.Minimum = 0;
-            toolStripProgressBar.Maximum = items.Count();
-            toolStripProgressBar.Value = 0;
+            mainForm.UpdateToolStripProgressBarSetting(0, items.Count());
+            mainForm.UpdateToolStripProgressBarValue(0);
 
             SortableBindingList<Item> newList = new SortableBindingList<Item>();
             List<Item> forUpdate = new List<Item>();
@@ -281,20 +280,21 @@ namespace RoItemKakakuChecker
             {
                 if (stopFlag)
                 {
-                    toolStripStatusLabel.Text = $"取得を中断しました。";
-                    toolStripProgressBar.Value = 0;
+                    mainForm.UpdateToolStripLabel("取得を中断しました。");
+                    mainForm.UpdateToolStripProgressBarValue(0);
                     isFetching = false;
                     stopFlag = false;
                     return;
                 }
 
 
-                toolStripStatusLabel.Text = $"価格情報取得中 ({count++}/{items.Count()})";
+                mainForm.UpdateToolStripLabel($"価格情報取得中 ({count++}/{items.Count()})");
 
                 Item dataFetchedItem = null;
 
                 int limit = Convert.ToInt32(comboApiLimit.SelectedItem);
-                if (item.LastFetchedAt >= DateTime.Now.AddDays(limit * -1)) {
+                if (item.LastFetchedAt >= DateTime.Now.AddDays(limit * -1))
+                {
                     dataFetchedItem = item;
                 }
                 else
@@ -302,7 +302,7 @@ namespace RoItemKakakuChecker
                     dataFetchedItem = await caller.GetItemAsync(item.Name);
                     if (dataFetchedItem == null)
                     {
-                        toolStripProgressBar.Value++;
+                        mainForm.IncrementToolStripProgressBarValue();
                         continue;
                     }
                     forUpdate.Add(dataFetchedItem);
@@ -310,7 +310,7 @@ namespace RoItemKakakuChecker
 
 
 
-                toolStripProgressBar.Value++;
+                mainForm.IncrementToolStripProgressBarValue();
                 dataFetchedItem.Count = item.Count;
                 dataFetchedItem.LastFetchedAt = DateTime.Now;
                 dataFetchedItem.TotalPrice = dataFetchedItem.EachPrice * dataFetchedItem.Count;
@@ -319,7 +319,7 @@ namespace RoItemKakakuChecker
 
             }
 
-            toolStripStatusLabel.Text = $"価格情報取得完了";
+            mainForm.UpdateToolStripLabel($"価格情報取得完了");
             dataGridView.DataSource = newList;
 
             SaveItemsCache(forUpdate);
@@ -354,7 +354,8 @@ namespace RoItemKakakuChecker
             }
 
 
-            foreach (Item updatedItem in updatedItems) {
+            foreach (Item updatedItem in updatedItems)
+            {
                 var cachedItem = cachedItems.FirstOrDefault(ci => updatedItem.ItemId == ci.ItemId);
                 if (cachedItem != null)
                 {
@@ -447,7 +448,7 @@ namespace RoItemKakakuChecker
                 }
             }
             Clipboard.SetText(sb.ToString());
-            toolStripStatusLabel.Text = "クリップボードにコピーしました。";
+            mainForm.UpdateToolStripLabel("クリップボードにコピーしました。");
         }
 
         private void 結果をクリップボードにコピーToolStripMenuItem_Click(object sender, EventArgs e)
@@ -473,7 +474,7 @@ namespace RoItemKakakuChecker
                 }
             }
             Clipboard.SetText(sb.ToString());
-            toolStripStatusLabel.Text = "クリップボードにコピーしました。";
+            mainForm.UpdateToolStripLabel("クリップボードにコピーしました。");
 
         }
 
@@ -539,7 +540,7 @@ namespace RoItemKakakuChecker
                     using (var writer = new StreamWriter(dialog.FileName, false, Encoding.UTF8))
                     {
                         writer.Write(csv);
-                        toolStripStatusLabel.Text = "ファイルを出力しました。";
+                        mainForm.UpdateToolStripLabel("ファイルを出力しました。");
                     }
                 }
                 catch (IOException ex)
@@ -548,6 +549,6 @@ namespace RoItemKakakuChecker
                 }
             }
         }
-    }
 
+    }
 }
