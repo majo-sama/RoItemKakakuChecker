@@ -28,10 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.btnObserve = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // btnObserve
+            // 
+            this.btnObserve.Location = new System.Drawing.Point(56, 57);
+            this.btnObserve.Name = "btnObserve";
+            this.btnObserve.Size = new System.Drawing.Size(75, 23);
+            this.btnObserve.TabIndex = 0;
+            this.btnObserve.Text = "button1";
+            this.btnObserve.UseVisualStyleBackColor = true;
+            this.btnObserve.Click += new System.EventHandler(this.btnObserve_Click);
+            // 
+            // StorageObserveModeControl
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnObserve);
+            this.Name = "StorageObserveModeControl";
+            this.Size = new System.Drawing.Size(512, 508);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Button btnObserve;
     }
 }

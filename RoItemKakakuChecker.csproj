@@ -251,10 +251,10 @@
   <ItemGroup>
     <Compile Include="ApiCaller.cs" />
     <Compile Include="AppSettingsEntity.cs" />
-    <Compile Include="ChatLogModeControl.cs">
+    <Compile Include="forms\ChatLogModeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ChatLogModeControl.Designer.cs">
+    <Compile Include="forms\ChatLogModeControl.Designer.cs">
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ChatLogReader.cs" />
@@ -269,17 +269,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="SortableBindingList.cs" />
-    <Compile Include="StorageObserveModeControl.cs">
+    <Compile Include="forms\StorageObserveModeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="StorageObserveModeControl.Designer.cs">
+    <Compile Include="forms\StorageObserveModeControl.Designer.cs">
       <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ChatLogModeControl.resx">
+    <EmbeddedResource Include="forms\ChatLogModeControl.resx">
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\StorageObserveModeControl.resx">
+      <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
