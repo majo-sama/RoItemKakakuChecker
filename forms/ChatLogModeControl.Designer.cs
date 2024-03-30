@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnFetchKakaku = new System.Windows.Forms.Button();
@@ -43,15 +43,13 @@
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnLoadChatLog = new System.Windows.Forms.Button();
             this.btnChatDir = new System.Windows.Forms.Button();
             this.txtChatDir = new System.Windows.Forms.TextBox();
             this.labelChatDir = new System.Windows.Forms.Label();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
-
             this.SuspendLayout();
             // 
             // label1
@@ -65,7 +63,7 @@
             // 
             // btnHelp
             // 
-            this.btnHelp.Location = new System.Drawing.Point(482, 16);
+            this.btnHelp.Location = new System.Drawing.Point(481, 3);
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Size = new System.Drawing.Size(48, 23);
             this.btnHelp.TabIndex = 20;
@@ -75,7 +73,7 @@
             // 
             // btnFetchKakaku
             // 
-            this.btnFetchKakaku.Location = new System.Drawing.Point(319, 55);
+            this.btnFetchKakaku.Location = new System.Drawing.Point(319, 30);
             this.btnFetchKakaku.Name = "btnFetchKakaku";
             this.btnFetchKakaku.Size = new System.Drawing.Size(212, 23);
             this.btnFetchKakaku.TabIndex = 19;
@@ -86,7 +84,7 @@
             // labelApiLimit
             // 
             this.labelApiLimit.AutoSize = true;
-            this.labelApiLimit.Location = new System.Drawing.Point(67, 61);
+            this.labelApiLimit.Location = new System.Drawing.Point(64, 35);
             this.labelApiLimit.Name = "labelApiLimit";
             this.labelApiLimit.Size = new System.Drawing.Size(253, 12);
             this.labelApiLimit.TabIndex = 18;
@@ -105,7 +103,7 @@
             "10",
             "20",
             "30"});
-            this.comboApiLimit.Location = new System.Drawing.Point(19, 58);
+            this.comboApiLimit.Location = new System.Drawing.Point(16, 32);
             this.comboApiLimit.Name = "comboApiLimit";
             this.comboApiLimit.Size = new System.Drawing.Size(42, 20);
             this.comboApiLimit.TabIndex = 17;
@@ -122,19 +120,19 @@
             this.eachPriceDataGridViewTextBoxColumn,
             this.TotalPrice});
             this.dataGridView.DataSource = this.itemBindingSource;
-            this.dataGridView.Location = new System.Drawing.Point(16, 91);
+            this.dataGridView.Location = new System.Drawing.Point(16, 59);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 21;
-            this.dataGridView.Size = new System.Drawing.Size(512, 313);
+            this.dataGridView.Size = new System.Drawing.Size(512, 345);
             this.dataGridView.TabIndex = 4;
             // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle17;
             this.nameDataGridViewTextBoxColumn.HeaderText = "アイテム名";
             this.nameDataGridViewTextBoxColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
@@ -146,10 +144,10 @@
             // countDataGridViewTextBoxColumn
             // 
             this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = null;
-            this.countDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle18.Format = "N0";
+            dataGridViewCellStyle18.NullValue = null;
+            this.countDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle18;
             this.countDataGridViewTextBoxColumn.HeaderText = "個数";
             this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
             this.countDataGridViewTextBoxColumn.ReadOnly = true;
@@ -159,38 +157,37 @@
             // eachPriceDataGridViewTextBoxColumn
             // 
             this.eachPriceDataGridViewTextBoxColumn.DataPropertyName = "EachPrice";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N0";
-            dataGridViewCellStyle7.NullValue = null;
-            this.eachPriceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle19.Format = "N0";
+            dataGridViewCellStyle19.NullValue = null;
+            this.eachPriceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle19;
             this.eachPriceDataGridViewTextBoxColumn.HeaderText = "単体価格(中央値)";
             this.eachPriceDataGridViewTextBoxColumn.Name = "eachPriceDataGridViewTextBoxColumn";
             this.eachPriceDataGridViewTextBoxColumn.ReadOnly = true;
             this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.eachPriceDataGridViewTextBoxColumn.Width = 85;
             // 
-            // itemBindingSource
-            // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
-
-            // 
             // TotalPrice
             // 
             this.TotalPrice.DataPropertyName = "TotalPrice";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N0";
-            dataGridViewCellStyle8.NullValue = null;
-            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle20.Format = "N0";
+            dataGridViewCellStyle20.NullValue = null;
+            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle20;
             this.TotalPrice.HeaderText = "合計金額";
             this.TotalPrice.Name = "TotalPrice";
             this.TotalPrice.ReadOnly = true;
             this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.TotalPrice.Width = 85;
             // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            // 
             // btnLoadChatLog
             // 
             this.btnLoadChatLog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnLoadChatLog.Location = new System.Drawing.Point(400, 16);
+            this.btnLoadChatLog.Location = new System.Drawing.Point(400, 3);
             this.btnLoadChatLog.Name = "btnLoadChatLog";
             this.btnLoadChatLog.Size = new System.Drawing.Size(75, 23);
             this.btnLoadChatLog.TabIndex = 15;
@@ -200,18 +197,17 @@
             // 
             // btnChatDir
             // 
-            this.btnChatDir.Location = new System.Drawing.Point(319, 16);
+            this.btnChatDir.Location = new System.Drawing.Point(319, 3);
             this.btnChatDir.Name = "btnChatDir";
             this.btnChatDir.Size = new System.Drawing.Size(75, 23);
             this.btnChatDir.TabIndex = 14;
             this.btnChatDir.Text = "参照";
             this.btnChatDir.UseVisualStyleBackColor = true;
             this.btnChatDir.Click += new System.EventHandler(this.btnChatDir_Click);
-
             // 
             // txtChatDir
             // 
-            this.txtChatDir.Location = new System.Drawing.Point(76, 18);
+            this.txtChatDir.Location = new System.Drawing.Point(76, 3);
             this.txtChatDir.Name = "txtChatDir";
             this.txtChatDir.Size = new System.Drawing.Size(237, 19);
             this.txtChatDir.TabIndex = 13;
@@ -219,7 +215,7 @@
             // labelChatDir
             // 
             this.labelChatDir.AutoSize = true;
-            this.labelChatDir.Location = new System.Drawing.Point(17, 22);
+            this.labelChatDir.Location = new System.Drawing.Point(14, 6);
             this.labelChatDir.Name = "labelChatDir";
             this.labelChatDir.Size = new System.Drawing.Size(55, 12);
             this.labelChatDir.TabIndex = 12;
@@ -241,8 +237,8 @@
             this.Controls.Add(this.labelChatDir);
             this.Name = "ChatLogModeControl";
             this.Size = new System.Drawing.Size(542, 438);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
-
             this.ResumeLayout(false);
             this.PerformLayout();
 

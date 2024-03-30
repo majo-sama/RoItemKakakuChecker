@@ -121,9 +121,9 @@
             // 
             // storageObserveModeControl1
             // 
-            this.storageObserveModeControl1.Location = new System.Drawing.Point(18, 53);
+            this.storageObserveModeControl1.Location = new System.Drawing.Point(0, 52);
             this.storageObserveModeControl1.Name = "storageObserveModeControl1";
-            this.storageObserveModeControl1.Size = new System.Drawing.Size(512, 403);
+            this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);
             this.storageObserveModeControl1.TabIndex = 15;
             // 
             // MainForm

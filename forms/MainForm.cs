@@ -24,18 +24,10 @@ namespace RoItemKakakuChecker
 
         public MainForm()
         {
-            try
-            {
-                settings = new AppSettings();
+            settings = new AppSettings();
 
-                InitializeComponent();
-                FormBorderStyle = FormBorderStyle.FixedSingle;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedSingle;
 
         }
 
@@ -47,9 +39,9 @@ namespace RoItemKakakuChecker
             // chatLogModeControl
             // 
             this.chatLogModeControl = new RoItemKakakuChecker.ChatLogModeControl(this);
-            this.chatLogModeControl.Location = new System.Drawing.Point(18, 53);
+            this.chatLogModeControl.Location = new System.Drawing.Point(0, 52);
             this.chatLogModeControl.Name = "chatLogModeControl";
-            this.chatLogModeControl.Size = new System.Drawing.Size(512, 403);
+            this.chatLogModeControl.Size = new System.Drawing.Size(542, 412);
             this.chatLogModeControl.TabIndex = 15;
 
 
