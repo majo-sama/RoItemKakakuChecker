@@ -51,7 +51,7 @@ namespace RoItemKakakuChecker
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
             socket.IOControl(IOControlCode.ReceiveAll, ib, ob); //SIO_RCVALL
-            byte[] buf = new byte[4096];
+            byte[] buf = new byte[28682];
             int i = 0;
 
             // ファイアウォール設定解除しないと受信パケットを確認できない
@@ -195,10 +195,10 @@ namespace RoItemKakakuChecker
 
         private void AnalyzeEquips(List<byte[]> equips)
         {
-            var storageItems = new List<StorageItem>();
+            var storageItems = new List<Item>();
             foreach (var item in equips)
             {
-                var storageItem = new StorageItem();
+                var storageItem = new Item();
 
                 byte[] itemId = new byte[4];
                 Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
@@ -305,6 +305,20 @@ namespace RoItemKakakuChecker
 
                 storageItems.Add(storageItem);
             }
+
+            var list = dataGridView.DataSource as SortableBindingList<Item>;
+            if (list == null)
+            {
+                list = new SortableBindingList<Item>();
+            }
+
+            foreach (var item in storageItems)
+            {
+                list.Add(item);
+            }
+
+            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
+            //dataGridView.DataSource = list;
             return;
         }
 
@@ -312,7 +326,8 @@ namespace RoItemKakakuChecker
         private void AnalyzeItems(List<byte[]> items)
         {
             // アイテム情報は100個単位で送信されるため、最大6回（600個分）これが呼ばれる可能性がある
-            var storageItems = new List<StorageItem>();
+            
+            var storageItems = new List<Item>();
             foreach (var item in items)
             {
                 byte[] itemId = new byte[4];
@@ -327,7 +342,7 @@ namespace RoItemKakakuChecker
                 Array.Copy(item, 29, itemLimitDateTime, 0, 4);
                 int unixtime = BitConverter.ToInt32(itemLimitDateTime, 0);
 
-                var storageItem = new StorageItem();
+                var storageItem = new Item();
                 storageItem.ItemId = intItemId;
                 storageItem.Name = itemIdNameMap.Map[intItemId];
                 storageItem.Count = intItemCount;
@@ -337,6 +352,20 @@ namespace RoItemKakakuChecker
                 }
                 storageItems.Add(storageItem);
             }
+            var list = dataGridView.DataSource as SortableBindingList<Item>;
+            if (list == null)
+            {
+                list = new SortableBindingList<Item>();
+            }
+            
+            foreach (var item in storageItems)
+            {
+                list.Add(item);
+            }
+
+            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
+            
+
             return;
         }
 

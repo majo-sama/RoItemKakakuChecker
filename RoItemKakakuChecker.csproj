@@ -277,7 +277,6 @@
     <Compile Include="forms\StorageObserveModeControl.Designer.cs">
       <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="StorageItem.cs" />
     <EmbeddedResource Include="forms\ChatLogModeControl.resx">
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
     </EmbeddedResource>
