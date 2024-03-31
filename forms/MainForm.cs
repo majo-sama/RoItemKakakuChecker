@@ -27,6 +27,7 @@ namespace RoItemKakakuChecker
             settings = new AppSettings();
 
             InitializeComponent();
+            this.TopMost = true;
             FormBorderStyle = FormBorderStyle.FixedSingle;
 
         }

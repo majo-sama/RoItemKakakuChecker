@@ -37,7 +37,7 @@
             this.radioButton_chatLog = new System.Windows.Forms.RadioButton();
             this.radioButton_storage = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl();
+            this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl(this);
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();

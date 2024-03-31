@@ -178,44 +178,6 @@ namespace RoItemKakakuChecker
             btnFetchKakaku.Enabled = true;
         }
 
-        private void LoadCache(IEnumerable<Item> items)
-        {
-            string cacheFilePath = Application.StartupPath + @"\cache";
-
-            if (!File.Exists(cacheFilePath))
-            {
-                return;
-            }
-
-            try
-            {
-                using (var stream = new FileStream(cacheFilePath, FileMode.Open))
-                {
-                    using (var sr = new StreamReader(stream))
-                    {
-                        var cachedItems = JsonSerializer.Deserialize<IEnumerable<Item>>(sr.ReadToEnd());
-
-                        foreach (var item in items)
-                        {
-                            var cachedItem = cachedItems.FirstOrDefault(ci => item.Name == ci.Name);
-                            if (cachedItem != null)
-                            {
-                                item.LastFetchedAt = cachedItem.LastFetchedAt;
-                                item.ItemId = cachedItem.ItemId;
-                                item.EachPrice = cachedItem.EachPrice;
-                            }
-                        }
-
-                        return;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                File.Delete(cacheFilePath);
-            }
-
-        }
 
         private void ApplyDataGridView(IEnumerable<Item> items)
         {
@@ -263,119 +225,72 @@ namespace RoItemKakakuChecker
         /// <param name="e"></param>
         private async void btnFetchKakaku_Click(object sender, EventArgs e)
         {
-            isFetching = true;
-            ApiCaller caller = new ApiCaller();
-            var items = (IEnumerable<Item>)dataGridView.DataSource;
+            var caller = new ApiCaller(dataGridView, mainForm, comboApiLimit);
+            await caller.OnClickedFetchKakakuButton();
+            //isFetching = true;
+            //ApiCaller caller = new ApiCaller();
+            //var items = (IEnumerable<Item>)dataGridView.DataSource;
 
-            LoadCache(items);
+            //LoadCache(items);
 
-            mainForm.UpdateToolStripProgressBarSetting(0, items.Count());
-            mainForm.UpdateToolStripProgressBarValue(0);
+            //mainForm.UpdateToolStripProgressBarSetting(0, items.Count());
+            //mainForm.UpdateToolStripProgressBarValue(0);
 
-            SortableBindingList<Item> newList = new SortableBindingList<Item>();
-            List<Item> forUpdate = new List<Item>();
+            //SortableBindingList<Item> newList = new SortableBindingList<Item>();
+            //List<Item> forUpdate = new List<Item>();
 
-            int count = 1;
-            foreach (var item in items)
-            {
-                if (stopFlag)
-                {
-                    mainForm.UpdateToolStripLabel("取得を中断しました。");
-                    mainForm.UpdateToolStripProgressBarValue(0);
-                    isFetching = false;
-                    stopFlag = false;
-                    return;
-                }
-
-
-                mainForm.UpdateToolStripLabel($"価格情報取得中 ({count++}/{items.Count()})");
-
-                Item dataFetchedItem = null;
-
-                int limit = Convert.ToInt32(comboApiLimit.SelectedItem);
-                if (item.LastFetchedAt >= DateTime.Now.AddDays(limit * -1))
-                {
-                    dataFetchedItem = item;
-                }
-                else
-                {
-                    dataFetchedItem = await caller.GetItemAsync(item.Name);
-                    if (dataFetchedItem == null)
-                    {
-                        mainForm.IncrementToolStripProgressBarValue();
-                        continue;
-                    }
-                    forUpdate.Add(dataFetchedItem);
-                }
+            //int count = 1;
+            //foreach (var item in items)
+            //{
+            //    if (stopFlag)
+            //    {
+            //        mainForm.UpdateToolStripLabel("取得を中断しました。");
+            //        mainForm.UpdateToolStripProgressBarValue(0);
+            //        isFetching = false;
+            //        stopFlag = false;
+            //        return;
+            //    }
 
 
+            //    mainForm.UpdateToolStripLabel($"価格情報取得中 ({count++}/{items.Count()})");
 
-                mainForm.IncrementToolStripProgressBarValue();
-                dataFetchedItem.Count = item.Count;
-                dataFetchedItem.LastFetchedAt = DateTime.Now;
-                dataFetchedItem.TotalPrice = dataFetchedItem.EachPrice * dataFetchedItem.Count;
-                newList.Add(dataFetchedItem);
+            //    Item dataFetchedItem = null;
+
+            //    int limit = Convert.ToInt32(comboApiLimit.SelectedItem);
+            //    if (item.LastFetchedAt >= DateTime.Now.AddDays(limit * -1))
+            //    {
+            //        dataFetchedItem = item;
+            //    }
+            //    else
+            //    {
+            //        dataFetchedItem = await caller.GetItemAsync(item.Name);
+            //        if (dataFetchedItem == null)
+            //        {
+            //            mainForm.IncrementToolStripProgressBarValue();
+            //            continue;
+            //        }
+            //        forUpdate.Add(dataFetchedItem);
+            //    }
 
 
-            }
 
-            mainForm.UpdateToolStripLabel($"価格情報取得完了");
-            dataGridView.DataSource = newList;
+            //    mainForm.IncrementToolStripProgressBarValue();
+            //    dataFetchedItem.Count = item.Count;
+            //    dataFetchedItem.LastFetchedAt = DateTime.Now;
+            //    dataFetchedItem.TotalPrice = dataFetchedItem.EachPrice * dataFetchedItem.Count;
+            //    newList.Add(dataFetchedItem);
 
-            SaveItemsCache(forUpdate);
 
-            isFetching = false;
+            //}
+
+            //mainForm.UpdateToolStripLabel($"価格情報取得完了");
+            //dataGridView.DataSource = newList;
+
+            //SaveItemsCache(forUpdate);
+
+            //isFetching = false;
         }
 
-        private void SaveItemsCache(IEnumerable<Item> updatedItems)
-        {
-
-            string cacheFilePath = Application.StartupPath + @"\cache";
-
-            List<Item> cachedItems = new List<Item>();
-
-            if (File.Exists(cacheFilePath))
-            {
-                try
-                {
-                    using (var stream = new FileStream(cacheFilePath, FileMode.Open))
-                    {
-                        using (var sr = new StreamReader(stream))
-                        {
-
-                            cachedItems = JsonSerializer.Deserialize<List<Item>>(sr.ReadToEnd());
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    File.Delete(cacheFilePath);
-                }
-            }
-
-
-            foreach (Item updatedItem in updatedItems)
-            {
-                var cachedItem = cachedItems.FirstOrDefault(ci => updatedItem.ItemId == ci.ItemId);
-                if (cachedItem != null)
-                {
-                    cachedItem.EachPrice = updatedItem.EachPrice;
-                    cachedItem.LastFetchedAt = updatedItem.LastFetchedAt;
-                }
-                else
-                {
-                    cachedItems.Add(updatedItem);
-                }
-            }
-
-
-            string jsonStr = JsonSerializer.Serialize(cachedItems);
-
-            using (var writer = new StreamWriter(cacheFilePath, false, Encoding.UTF8))
-            {
-                writer.Write(jsonStr);
-            }
-        }
 
         private void btnStop_Click(object sender, EventArgs e)
         {

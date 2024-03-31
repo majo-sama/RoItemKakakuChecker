@@ -10,21 +10,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace RoItemKakakuChecker
 {
     public partial class StorageObserveModeControl : UserControl
     {
+        private MainForm mainForm;
         private static bool stopFlag = false;
         private static bool observing = false;
         private const string RO_STORAGE_SERVER_IP = "18.182.57.203";
         private ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
 
 
-        public StorageObserveModeControl()
+        public StorageObserveModeControl(Form parent)
         {
             InitializeComponent();
+            this.mainForm = parent as MainForm;
+
             this.btnObserve.Text = "倉庫監視 開始";
+
+            dataGridView.CellContentClick += DataGridView_CellContentClick;
+            dataGridView.SelectionChanged += DataGridView_SelectionChanged;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.RowHeadersVisible = false;
+            dataGridView.ReadOnly = true;
+            dataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dataGridView.Columns[2].HeaderText = "単体価格\n(中央値)";
+            dataGridView.Columns[2].HeaderCell.Style.Padding = new Padding(0, 0, 0, 0);
         }
 
         private async void btnObserve_Click(object sender, EventArgs e)
@@ -383,5 +404,37 @@ namespace RoItemKakakuChecker
         }
 
 
+
+        private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var gridView = (DataGridView)sender;
+            if (gridView.Columns[e.ColumnIndex].Name == "nameDataGridViewTextBoxColumn")
+            {
+                if (e.RowIndex < 0)
+                {
+                    return;
+                }
+
+                var items = ((IEnumerable<Item>)dataGridView.DataSource).ToList();
+                var selectedItem = items[e.RowIndex];
+                if (selectedItem.ItemId != 0)
+                {
+                    var url = $"https://rotool.gungho.jp/item/{selectedItem.ItemId}/0/";
+                    System.Diagnostics.Process.Start(url);
+                }
+            }
+        }
+
+
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridView.ClearSelection();
+        }
+
+        private async void btnFetchKakaku_Click(object sender, EventArgs e)
+        {
+            var caller = new ApiCaller(dataGridView, mainForm, comboApiLimit);
+            await caller.OnClickedFetchKakakuButton();
+        }
     }
 }
