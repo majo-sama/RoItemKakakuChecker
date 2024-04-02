@@ -17,8 +17,7 @@ namespace RoItemKakakuChecker
     public partial class ChatLogModeControl : UserControl
     {
         private MainForm mainForm;
-        private bool stopFlag = false;
-        private bool isFetching = false;
+
 
         public ChatLogModeControl(Form parent)
         {
@@ -294,10 +293,10 @@ namespace RoItemKakakuChecker
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            if (isFetching)
+            if (mainForm.isFetching)
             {
-                stopFlag = true;
-                isFetching = false;
+                mainForm.stopFlag = true;
+                mainForm.isFetching = false;
             }
         }
 

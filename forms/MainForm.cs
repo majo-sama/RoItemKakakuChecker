@@ -20,6 +20,10 @@ namespace RoItemKakakuChecker
     public partial class MainForm : Form
     {
         public AppSettings settings;
+        public bool stopFlag = false;
+        public bool isFetching = false;
+        public ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
+
 
 
         public MainForm()
@@ -85,7 +89,8 @@ namespace RoItemKakakuChecker
         public void UpdateToolStripProgressBarSetting(int min, int max)
         {
             toolStripProgressBar.Minimum = min;
-            toolStripProgressBar.Value = max;
+            toolStripProgressBar.Maximum = max;
+            toolStripProgressBar.Value = 0;
         }
 
         public void UpdateToolStripProgressBarValue(int value)
@@ -95,9 +100,25 @@ namespace RoItemKakakuChecker
 
         public void IncrementToolStripProgressBarValue()
         {
-            toolStripProgressBar.Value++;
+            int nextValue = toolStripProgressBar.Value + 1;
+            if (nextValue < toolStripProgressBar.Maximum)
+            {
+                toolStripProgressBar.Value = nextValue + 1;
+                toolStripProgressBar.Value = nextValue;
+            }
+            else
+            {
+                toolStripProgressBar.Maximum++;
+                toolStripProgressBar.Value = nextValue + 1;
+                toolStripProgressBar.Value = nextValue;
+                toolStripProgressBar.Maximum--;
+            }
         }
 
+        private void toolStripDropDownButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

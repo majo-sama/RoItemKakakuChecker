@@ -30,7 +30,7 @@ namespace RoItemKakakuChecker
 
         public async Task OnClickedFetchKakakuButton()
         {
-            //isFetching = true;
+            mainForm.isFetching = true;
             var items = (IEnumerable<Item>)dataGridView.DataSource;
 
             LoadCache(items);
@@ -44,14 +44,14 @@ namespace RoItemKakakuChecker
             int count = 1;
             foreach (var item in items)
             {
-                //if (stopFlag)
-                //{
-                //    mainForm.UpdateToolStripLabel("取得を中断しました。");
-                //    mainForm.UpdateToolStripProgressBarValue(0);
-                //    isFetching = false;
-                //    stopFlag = false;
-                //    return;
-                //}
+                if (mainForm.stopFlag)
+                {
+                    mainForm.UpdateToolStripLabel("取得を中断しました。");
+                    mainForm.UpdateToolStripProgressBarValue(0);
+                    mainForm.isFetching = false;
+                    mainForm.stopFlag = false;
+                    return;
+                }
 
 
                 mainForm.UpdateToolStripLabel($"価格情報取得中 ({count++}/{items.Count()})");
@@ -93,7 +93,7 @@ namespace RoItemKakakuChecker
 
             SaveItemsCache(forUpdate);
 
-            //isFetching = false;
+            mainForm.isFetching = false;
         }
 
 
@@ -152,6 +152,17 @@ namespace RoItemKakakuChecker
 
         private async Task<Item> GetItemGeneralInfo(string itemName)
         {
+            // まずローカル定義の一覧からIDの取得を試みる
+            var keyValue = mainForm.itemIdNameMap.Map.FirstOrDefault(e => e.Value == itemName);
+            if (!keyValue.Equals(default(KeyValuePair<int, string>)))
+            {
+                var item = new Item();
+                item.ItemId = keyValue.Key;
+                item.Name = keyValue.Value;
+                return item;
+            }
+
+
             HttpClient client = new HttpClient();
             var baseUrl = "https://rotool.gungho.jp/item/prediction_conversion_search_name/?item_name=";
             client.DefaultRequestHeaders.Accept.Clear();

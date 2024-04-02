@@ -37,6 +37,8 @@
             this.radioButton_chatLog = new System.Windows.Forms.RadioButton();
             this.radioButton_storage = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.結果をCSVファイルに出力_簡易 = new System.Windows.Forms.ToolStripMenuItem();
+            this.結果をCSVファイルに出力_通常 = new System.Windows.Forms.ToolStripMenuItem();
             this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl(this);
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -63,6 +65,7 @@
             // 
             this.toolStripProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripProgressBar.Margin = new System.Windows.Forms.Padding(1, 3, 45, 3);
+            this.toolStripProgressBar.MergeIndex = -2;
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
@@ -71,8 +74,8 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
-            this.toolStripDropDownButton,
-            this.toolStripProgressBar});
+            this.toolStripProgressBar,
+            this.toolStripDropDownButton});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.statusStrip1.Location = new System.Drawing.Point(0, 460);
             this.statusStrip1.Name = "statusStrip1";
@@ -83,8 +86,15 @@
             // 
             // toolStripDropDownButton
             // 
+            this.toolStripDropDownButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.結果をCSVファイルに出力_通常,
+            this.結果をCSVファイルに出力_簡易});
+            this.toolStripDropDownButton.Margin = new System.Windows.Forms.Padding(0, 2, 10, 0);
             this.toolStripDropDownButton.Name = "toolStripDropDownButton";
-            this.toolStripDropDownButton.Size = new System.Drawing.Size(13, 20);
+            this.toolStripDropDownButton.Size = new System.Drawing.Size(44, 20);
+            this.toolStripDropDownButton.Text = "出力";
+            this.toolStripDropDownButton.Click += new System.EventHandler(this.toolStripDropDownButton_Click);
             // 
             // radioButton_chatLog
             // 
@@ -126,6 +136,18 @@
             this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);
             this.storageObserveModeControl1.TabIndex = 15;
             // 
+            // 結果をCSVファイルに出力_簡易
+            // 
+            this.結果をCSVファイルに出力_簡易.Name = "結果をCSVファイルに出力_簡易";
+            this.結果をCSVファイルに出力_簡易.Size = new System.Drawing.Size(218, 22);
+            this.結果をCSVファイルに出力_簡易.Text = "結果をCSVファイルに出力(簡易)";
+            // 
+            // 結果をCSVファイルに出力_通常
+            // 
+            this.結果をCSVファイルに出力_通常.Name = "結果をCSVファイルに出力_通常";
+            this.結果をCSVファイルに出力_通常.Size = new System.Drawing.Size(32, 19);
+            this.結果をCSVファイルに出力_通常.Text = "結果をCSVファイルに出力";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -163,6 +185,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private ChatLogModeControl chatLogModeControl;
         private StorageObserveModeControl storageObserveModeControl1;
+        private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_簡易;
+        private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_通常;
     }
 }
 

@@ -20,7 +20,6 @@ namespace RoItemKakakuChecker
         private static bool stopFlag = false;
         private static bool observing = false;
         private const string RO_STORAGE_SERVER_IP = "18.182.57.203";
-        private ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
 
 
         public StorageObserveModeControl(Form parent)
@@ -219,112 +218,120 @@ namespace RoItemKakakuChecker
             var storageItems = new List<Item>();
             foreach (var item in equips)
             {
-                var storageItem = new Item();
 
-                byte[] itemId = new byte[4];
-                Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
-                int intItemId = BitConverter.ToInt32(itemId, 0);
-                storageItem.ItemId = intItemId;
-                storageItem.Name = itemIdNameMap.Map[intItemId];
-
-
-
-                int i_createGrade = 0;
-                // ユーザー製の武器
-                if (item[15] == 0xff || item[15] == 0xfe)
+                try
                 {
-                    switch (item[20])
+                    var storageItem = new Item();
+
+                    byte[] itemId = new byte[4];
+                    Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
+                    int intItemId = BitConverter.ToInt32(itemId, 0);
+                    storageItem.ItemId = intItemId;
+                    storageItem.Name = mainForm.itemIdNameMap.Map[intItemId];
+
+
+
+                    int i_createGrade = 0;
+                    // ユーザー製の武器
+                    if (item[15] == 0xff || item[15] == 0xfe)
                     {
-                        case 0x05: i_createGrade = 1; break;
-                        case 0x0a: i_createGrade = 2; break;
-                        case 0x0f: i_createGrade = 3; break;
-                        default:   i_createGrade = 0; break;
+                        switch (item[20])
+                        {
+                            case 0x05: i_createGrade = 1; break;
+                            case 0x0a: i_createGrade = 2; break;
+                            case 0x0f: i_createGrade = 3; break;
+                            default: i_createGrade = 0; break;
+                        }
+                        storageItem.CreateGrade = i_createGrade;
                     }
-                    storageItem.CreateGrade = i_createGrade;
+                    // 通常の装備
+                    else
+                    {
+
+                        byte[] b_slot1 = new byte[2];
+                        Array.Copy(item, 15, b_slot1, 0, 2);
+                        int i_slot1 = BitConverter.ToInt16(b_slot1, 0);
+                        storageItem.Slot1ItemId = i_slot1;
+
+                        byte[] b_slot2 = new byte[2];
+                        Array.Copy(item, 19, b_slot2, 0, 2);
+                        int i_slot2 = BitConverter.ToInt16(b_slot2, 0);
+                        storageItem.Slot2ItemId = i_slot2;
+
+                        byte[] b_slot3 = new byte[2];
+                        Array.Copy(item, 23, b_slot3, 0, 2);
+                        int i_slot3 = BitConverter.ToInt16(b_slot3, 0);
+                        storageItem.Slot3ItemId = i_slot3;
+
+                        byte[] b_slot4 = new byte[2];
+                        Array.Copy(item, 27, b_slot4, 0, 2);
+                        int i_slot4 = BitConverter.ToInt16(b_slot4, 0);
+                        storageItem.Slot4ItemId = i_slot4;
+
+                        byte[] b_op1Key = new byte[2];
+                        Array.Copy(item, 40, b_op1Key, 0, 2);
+                        int i_op1Key = BitConverter.ToInt16(b_op1Key, 0);
+                        storageItem.Option1Key = i_op1Key;
+
+                        byte[] b_op1Value = new byte[2];
+                        Array.Copy(item, 42, b_op1Value, 0, 2);
+                        int i_op1Value = BitConverter.ToInt16(b_op1Value, 0);
+                        storageItem.Option1Value = i_op1Value;
+
+                        byte[] b_op2Key = new byte[2];
+                        Array.Copy(item, 45, b_op2Key, 0, 2);
+                        int i_op2Key = BitConverter.ToInt16(b_op2Key, 0);
+                        storageItem.Option2Key = i_op2Key;
+
+                        byte[] b_op2Value = new byte[2];
+                        Array.Copy(item, 47, b_op2Value, 0, 2);
+                        int i_op2Value = BitConverter.ToInt16(b_op2Value, 0);
+                        storageItem.Option2Value = i_op2Value;
+
+                        byte[] b_op3Key = new byte[2];
+                        Array.Copy(item, 50, b_op3Key, 0, 2);
+                        int i_op3Key = BitConverter.ToInt16(b_op3Key, 0);
+                        storageItem.Option3Key = i_op3Key;
+
+                        byte[] b_op3Value = new byte[2];
+                        Array.Copy(item, 52, b_op3Value, 0, 2);
+                        int i_op3Value = BitConverter.ToInt16(b_op3Value, 0);
+                        storageItem.Option3Value = i_op3Value;
+
+                        byte[] b_op4Key = new byte[2];
+                        Array.Copy(item, 55, b_op4Key, 0, 2);
+                        int i_op4Key = BitConverter.ToInt16(b_op4Key, 0);
+                        storageItem.Option4Key = i_op4Key;
+
+                        byte[] b_op4Value = new byte[2];
+                        Array.Copy(item, 57, b_op4Value, 0, 2);
+                        int i_op4Value = BitConverter.ToInt16(b_op4Value, 0);
+                        storageItem.Option4Value = i_op4Value;
+
+                        byte[] b_op5Key = new byte[2];
+                        Array.Copy(item, 60, b_op5Key, 0, 2);
+                        int i_op5Key = BitConverter.ToInt16(b_op5Key, 0);
+                        storageItem.Option5Key = i_op5Key;
+
+                        byte[] b_op5Value = new byte[2];
+                        Array.Copy(item, 62, b_op5Value, 0, 2);
+                        int i_op5Value = BitConverter.ToInt16(b_op5Value, 0);
+                        storageItem.Option5Value = i_op5Value;
+                    }
+
+
+                    byte[] b_enhanceLevel = new byte[2];
+                    Array.Copy(item, 65, b_enhanceLevel, 0, 2);
+                    int i_enhanceLevel = BitConverter.ToInt16(b_enhanceLevel, 0);
+                    storageItem.EnhanceLevel = i_enhanceLevel;
+
+
+                    storageItems.Add(storageItem);
                 }
-                // 通常の装備
-                else
+                catch (Exception e)
                 {
-
-                    byte[] b_slot1 = new byte[2];
-                    Array.Copy(item, 15, b_slot1, 0, 2);
-                    int i_slot1 = BitConverter.ToInt16(b_slot1, 0);
-                    storageItem.Slot1ItemId = i_slot1;
-
-                    byte[] b_slot2 = new byte[2];
-                    Array.Copy(item, 19, b_slot2, 0, 2);
-                    int i_slot2 = BitConverter.ToInt16(b_slot2, 0);
-                    storageItem.Slot2ItemId = i_slot2;
-
-                    byte[] b_slot3 = new byte[2];
-                    Array.Copy(item, 23, b_slot3, 0, 2);
-                    int i_slot3 = BitConverter.ToInt16(b_slot3, 0);
-                    storageItem.Slot3ItemId = i_slot3;
-
-                    byte[] b_slot4 = new byte[2];
-                    Array.Copy(item, 27, b_slot4, 0, 2);
-                    int i_slot4 = BitConverter.ToInt16(b_slot4, 0);
-                    storageItem.Slot4ItemId = i_slot4;
-
-                    byte[] b_op1Key = new byte[2];
-                    Array.Copy(item, 40, b_op1Key, 0, 2);
-                    int i_op1Key = BitConverter.ToInt16(b_op1Key, 0);
-                    storageItem.Option1Key = i_op1Key;
-
-                    byte[] b_op1Value = new byte[2];
-                    Array.Copy(item, 42, b_op1Value, 0, 2);
-                    int i_op1Value = BitConverter.ToInt16(b_op1Value, 0);
-                    storageItem.Option1Value = i_op1Value;
-
-                    byte[] b_op2Key = new byte[2];
-                    Array.Copy(item, 45, b_op2Key, 0, 2);
-                    int i_op2Key = BitConverter.ToInt16(b_op2Key, 0);
-                    storageItem.Option2Key = i_op2Key;
-
-                    byte[] b_op2Value = new byte[2];
-                    Array.Copy(item, 47, b_op2Value, 0, 2);
-                    int i_op2Value = BitConverter.ToInt16(b_op2Value, 0);
-                    storageItem.Option2Value = i_op2Value;
-
-                    byte[] b_op3Key = new byte[2];
-                    Array.Copy(item, 50, b_op3Key, 0, 2);
-                    int i_op3Key = BitConverter.ToInt16(b_op3Key, 0);
-                    storageItem.Option3Key = i_op3Key;
-
-                    byte[] b_op3Value = new byte[2];
-                    Array.Copy(item, 52, b_op3Value, 0, 2);
-                    int i_op3Value = BitConverter.ToInt16(b_op3Value, 0);
-                    storageItem.Option3Value = i_op3Value;
-
-                    byte[] b_op4Key = new byte[2];
-                    Array.Copy(item, 55, b_op4Key, 0, 2);
-                    int i_op4Key = BitConverter.ToInt16(b_op4Key, 0);
-                    storageItem.Option4Key = i_op4Key;
-
-                    byte[] b_op4Value = new byte[2];
-                    Array.Copy(item, 57, b_op4Value, 0, 2);
-                    int i_op4Value = BitConverter.ToInt16(b_op4Value, 0);
-                    storageItem.Option4Value = i_op4Value;
-
-                    byte[] b_op5Key = new byte[2];
-                    Array.Copy(item, 60, b_op5Key, 0, 2);
-                    int i_op5Key = BitConverter.ToInt16(b_op5Key, 0);
-                    storageItem.Option5Key = i_op5Key;
-
-                    byte[] b_op5Value = new byte[2];
-                    Array.Copy(item, 62, b_op5Value, 0, 2);
-                    int i_op5Value = BitConverter.ToInt16(b_op5Value, 0);
-                    storageItem.Option5Value = i_op5Value;
+                    continue;
                 }
-
-
-                byte[] b_enhanceLevel = new byte[2];
-                Array.Copy(item, 65, b_enhanceLevel, 0, 2);
-                int i_enhanceLevel = BitConverter.ToInt16(b_enhanceLevel, 0);
-                storageItem.EnhanceLevel = i_enhanceLevel;
-
-
-                storageItems.Add(storageItem);
             }
 
             var list = dataGridView.DataSource as SortableBindingList<Item>;
@@ -339,7 +346,6 @@ namespace RoItemKakakuChecker
             }
 
             dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
-            //dataGridView.DataSource = list;
             return;
         }
 
@@ -351,27 +357,35 @@ namespace RoItemKakakuChecker
             var storageItems = new List<Item>();
             foreach (var item in items)
             {
-                byte[] itemId = new byte[4];
-                Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
-                int intItemId = BitConverter.ToInt32(itemId, 0);
-
-                byte[] itemCount = new byte[2]; // ROのアイテム所持上限が30000なので、おそらに2byteだろう
-                Array.Copy(item, 7, itemCount, 0, 2);
-                int intItemCount = BitConverter.ToInt16(itemCount, 0);
-
-                byte[] itemLimitDateTime = new byte[4];
-                Array.Copy(item, 29, itemLimitDateTime, 0, 4);
-                int unixtime = BitConverter.ToInt32(itemLimitDateTime, 0);
-
-                var storageItem = new Item();
-                storageItem.ItemId = intItemId;
-                storageItem.Name = itemIdNameMap.Map[intItemId];
-                storageItem.Count = intItemCount;
-                if (unixtime > 0)
+                try
                 {
-                   storageItem.LimitDateTime = DateTimeOffset.FromUnixTimeSeconds(unixtime).ToLocalTime();
+                    byte[] itemId = new byte[4];
+                    Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
+                    int intItemId = BitConverter.ToInt32(itemId, 0);
+
+                    byte[] itemCount = new byte[2]; // ROのアイテム所持上限が30000なので、おそらに2byteだろう
+                    Array.Copy(item, 7, itemCount, 0, 2);
+                    int intItemCount = BitConverter.ToInt16(itemCount, 0);
+
+                    byte[] itemLimitDateTime = new byte[4];
+                    Array.Copy(item, 29, itemLimitDateTime, 0, 4);
+                    int unixtime = BitConverter.ToInt32(itemLimitDateTime, 0);
+
+                    var storageItem = new Item();
+                    storageItem.ItemId = intItemId;
+                    storageItem.Name = mainForm.itemIdNameMap.Map[intItemId];
+                    storageItem.Count = intItemCount;
+                    if (unixtime > 0)
+                    {
+                        storageItem.LimitDateTime = DateTimeOffset.FromUnixTimeSeconds(unixtime).ToLocalTime();
+                    }
+                    storageItems.Add(storageItem);
                 }
-                storageItems.Add(storageItem);
+                catch (Exception ex)
+                {
+                    continue;
+                }
+
             }
             var list = dataGridView.DataSource as SortableBindingList<Item>;
             if (list == null)
