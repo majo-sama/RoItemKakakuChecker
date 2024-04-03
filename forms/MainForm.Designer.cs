@@ -34,11 +34,11 @@
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.結果をCSVファイルに出力_通常 = new System.Windows.Forms.ToolStripMenuItem();
+            this.結果をCSVファイルに出力_簡易 = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButton_chatLog = new System.Windows.Forms.RadioButton();
             this.radioButton_storage = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.結果をCSVファイルに出力_簡易 = new System.Windows.Forms.ToolStripMenuItem();
-            this.結果をCSVファイルに出力_通常 = new System.Windows.Forms.ToolStripMenuItem();
             this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl(this);
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -96,6 +96,18 @@
             this.toolStripDropDownButton.Text = "出力";
             this.toolStripDropDownButton.Click += new System.EventHandler(this.toolStripDropDownButton_Click);
             // 
+            // 結果をCSVファイルに出力_通常
+            // 
+            this.結果をCSVファイルに出力_通常.Name = "結果をCSVファイルに出力_通常";
+            this.結果をCSVファイルに出力_通常.Size = new System.Drawing.Size(226, 22);
+            this.結果をCSVファイルに出力_通常.Text = "結果をCSVファイルに出力";
+            // 
+            // 結果をCSVファイルに出力_簡易
+            // 
+            this.結果をCSVファイルに出力_簡易.Name = "結果をCSVファイルに出力_簡易";
+            this.結果をCSVファイルに出力_簡易.Size = new System.Drawing.Size(226, 22);
+            this.結果をCSVファイルに出力_簡易.Text = "結果をCSVファイルに出力(簡易)";
+            // 
             // radioButton_chatLog
             // 
             this.radioButton_chatLog.AutoSize = true;
@@ -136,18 +148,6 @@
             this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);
             this.storageObserveModeControl1.TabIndex = 15;
             // 
-            // 結果をCSVファイルに出力_簡易
-            // 
-            this.結果をCSVファイルに出力_簡易.Name = "結果をCSVファイルに出力_簡易";
-            this.結果をCSVファイルに出力_簡易.Size = new System.Drawing.Size(218, 22);
-            this.結果をCSVファイルに出力_簡易.Text = "結果をCSVファイルに出力(簡易)";
-            // 
-            // 結果をCSVファイルに出力_通常
-            // 
-            this.結果をCSVファイルに出力_通常.Name = "結果をCSVファイルに出力_通常";
-            this.結果をCSVファイルに出力_通常.Size = new System.Drawing.Size(32, 19);
-            this.結果をCSVファイルに出力_通常.Text = "結果をCSVファイルに出力";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -157,7 +157,6 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "RO価格確認機";
             this.Load += new System.EventHandler(this.Form1_Load);

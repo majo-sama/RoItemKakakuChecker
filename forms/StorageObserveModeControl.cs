@@ -47,6 +47,8 @@ namespace RoItemKakakuChecker
 
             dataGridView.Columns[2].HeaderText = "単体価格\n(中央値)";
             dataGridView.Columns[2].HeaderCell.Style.Padding = new Padding(0, 0, 0, 0);
+
+            this.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
         }
 
         private async void btnObserve_Click(object sender, EventArgs e)

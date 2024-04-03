@@ -31,22 +31,22 @@ namespace RoItemKakakuChecker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnObserve = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnFetchKakaku = new System.Windows.Forms.Button();
             this.labelApiLimit = new System.Windows.Forms.Label();
             this.comboApiLimit = new System.Windows.Forms.ComboBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btnHelp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -63,8 +63,9 @@ namespace RoItemKakakuChecker
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 414);
+            this.label1.Location = new System.Drawing.Point(19, 439);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(512, 12);
             this.label1.TabIndex = 26;
@@ -111,6 +112,9 @@ namespace RoItemKakakuChecker
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -123,8 +127,30 @@ namespace RoItemKakakuChecker
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 21;
-            this.dataGridView.Size = new System.Drawing.Size(512, 345);
+            this.dataGridView.Size = new System.Drawing.Size(525, 360);
             this.dataGridView.TabIndex = 4;
+            // 
+            // TotalPrice
+            // 
+            this.TotalPrice.DataPropertyName = "TotalPrice";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
+            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            this.TotalPrice.HeaderText = "合計金額";
+            this.TotalPrice.Name = "TotalPrice";
+            this.TotalPrice.ReadOnly = true;
+            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalPrice.Width = 85;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(483, 3);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(48, 23);
+            this.btnHelp.TabIndex = 27;
+            this.btnHelp.Text = "ヘルプ";
+            this.btnHelp.UseVisualStyleBackColor = true;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -166,31 +192,9 @@ namespace RoItemKakakuChecker
             this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.eachPriceDataGridViewTextBoxColumn.Width = 85;
             // 
-            // TotalPrice
-            // 
-            this.TotalPrice.DataPropertyName = "TotalPrice";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TotalPrice.HeaderText = "合計金額";
-            this.TotalPrice.Name = "TotalPrice";
-            this.TotalPrice.ReadOnly = true;
-            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalPrice.Width = 85;
-            // 
             // itemBindingSource
             // 
             this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.Location = new System.Drawing.Point(483, 3);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(48, 23);
-            this.btnHelp.TabIndex = 27;
-            this.btnHelp.Text = "ヘルプ";
-            this.btnHelp.UseVisualStyleBackColor = true;
             // 
             // StorageObserveModeControl
             // 
@@ -204,7 +208,7 @@ namespace RoItemKakakuChecker
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.btnObserve);
             this.Name = "StorageObserveModeControl";
-            this.Size = new System.Drawing.Size(542, 438);
+            this.Size = new System.Drawing.Size(555, 482);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             this.ResumeLayout(false);

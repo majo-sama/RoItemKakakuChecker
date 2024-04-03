@@ -33,7 +33,6 @@ namespace RoItemKakakuChecker
 
             InitializeComponent();
             this.TopMost = true;
-            FormBorderStyle = FormBorderStyle.FixedSingle;
 
         }
 
