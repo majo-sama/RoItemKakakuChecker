@@ -252,6 +252,7 @@
   <ItemGroup>
     <Compile Include="ApiCaller.cs" />
     <Compile Include="AppSettingsEntity.cs" />
+    <Compile Include="ChatLogEntity.cs" />
     <Compile Include="forms\ChatLogModeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -259,6 +260,12 @@
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ChatLogReader.cs" />
+    <Compile Include="forms\ChatObserveModeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\ChatObserveModeControl.Designer.cs">
+      <DependentUpon>ChatObserveModeControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Item.cs" />
     <Compile Include="forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -280,6 +287,9 @@
     </Compile>
     <EmbeddedResource Include="forms\ChatLogModeControl.resx">
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ChatObserveModeControl.resx">
+      <DependentUpon>ChatObserveModeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
