@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using System.Xml.Linq;
+using System.Reflection;
 
 namespace RoItemKakakuChecker
 {
@@ -49,6 +51,30 @@ namespace RoItemKakakuChecker
 
         private async void btnObserve_Click(object sender, EventArgs e)
         {
+
+            string cmdDelete = "netsh advfirewall firewall delete rule name=\"RoItemKakakuChecker\"";
+            string exePath = Assembly.GetEntryAssembly().Location;
+            string cmdAdd = $"netsh advfirewall firewall add rule name=\"RoItemKakakuChecker\" dir=in action=allow program=\"{exePath}\" enable=yes";
+            
+            //Processオブジェクトを作成
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+
+            //ComSpec(cmd.exe)のパスを取得して、FileNameプロパティに指定
+            p.StartInfo.FileName = System.Environment.GetEnvironmentVariable("ComSpec");
+            //出力を読み取れるようにする
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardInput = false;
+            //ウィンドウを表示しないようにする
+            p.StartInfo.CreateNoWindow = true;
+            //コマンドラインを指定（"/c"は実行後閉じるために必要）
+            p.StartInfo.Arguments = $@"/c {cmdDelete} & {cmdAdd}";
+
+            //起動
+            p.Start();
+
+
+
             if (observing)
             {
                 stopFlag = true;
@@ -227,7 +253,11 @@ namespace RoItemKakakuChecker
                     Array.Copy(item, 2, itemId, 0, 3); // 恐らくItemIDは3バイト
                     int intItemId = BitConverter.ToInt32(itemId, 0);
                     storageItem.ItemId = intItemId;
-                    storageItem.Name = mainForm.itemIdNameMap.Map[intItemId];
+                    mainForm.itemIdNameMap.Map.TryGetValue(intItemId, out string name);
+                    if (name == null)
+                    {
+                        continue;
+                    }
 
                     int i_slot1 = 0, i_slot2 = 0, i_slot3 = 0, i_slot4 = 0;
                     int i_op1Key = 0, i_op2Key = 0, i_op3Key = 0, i_op4Key = 0, i_op5Key = 0;
@@ -342,12 +372,82 @@ namespace RoItemKakakuChecker
                             case 3: builder.Append("超強い "); break;
                             default: break;
                         }
+                        builder.Append($"{name} ");
                     }
-                    if (i_slot1 > 0)
+                    // 自作武器ではないとき
+                    else
                     {
-                        
-                    }
+                        builder.Append($"{name} ");
 
+                        var itemNameMap = mainForm.itemIdNameMap.Map;
+                        if (i_slot1 > 0)
+                        {
+                            itemNameMap.TryGetValue(i_slot1, out string mName);
+                            if (name != null) builder.Append($"{mName} ");
+                        }
+                        if (i_slot2 > 0)
+                        {
+                            itemNameMap.TryGetValue(i_slot2, out string mName);
+                            if (name != null) builder.Append($"{mName} ");
+                        }
+                        if (i_slot3 > 0)
+                        {
+                            itemNameMap.TryGetValue(i_slot3, out string mName);
+                            if (name != null) builder.Append($"{mName} ");
+                        }
+                        if (i_slot4 > 0)
+                        {
+                            itemNameMap.TryGetValue(i_slot4, out string mName);
+                            if (name != null) builder.Append($"{mName} ");
+                        }
+                        var optionNameMap = mainForm.optionIdNameMap.Map;
+                        if (i_op1Key > 0 && i_op1Value > 0)
+                        {
+                            optionNameMap.TryGetValue(i_op1Key, out string opDescription);
+                            if (opDescription != null)
+                            {
+                                var description = string.Format(opDescription, i_op1Value);
+                                builder.Append($"{description} ");
+                            }
+                        }
+                        if (i_op2Key > 0 && i_op2Value > 0)
+                        {
+                            optionNameMap.TryGetValue(i_op2Key, out string opDescription);
+                            if (opDescription != null)
+                            {
+                                var description = string.Format(opDescription, i_op2Value);
+                                builder.Append($"{description} ");
+                            }
+                        }
+                        if (i_op3Key > 0 && i_op3Value > 0)
+                        {
+                            optionNameMap.TryGetValue(i_op3Key, out string opDescription);
+                            if (opDescription != null)
+                            {
+                                var description = string.Format(opDescription, i_op3Value);
+                                builder.Append($"{description} ");
+                            }
+                        }
+                        if (i_op4Key > 0 && i_op4Value > 0)
+                        {
+                            optionNameMap.TryGetValue(i_op4Key, out string opDescription);
+                            if (opDescription != null)
+                            {
+                                var description = string.Format(opDescription, i_op4Value);
+                                builder.Append($"{description} ");
+                            }
+                        }
+                        if (i_op5Key > 0 && i_op5Value > 0)
+                        {
+                            optionNameMap.TryGetValue(i_op5Key, out string opDescription);
+                            if (opDescription != null)
+                            {
+                                var description = string.Format(opDescription, i_op5Value);
+                                builder.Append($"{description} ");
+                            }
+                        }
+                    }
+                    storageItem.Name = builder.ToString();
 
                     storageItems.Add(storageItem);
                 }
@@ -396,7 +496,14 @@ namespace RoItemKakakuChecker
 
                     var storageItem = new Item();
                     storageItem.ItemId = intItemId;
-                    storageItem.Name = mainForm.itemIdNameMap.Map[intItemId];
+                    mainForm.itemIdNameMap.Map.TryGetValue(intItemId, out string name);
+                    if (name == null)
+                    {
+                        continue;
+                    }
+                    storageItem.Name = name;
+
+
                     storageItem.Count = intItemCount;
                     if (unixtime > 0)
                     {

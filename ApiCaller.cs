@@ -21,6 +21,7 @@ namespace RoItemKakakuChecker
         MainForm mainForm;
         ComboBox comboApiLimit;
 
+
         public ApiCaller(DataGridView dataGridView, MainForm mainForm, ComboBox comboApiLimit)
         {
             this.dataGridView = dataGridView;
@@ -153,13 +154,13 @@ namespace RoItemKakakuChecker
         private async Task<Item> GetItemGeneralInfo(string itemName)
         {
             // まずローカル定義の一覧からIDの取得を試みる
-            var keyValue = mainForm.itemIdNameMap.Map.FirstOrDefault(e => e.Value == itemName);
-            mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(aaaaaaaaaaaaaaaaaaaaaa)
-            if (!keyValue.Equals(default(KeyValuePair<int, string>)))
+
+            mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(itemName, out int itemKey);
+            if (itemKey != 0)
             {
                 var item = new Item();
-                item.ItemId = keyValue.Key;
-                item.Name = keyValue.Value;
+                item.ItemId = itemKey;
+                item.Name = itemName;
                 return item;
             }
 

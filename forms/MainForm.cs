@@ -23,6 +23,7 @@ namespace RoItemKakakuChecker
         public bool stopFlag = false;
         public bool isFetching = false;
         public ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
+        public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
 
 
 
