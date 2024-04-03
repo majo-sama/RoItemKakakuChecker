@@ -66,9 +66,7 @@ namespace RoItemKakakuChecker
                 }
 
                 dataGridView.Rows[e.RowIndex].Selected = true;
-
             }
-
         }
 
         private void ChatLogModeControl_Load(object sender, EventArgs e)
