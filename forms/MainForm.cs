@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -63,6 +64,7 @@ namespace RoItemKakakuChecker
 
             this.radioButton_chatLog.CheckedChanged += RadioButton_chatLog_CheckedChanged;
             this.radioButton_storage.CheckedChanged += RadioButton_chatLog_CheckedChanged;
+            this.radioChatMessage.CheckedChanged += RadioButton_chatLog_CheckedChanged;
 
             this.radioButton_chatLog.Checked = false;
             this.radioButton_chatLog.Checked = true;
@@ -70,7 +72,36 @@ namespace RoItemKakakuChecker
 
             this.Controls.Add(this.chatLogModeControl);
             this.Controls.Add(this.storageObserveModeControl1);
+            this.Controls.Add(this.chatObserveModeControl1);
+
+
+
+
+
+
+            string cmdDelete = "netsh advfirewall firewall delete rule name=\"RoItemKakakuChecker\"";
+            string exePath = Assembly.GetEntryAssembly().Location;
+            string cmdAdd = $"netsh advfirewall firewall add rule name=\"RoItemKakakuChecker\" dir=in action=allow program=\"{exePath}\" enable=yes";
+
+            //Processオブジェクトを作成
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+
+            //ComSpec(cmd.exe)のパスを取得して、FileNameプロパティに指定
+            p.StartInfo.FileName = System.Environment.GetEnvironmentVariable("ComSpec");
+            //出力を読み取れるようにする
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardInput = false;
+            //ウィンドウを表示しないようにする
+            p.StartInfo.CreateNoWindow = true;
+            //コマンドラインを指定（"/c"は実行後閉じるために必要）
+            p.StartInfo.Arguments = $@"/c {cmdDelete} & {cmdAdd}";
+
+            //起動
+            p.Start();
         }
+
+
 
         private void RadioButton_chatLog_CheckedChanged(object sender, EventArgs e)
         {
@@ -79,16 +110,20 @@ namespace RoItemKakakuChecker
             {
                 if (radio.Name == "radioButton_chatLog")
                 {
-                    //this.Controls.Add(this.chatLogModeControl);
-                    //this.Controls.Remove(this.storageObserveModeControl1);
                     this.chatLogModeControl.Show();
                     this.storageObserveModeControl1.Hide();
+                    this.chatObserveModeControl1.Hide();
+                }
+                else if (radio.Name == "radioButton_storage")
+                {
+                    this.storageObserveModeControl1.Show();
+                    this.chatLogModeControl.Hide();
+                    this.chatObserveModeControl1.Hide();
                 }
                 else
                 {
-                    //this.Controls.Add(this.storageObserveModeControl1);
-                    //this.Controls.Remove(this.chatLogModeControl);
-                    this.storageObserveModeControl1.Show();
+                    this.chatObserveModeControl1.Show();
+                    this.storageObserveModeControl1.Hide();
                     this.chatLogModeControl.Hide();
                 }
             }

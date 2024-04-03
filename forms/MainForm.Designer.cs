@@ -39,6 +39,8 @@
             this.radioButton_chatLog = new System.Windows.Forms.RadioButton();
             this.radioButton_storage = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioChatMessage = new System.Windows.Forms.RadioButton();
+            this.chatObserveModeControl1 = new RoItemKakakuChecker.forms.ChatObserveModeControl();
             this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl(this);
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -114,16 +116,16 @@
             this.radioButton_chatLog.Checked = true;
             this.radioButton_chatLog.Location = new System.Drawing.Point(23, 15);
             this.radioButton_chatLog.Name = "radioButton_chatLog";
-            this.radioButton_chatLog.Size = new System.Drawing.Size(115, 16);
+            this.radioButton_chatLog.Size = new System.Drawing.Size(161, 16);
             this.radioButton_chatLog.TabIndex = 12;
             this.radioButton_chatLog.TabStop = true;
-            this.radioButton_chatLog.Text = "チャットログから確認";
+            this.radioButton_chatLog.Text = "チャットログからアイテムを確認";
             this.radioButton_chatLog.UseVisualStyleBackColor = true;
             // 
             // radioButton_storage
             // 
             this.radioButton_storage.AutoSize = true;
-            this.radioButton_storage.Location = new System.Drawing.Point(146, 15);
+            this.radioButton_storage.Location = new System.Drawing.Point(203, 15);
             this.radioButton_storage.Name = "radioButton_storage";
             this.radioButton_storage.Size = new System.Drawing.Size(71, 16);
             this.radioButton_storage.TabIndex = 13;
@@ -132,11 +134,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.radioChatMessage);
             this.groupBox1.Controls.Add(this.radioButton_chatLog);
             this.groupBox1.Controls.Add(this.radioButton_storage);
             this.groupBox1.Location = new System.Drawing.Point(18, 8);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(423, 38);
+            this.groupBox1.Size = new System.Drawing.Size(495, 38);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "モード選択";
@@ -151,11 +154,30 @@
             this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);
             this.storageObserveModeControl1.TabIndex = 15;
             // 
+            // radioChatMessage
+            // 
+            this.radioChatMessage.AutoSize = true;
+            this.radioChatMessage.Location = new System.Drawing.Point(295, 15);
+            this.radioChatMessage.Name = "radioChatMessage";
+            this.radioChatMessage.Size = new System.Drawing.Size(124, 16);
+            this.radioChatMessage.TabIndex = 14;
+            this.radioChatMessage.TabStop = true;
+            this.radioChatMessage.Text = "チャットメッセージ取得";
+            this.radioChatMessage.UseVisualStyleBackColor = true;
+            // 
+            // chatObserveModeControl1
+            // 
+            this.chatObserveModeControl1.Location = new System.Drawing.Point(0, 45);
+            this.chatObserveModeControl1.Name = "chatObserveModeControl1";
+            this.chatObserveModeControl1.Size = new System.Drawing.Size(542, 411);
+            this.chatObserveModeControl1.TabIndex = 15;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(542, 482);
+            this.Controls.Add(this.chatObserveModeControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.statusStrip1);
@@ -189,6 +211,8 @@
         private StorageObserveModeControl storageObserveModeControl1;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_簡易;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_通常;
+        private System.Windows.Forms.RadioButton radioChatMessage;
+        private forms.ChatObserveModeControl chatObserveModeControl1;
     }
 }
 

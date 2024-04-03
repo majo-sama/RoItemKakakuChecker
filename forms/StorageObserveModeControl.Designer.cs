@@ -203,7 +203,7 @@ namespace RoItemKakakuChecker
             // 
             this.linkDataGridViewTextBoxColumn.DataPropertyName = "Link";
             this.linkDataGridViewTextBoxColumn.FillWeight = 55F;
-            this.linkDataGridViewTextBoxColumn.HeaderText = "Link";
+            this.linkDataGridViewTextBoxColumn.HeaderText = "リンク";
             this.linkDataGridViewTextBoxColumn.Name = "linkDataGridViewTextBoxColumn";
             this.linkDataGridViewTextBoxColumn.ReadOnly = true;
             this.linkDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
