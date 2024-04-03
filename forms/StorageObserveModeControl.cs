@@ -229,7 +229,9 @@ namespace RoItemKakakuChecker
                     storageItem.ItemId = intItemId;
                     storageItem.Name = mainForm.itemIdNameMap.Map[intItemId];
 
-
+                    int i_slot1 = 0, i_slot2 = 0, i_slot3 = 0, i_slot4 = 0;
+                    int i_op1Key = 0, i_op2Key = 0, i_op3Key = 0, i_op4Key = 0, i_op5Key = 0;
+                    int i_op1Value = 0, i_op2Value = 0, i_op3Value = 0, i_op4Value = 0, i_op5Value = 0;
 
                     int i_createGrade = 0;
                     // ユーザー製の武器
@@ -250,72 +252,72 @@ namespace RoItemKakakuChecker
 
                         byte[] b_slot1 = new byte[2];
                         Array.Copy(item, 15, b_slot1, 0, 2);
-                        int i_slot1 = BitConverter.ToInt16(b_slot1, 0);
+                        i_slot1 = BitConverter.ToInt16(b_slot1, 0);
                         storageItem.Slot1ItemId = i_slot1;
 
                         byte[] b_slot2 = new byte[2];
                         Array.Copy(item, 19, b_slot2, 0, 2);
-                        int i_slot2 = BitConverter.ToInt16(b_slot2, 0);
+                        i_slot2 = BitConverter.ToInt16(b_slot2, 0);
                         storageItem.Slot2ItemId = i_slot2;
 
                         byte[] b_slot3 = new byte[2];
                         Array.Copy(item, 23, b_slot3, 0, 2);
-                        int i_slot3 = BitConverter.ToInt16(b_slot3, 0);
+                        i_slot3 = BitConverter.ToInt16(b_slot3, 0);
                         storageItem.Slot3ItemId = i_slot3;
 
                         byte[] b_slot4 = new byte[2];
                         Array.Copy(item, 27, b_slot4, 0, 2);
-                        int i_slot4 = BitConverter.ToInt16(b_slot4, 0);
+                        i_slot4 = BitConverter.ToInt16(b_slot4, 0);
                         storageItem.Slot4ItemId = i_slot4;
 
                         byte[] b_op1Key = new byte[2];
                         Array.Copy(item, 40, b_op1Key, 0, 2);
-                        int i_op1Key = BitConverter.ToInt16(b_op1Key, 0);
+                        i_op1Key = BitConverter.ToInt16(b_op1Key, 0);
                         storageItem.Option1Key = i_op1Key;
 
                         byte[] b_op1Value = new byte[2];
                         Array.Copy(item, 42, b_op1Value, 0, 2);
-                        int i_op1Value = BitConverter.ToInt16(b_op1Value, 0);
+                        i_op1Value = BitConverter.ToInt16(b_op1Value, 0);
                         storageItem.Option1Value = i_op1Value;
 
                         byte[] b_op2Key = new byte[2];
                         Array.Copy(item, 45, b_op2Key, 0, 2);
-                        int i_op2Key = BitConverter.ToInt16(b_op2Key, 0);
+                        i_op2Key = BitConverter.ToInt16(b_op2Key, 0);
                         storageItem.Option2Key = i_op2Key;
 
                         byte[] b_op2Value = new byte[2];
                         Array.Copy(item, 47, b_op2Value, 0, 2);
-                        int i_op2Value = BitConverter.ToInt16(b_op2Value, 0);
+                        i_op2Value = BitConverter.ToInt16(b_op2Value, 0);
                         storageItem.Option2Value = i_op2Value;
 
                         byte[] b_op3Key = new byte[2];
                         Array.Copy(item, 50, b_op3Key, 0, 2);
-                        int i_op3Key = BitConverter.ToInt16(b_op3Key, 0);
+                        i_op3Key = BitConverter.ToInt16(b_op3Key, 0);
                         storageItem.Option3Key = i_op3Key;
 
                         byte[] b_op3Value = new byte[2];
                         Array.Copy(item, 52, b_op3Value, 0, 2);
-                        int i_op3Value = BitConverter.ToInt16(b_op3Value, 0);
+                        i_op3Value = BitConverter.ToInt16(b_op3Value, 0);
                         storageItem.Option3Value = i_op3Value;
 
                         byte[] b_op4Key = new byte[2];
                         Array.Copy(item, 55, b_op4Key, 0, 2);
-                        int i_op4Key = BitConverter.ToInt16(b_op4Key, 0);
+                        i_op4Key = BitConverter.ToInt16(b_op4Key, 0);
                         storageItem.Option4Key = i_op4Key;
 
                         byte[] b_op4Value = new byte[2];
                         Array.Copy(item, 57, b_op4Value, 0, 2);
-                        int i_op4Value = BitConverter.ToInt16(b_op4Value, 0);
+                        i_op4Value = BitConverter.ToInt16(b_op4Value, 0);
                         storageItem.Option4Value = i_op4Value;
 
                         byte[] b_op5Key = new byte[2];
                         Array.Copy(item, 60, b_op5Key, 0, 2);
-                        int i_op5Key = BitConverter.ToInt16(b_op5Key, 0);
+                        i_op5Key = BitConverter.ToInt16(b_op5Key, 0);
                         storageItem.Option5Key = i_op5Key;
 
                         byte[] b_op5Value = new byte[2];
                         Array.Copy(item, 62, b_op5Value, 0, 2);
-                        int i_op5Value = BitConverter.ToInt16(b_op5Value, 0);
+                        i_op5Value = BitConverter.ToInt16(b_op5Value, 0);
                         storageItem.Option5Value = i_op5Value;
                     }
 
@@ -324,6 +326,27 @@ namespace RoItemKakakuChecker
                     Array.Copy(item, 65, b_enhanceLevel, 0, 2);
                     int i_enhanceLevel = BitConverter.ToInt16(b_enhanceLevel, 0);
                     storageItem.EnhanceLevel = i_enhanceLevel;
+
+
+                    var builder = new StringBuilder();
+                    if (i_enhanceLevel > 0)
+                    {
+                        builder.Append($"+{i_enhanceLevel} ");
+                    }
+                    if (i_createGrade > 0)
+                    {
+                        switch (i_createGrade)
+                        {
+                            case 1: builder.Append("ぷち強い "); break;
+                            case 2: builder.Append("強い "); break;
+                            case 3: builder.Append("超強い "); break;
+                            default: break;
+                        }
+                    }
+                    if (i_slot1 > 0)
+                    {
+                        
+                    }
 
 
                     storageItems.Add(storageItem);

@@ -154,6 +154,7 @@ namespace RoItemKakakuChecker
         {
             // まずローカル定義の一覧からIDの取得を試みる
             var keyValue = mainForm.itemIdNameMap.Map.FirstOrDefault(e => e.Value == itemName);
+            mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(aaaaaaaaaaaaaaaaaaaaaa)
             if (!keyValue.Equals(default(KeyValuePair<int, string>)))
             {
                 var item = new Item();

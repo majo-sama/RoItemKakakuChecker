@@ -9,6 +9,7 @@ namespace RoItemKakakuChecker
     public class ItemIdNameMap
     {
         public Dictionary<int, string> Map { get; set; } = new Dictionary<int, string>();
+        public Dictionary<string, int> ValueKeyMap { get; set; } = new Dictionary<string, int>();
 
 
         public ItemIdNameMap()
@@ -12391,6 +12392,8 @@ namespace RoItemKakakuChecker
                 { 1100020, "直火焼ソーセージ" }
 
             };
+
+            ValueKeyMap = Map.GroupBy(kv => kv.Value).ToDictionary(group => group.Last().Value, group => group.Last().Key);
         }
     }
 }
