@@ -65,7 +65,7 @@ namespace RoItemKakakuChecker
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 439);
+            this.label1.Location = new System.Drawing.Point(19, 460);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(512, 12);
             this.label1.TabIndex = 26;
@@ -127,7 +127,7 @@ namespace RoItemKakakuChecker
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 21;
-            this.dataGridView.Size = new System.Drawing.Size(525, 360);
+            this.dataGridView.Size = new System.Drawing.Size(525, 393);
             this.dataGridView.TabIndex = 4;
             // 
             // TotalPrice

@@ -46,8 +46,9 @@
             // 
             // btnStop
             // 
+            this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStop.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnStop.Location = new System.Drawing.Point(493, 462);
+            this.btnStop.Location = new System.Drawing.Point(489, 462);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(37, 20);
             this.btnStop.TabIndex = 9;
@@ -80,7 +81,6 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 460);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(542, 22);
-            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -111,6 +111,7 @@
             // radioButton_chatLog
             // 
             this.radioButton_chatLog.AutoSize = true;
+            this.radioButton_chatLog.Checked = true;
             this.radioButton_chatLog.Location = new System.Drawing.Point(23, 15);
             this.radioButton_chatLog.Name = "radioButton_chatLog";
             this.radioButton_chatLog.Size = new System.Drawing.Size(115, 16);
@@ -126,7 +127,6 @@
             this.radioButton_storage.Name = "radioButton_storage";
             this.radioButton_storage.Size = new System.Drawing.Size(71, 16);
             this.radioButton_storage.TabIndex = 13;
-            this.radioButton_storage.TabStop = true;
             this.radioButton_storage.Text = "倉庫監視";
             this.radioButton_storage.UseVisualStyleBackColor = true;
             // 
@@ -143,6 +143,9 @@
             // 
             // storageObserveModeControl1
             // 
+            this.storageObserveModeControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.storageObserveModeControl1.Location = new System.Drawing.Point(0, 52);
             this.storageObserveModeControl1.Name = "storageObserveModeControl1";
             this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);

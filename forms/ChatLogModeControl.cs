@@ -42,6 +42,33 @@ namespace RoItemKakakuChecker
             dataGridView.Columns[2].HeaderText = "単体価格\n(中央値)";
             dataGridView.Columns[2].HeaderCell.Style.Padding = new Padding(0, 0, 0, 0);
             this.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+            dataGridView.CellMouseMove += DataGridView_CellMouseMove;
+            dataGridView.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0xdd, 0xf1, 0xf4);
+            dataGridView.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 230, 230);
+            dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(230, 230, 230);
+            dataGridView.EnableHeadersVisualStyles = false;
+
+        }
+
+        private void DataGridView_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewCellStyle tcs = new DataGridViewCellStyle();
+                tcs.SelectionBackColor = Color.FromArgb(0xdd, 0xf1, 0xf4);
+                dataGridView.AlternatingRowsDefaultCellStyle = tcs;
+
+                dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                foreach (DataGridViewRow r in dataGridView.Rows)
+                {
+                    r.Selected = false;
+                }
+
+                dataGridView.Rows[e.RowIndex].Selected = true;
+
+            }
+
         }
 
         private void ChatLogModeControl_Load(object sender, EventArgs e)
@@ -78,7 +105,7 @@ namespace RoItemKakakuChecker
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            dataGridView.ClearSelection();
+            //dataGridView.ClearSelection();
         }
 
 

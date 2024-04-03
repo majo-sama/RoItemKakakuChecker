@@ -33,7 +33,7 @@ namespace RoItemKakakuChecker
 
             InitializeComponent();
             this.TopMost = true;
-
+            this.SizeGripStyle = SizeGripStyle.Show;
         }
 
 
@@ -49,15 +49,27 @@ namespace RoItemKakakuChecker
             this.chatLogModeControl.Size = new System.Drawing.Size(542, 412);
             this.chatLogModeControl.TabIndex = 15;
 
-
+            ToolTip toolTipChatLog = new ToolTip();
+            toolTipChatLog.AutoPopDelay = 5000;
+            toolTipChatLog.InitialDelay = 100;
+            toolTipChatLog.ReshowDelay = 100;
+            toolTipChatLog.SetToolTip(this.radioButton_chatLog, "/savechatにより出力されたチャットログに含まれるアイテム獲得メッセージを解析するモードです。");
+            ToolTip toolTipObserveStorage = new ToolTip();
+            toolTipObserveStorage.AutoPopDelay = 5000;
+            toolTipObserveStorage.InitialDelay = 100;
+            toolTipObserveStorage.ReshowDelay = 100;
+            toolTipObserveStorage.SetToolTip(this.radioButton_storage, "倉庫を開いた際の通信パケットを監視し解析するモードです。");
 
 
             this.radioButton_chatLog.CheckedChanged += RadioButton_chatLog_CheckedChanged;
             this.radioButton_storage.CheckedChanged += RadioButton_chatLog_CheckedChanged;
 
+            this.radioButton_chatLog.Checked = false;
             this.radioButton_chatLog.Checked = true;
 
 
+            this.Controls.Add(this.chatLogModeControl);
+            this.Controls.Add(this.storageObserveModeControl1);
         }
 
         private void RadioButton_chatLog_CheckedChanged(object sender, EventArgs e)
@@ -67,13 +79,17 @@ namespace RoItemKakakuChecker
             {
                 if (radio.Name == "radioButton_chatLog")
                 {
-                    this.Controls.Add(this.chatLogModeControl);
-                    this.Controls.Remove(this.storageObserveModeControl1);
+                    //this.Controls.Add(this.chatLogModeControl);
+                    //this.Controls.Remove(this.storageObserveModeControl1);
+                    this.chatLogModeControl.Show();
+                    this.storageObserveModeControl1.Hide();
                 }
                 else
                 {
-                    this.Controls.Add(this.storageObserveModeControl1);
-                    this.Controls.Remove(this.chatLogModeControl);
+                    //this.Controls.Add(this.storageObserveModeControl1);
+                    //this.Controls.Remove(this.chatLogModeControl);
+                    this.storageObserveModeControl1.Show();
+                    this.chatLogModeControl.Hide();
                 }
             }
             return;

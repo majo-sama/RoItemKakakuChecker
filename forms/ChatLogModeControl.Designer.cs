@@ -56,7 +56,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 409);
+            this.label1.Location = new System.Drawing.Point(19, 478);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(512, 12);
             this.label1.TabIndex = 21;
@@ -129,7 +129,7 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 21;
-            this.dataGridView.Size = new System.Drawing.Size(591, 327);
+            this.dataGridView.Size = new System.Drawing.Size(591, 412);
             this.dataGridView.TabIndex = 4;
             // 
             // TotalPrice
@@ -241,7 +241,7 @@
             this.Controls.Add(this.txtChatDir);
             this.Controls.Add(this.labelChatDir);
             this.Name = "ChatLogModeControl";
-            this.Size = new System.Drawing.Size(621, 465);
+            this.Size = new System.Drawing.Size(621, 499);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             this.ResumeLayout(false);
