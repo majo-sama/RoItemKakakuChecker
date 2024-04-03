@@ -32,7 +32,7 @@ namespace RoItemKakakuChecker
             settings = new AppSettings();
 
             InitializeComponent();
-            this.TopMost = true;
+            //this.TopMost = true;
             this.SizeGripStyle = SizeGripStyle.Show;
         }
 

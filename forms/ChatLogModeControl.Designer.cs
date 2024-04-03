@@ -29,25 +29,26 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnFetchKakaku = new System.Windows.Forms.Button();
             this.labelApiLimit = new System.Windows.Forms.Label();
             this.comboApiLimit = new System.Windows.Forms.ComboBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnLoadChatLog = new System.Windows.Forms.Button();
             this.btnChatDir = new System.Windows.Forms.Button();
             this.txtChatDir = new System.Windows.Forms.TextBox();
             this.labelChatDir = new System.Windows.Forms.Label();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.linkDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -123,7 +124,8 @@
             this.nameDataGridViewTextBoxColumn,
             this.countDataGridViewTextBoxColumn,
             this.eachPriceDataGridViewTextBoxColumn,
-            this.TotalPrice});
+            this.TotalPrice,
+            this.linkDataGridViewTextBoxColumn});
             this.dataGridView.DataSource = this.itemBindingSource;
             this.dataGridView.Location = new System.Drawing.Point(16, 59);
             this.dataGridView.Name = "dataGridView";
@@ -131,19 +133,6 @@
             this.dataGridView.RowTemplate.Height = 21;
             this.dataGridView.Size = new System.Drawing.Size(591, 412);
             this.dataGridView.TabIndex = 4;
-            // 
-            // TotalPrice
-            // 
-            this.TotalPrice.DataPropertyName = "TotalPrice";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TotalPrice.HeaderText = "合計金額";
-            this.TotalPrice.Name = "TotalPrice";
-            this.TotalPrice.ReadOnly = true;
-            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalPrice.Width = 85;
             // 
             // btnLoadChatLog
             // 
@@ -181,6 +170,10 @@
             this.labelChatDir.Size = new System.Drawing.Size(55, 12);
             this.labelChatDir.TabIndex = 12;
             this.labelChatDir.Text = "チャットログ";
+            // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -222,9 +215,29 @@
             this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.eachPriceDataGridViewTextBoxColumn.Width = 85;
             // 
-            // itemBindingSource
+            // TotalPrice
             // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            this.TotalPrice.DataPropertyName = "TotalPrice";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
+            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            this.TotalPrice.HeaderText = "合計金額";
+            this.TotalPrice.Name = "TotalPrice";
+            this.TotalPrice.ReadOnly = true;
+            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalPrice.Width = 85;
+            // 
+            // linkDataGridViewTextBoxColumn
+            // 
+            this.linkDataGridViewTextBoxColumn.DataPropertyName = "Link";
+            this.linkDataGridViewTextBoxColumn.FillWeight = 55F;
+            this.linkDataGridViewTextBoxColumn.HeaderText = "リンク";
+            this.linkDataGridViewTextBoxColumn.Name = "linkDataGridViewTextBoxColumn";
+            this.linkDataGridViewTextBoxColumn.ReadOnly = true;
+            this.linkDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.linkDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.linkDataGridViewTextBoxColumn.Width = 55;
             // 
             // ChatLogModeControl
             // 
@@ -257,15 +270,15 @@
         private System.Windows.Forms.Label labelApiLimit;
         private System.Windows.Forms.ComboBox comboApiLimit;
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TotalPrice;
-        private System.Windows.Forms.DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn eachPriceDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button btnLoadChatLog;
         private System.Windows.Forms.Button btnChatDir;
         private System.Windows.Forms.TextBox txtChatDir;
         private System.Windows.Forms.Label labelChatDir;
         private System.Windows.Forms.BindingSource itemBindingSource;
-
+        private System.Windows.Forms.DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn eachPriceDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalPrice;
+        private System.Windows.Forms.DataGridViewLinkColumn linkDataGridViewTextBoxColumn;
     }
 }

@@ -21,7 +21,7 @@ namespace RoItemKakakuChecker
         private MainForm mainForm;
         private static bool stopFlag = false;
         private static bool observing = false;
-        private const string RO_STORAGE_SERVER_IP = "18.182.57.203";
+        private const string RO_STORAGE_SERVER_IP = "18.182.57.";
 
 
         public StorageObserveModeControl(Form parent)
@@ -121,7 +121,7 @@ namespace RoItemKakakuChecker
                     var flagPsh = 8;
                     var hasPshFlag = (flags & flagPsh) != 0;
 
-                    if (protocol == "TCP" && srcIp == RO_STORAGE_SERVER_IP)
+                    if (protocol == "TCP" && srcIp.StartsWith(RO_STORAGE_SERVER_IP))
                     {
                         if (!appendMode)
                         {
@@ -467,7 +467,8 @@ namespace RoItemKakakuChecker
 
             foreach (var item in storageItems)
             {
-                list.Add(item);
+                
+                dataGridView.Invoke((MethodInvoker)delegate { list.Add(item); });
             }
 
             dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
@@ -569,6 +570,25 @@ namespace RoItemKakakuChecker
                     System.Diagnostics.Process.Start(url);
                 }
             }
+            else if (gridView.Columns[e.ColumnIndex].Name == "linkDataGridViewTextBoxColumn")
+            {
+                if (e.RowIndex < 0)
+                {
+                    return;
+                }
+                var items = ((IEnumerable<Item>)dataGridView.DataSource).ToList();
+                var selectedItem = items[e.RowIndex];
+                if (selectedItem.ItemId != 0)
+                {
+                    mainForm.itemIdNameMap.Map.TryGetValue(selectedItem.ItemId, out var originalName);
+                    if (originalName != null)
+                    {
+                        var url = $"http://unitrix.net/?w=BreNoa&i={originalName}";
+                        System.Diagnostics.Process.Start(url);
+                    }
+
+                }
+            }
         }
 
 
@@ -581,6 +601,24 @@ namespace RoItemKakakuChecker
         {
             var caller = new ApiCaller(dataGridView, mainForm, comboApiLimit);
             await caller.OnClickedFetchKakakuButton();
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string text = "";
+            text += "倉庫監視モードは、倉庫を開いた際のパケットを監視して これを素にRO公式ツールが使用しているAPIから価格情報を取得するものです。\n\n";
+            text += "ROのサーバー/クライアントプログラムの変更やサーバーのIPアドレスの変更などにより、この機能は利用できなくなる場合があります。\n";
+            text += "また解析が不十分なため、意図しない結果が表示されたり、本ツールがクラッシュするなどの可能性があります。\n";
+            text += "倉庫に溜まったカードのおおよその値段を調べる程度の使い方を推奨します。\n";
+            text += "尚、本機能は受信パケットの監視を行いますが、送信パケットに一切の手を加えるものではありません。\n\n";
+            text += "使い方：\n";
+            text += "1. 「倉庫監視 開始」ボタンを押下します。\n";
+            text += "2. ゲーム内で倉庫を開きます。\n";
+            text += "3. 「倉庫監視 停止」ボタンを押下します。\n";
+            text += "注意：このツールはRO公式ツールが使用しているAPIを利用するため、大量のデータを頻繁に再取得することは避けてください。\n";
+            text += "（『「X」日以内にサーバーから取得したデータは再取得しない』で大きめの数字を指定することを推奨します。）\n";
+
+            MessageBox.Show(text, "ヘルプ");
         }
     }
 }

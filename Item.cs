@@ -14,8 +14,7 @@ namespace RoItemKakakuChecker
         public long EachPrice {  get; set; }
         public DateTime LastFetchedAt { get; set; }
         public long TotalPrice { get; set; }
-
-
+        public string Link { get; set; }
 
         public DateTimeOffset LimitDateTime { get; set; }
         public int Slot1ItemId { get; set; }

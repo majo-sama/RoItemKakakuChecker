@@ -346,12 +346,31 @@ namespace RoItemKakakuChecker
                     System.Diagnostics.Process.Start(url);
                 }
             }
+            else if (gridView.Columns[e.ColumnIndex].Name == "linkDataGridViewTextBoxColumn")
+            {
+                if (e.RowIndex < 0)
+                {
+                    return;
+                }
+                var items = ((IEnumerable<Item>)dataGridView.DataSource).ToList();
+                var selectedItem = items[e.RowIndex];
+                if (selectedItem.ItemId != 0)
+                {
+                    mainForm.itemIdNameMap.Map.TryGetValue(selectedItem.ItemId, out var originalName);
+                    if (originalName != null)
+                    {
+                        var url = $"http://unitrix.net/?w=BreNoa&i={originalName}";
+                        System.Diagnostics.Process.Start(url);
+                    }
+
+                }
+            }
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            string text = "RO価格確認機 v1.1.3\n\n";
-            text += "このツールは、チャットログに含まれるアイテム獲得メッセージを抽出して これを素にRO公式ツールが使用しているAPIから価格情報を取得するものです。\n\n";
+            string text = "";
+            text += "チャットログから確認モードは、チャットログに含まれるアイテム獲得メッセージを抽出して これを素にRO公式ツールが使用しているAPIから価格情報を取得するものです。\n\n";
             text += "チャットログからアイテム名を判別できないもの（名称が長すぎて改行される場合など）やアイテム名が公式ツールに登録されていないもの（カード挿し・エンチャ・強化済み装備など）はデータを取得することができません。\n";
             text += "アイテム情報の取得に失敗した場合、情報が表示されない または近い名称の別のアイテムの情報が表示されることがあります。\n";
             text += "倉庫に溜まったカードのおおよその値段を調べる程度の使い方を推奨します。\n\n";
@@ -362,10 +381,7 @@ namespace RoItemKakakuChecker
             text += "4. ログ読込ボタンを押します。\n";
             text += "5. 価格取得ボタンを押します。\n\n";
             text += "注意：このツールはRO公式ツールが使用しているAPIを利用するため、大量のデータを頻繁に再取得することは避けてください。\n";
-            text += "（『「X」日以内にサーバーから取得したデータは再取得しない』で大きめの数字を指定することを推奨します。無理な使い方をしてガンホーに怒られても知りませんよ！）\n";
-            text += "また何らかの不利益が発生したとしても作者は責任を負いません。\n";
-            text += "ソースコードが欲しい方は @majo_sama まで。";
-
+            text += "（『「X」日以内にサーバーから取得したデータは再取得しない』で大きめの数字を指定することを推奨します。）\n";
 
             MessageBox.Show(text, "ヘルプ");
         }

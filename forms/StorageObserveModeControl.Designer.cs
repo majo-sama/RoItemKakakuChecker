@@ -31,22 +31,23 @@ namespace RoItemKakakuChecker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnObserve = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnFetchKakaku = new System.Windows.Forms.Button();
             this.labelApiLimit = new System.Windows.Forms.Label();
             this.comboApiLimit = new System.Windows.Forms.ComboBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnHelp = new System.Windows.Forms.Button();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.linkDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -121,7 +122,8 @@ namespace RoItemKakakuChecker
             this.nameDataGridViewTextBoxColumn,
             this.countDataGridViewTextBoxColumn,
             this.eachPriceDataGridViewTextBoxColumn,
-            this.TotalPrice});
+            this.TotalPrice,
+            this.linkDataGridViewTextBoxColumn});
             this.dataGridView.DataSource = this.itemBindingSource;
             this.dataGridView.Location = new System.Drawing.Point(16, 59);
             this.dataGridView.Name = "dataGridView";
@@ -129,19 +131,6 @@ namespace RoItemKakakuChecker
             this.dataGridView.RowTemplate.Height = 21;
             this.dataGridView.Size = new System.Drawing.Size(525, 393);
             this.dataGridView.TabIndex = 4;
-            // 
-            // TotalPrice
-            // 
-            this.TotalPrice.DataPropertyName = "TotalPrice";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TotalPrice.HeaderText = "合計金額";
-            this.TotalPrice.Name = "TotalPrice";
-            this.TotalPrice.ReadOnly = true;
-            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalPrice.Width = 85;
             // 
             // btnHelp
             // 
@@ -151,6 +140,11 @@ namespace RoItemKakakuChecker
             this.btnHelp.TabIndex = 27;
             this.btnHelp.Text = "ヘルプ";
             this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -192,9 +186,29 @@ namespace RoItemKakakuChecker
             this.eachPriceDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.eachPriceDataGridViewTextBoxColumn.Width = 85;
             // 
-            // itemBindingSource
+            // TotalPrice
             // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            this.TotalPrice.DataPropertyName = "TotalPrice";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
+            this.TotalPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            this.TotalPrice.HeaderText = "合計金額";
+            this.TotalPrice.Name = "TotalPrice";
+            this.TotalPrice.ReadOnly = true;
+            this.TotalPrice.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalPrice.Width = 85;
+            // 
+            // linkDataGridViewTextBoxColumn
+            // 
+            this.linkDataGridViewTextBoxColumn.DataPropertyName = "Link";
+            this.linkDataGridViewTextBoxColumn.FillWeight = 55F;
+            this.linkDataGridViewTextBoxColumn.HeaderText = "Link";
+            this.linkDataGridViewTextBoxColumn.Name = "linkDataGridViewTextBoxColumn";
+            this.linkDataGridViewTextBoxColumn.ReadOnly = true;
+            this.linkDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.linkDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.linkDataGridViewTextBoxColumn.Width = 55;
             // 
             // StorageObserveModeControl
             // 
@@ -224,11 +238,12 @@ namespace RoItemKakakuChecker
         private System.Windows.Forms.Label labelApiLimit;
         private System.Windows.Forms.ComboBox comboApiLimit;
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TotalPrice;
-        private System.Windows.Forms.DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn eachPriceDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.BindingSource itemBindingSource;
+        private DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn eachPriceDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn TotalPrice;
+        private DataGridViewLinkColumn linkDataGridViewTextBoxColumn;
     }
 }

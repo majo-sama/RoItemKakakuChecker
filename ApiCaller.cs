@@ -12,6 +12,7 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace RoItemKakakuChecker
 {
@@ -81,6 +82,7 @@ namespace RoItemKakakuChecker
                 dataFetchedItem.Count = item.Count;
                 dataFetchedItem.LastFetchedAt = DateTime.Now;
                 dataFetchedItem.TotalPrice = dataFetchedItem.EachPrice * dataFetchedItem.Count;
+                dataFetchedItem.Link = "Unitrix";
                 newList.Add(dataFetchedItem);
 
 
@@ -153,16 +155,7 @@ namespace RoItemKakakuChecker
 
         private async Task<Item> GetItemGeneralInfo(string itemName)
         {
-            // まずローカル定義の一覧からIDの取得を試みる
 
-            mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(itemName, out int itemKey);
-            if (itemKey != 0)
-            {
-                var item = new Item();
-                item.ItemId = itemKey;
-                item.Name = itemName;
-                return item;
-            }
 
 
             HttpClient client = new HttpClient();
@@ -176,6 +169,9 @@ namespace RoItemKakakuChecker
 
             // +1 の表記を除く
             itemName = new Regex(@"^\+\d+ ").Replace(itemName, "");
+
+            // 最後のスペースが入っている場合があるので除去
+            itemName = itemName.TrimEnd(' ');
 
             // この時点で、itemName はアイテム名＋カードprefix/suffixのみになっているはず
             string[] arr =itemName.Split(' ');
@@ -203,6 +199,19 @@ namespace RoItemKakakuChecker
                 itemName = TrimLastSpace(itemName);
             }
 
+
+
+            // まずローカル定義の一覧からIDの取得を試みる
+            mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(itemName, out int itemKey);
+            if (itemKey != 0)
+            {
+                var item = new Item();
+                item.ItemId = itemKey;
+                item.Name = itemName;
+                return item;
+            }
+
+
             try
             {
                 HttpResponseMessage response = await client.GetAsync(baseUrl + itemName);
@@ -220,7 +229,7 @@ namespace RoItemKakakuChecker
                         item = new Item();
 
                         item.ItemId = Convert.ToInt32(array[i]["item_id"].ToString());
-                        item.Name = System.Net.WebUtility.HtmlDecode(array[i]["item_name"].ToString());
+                        //item.Name = System.Net.WebUtility.HtmlDecode(array[i]["item_name"].ToString());
 
                         // 
                         if (item.Name == itemName)
