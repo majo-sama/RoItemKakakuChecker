@@ -67,7 +67,7 @@ namespace RoItemKakakuChecker
                 }
                 else
                 {
-                    dataFetchedItem = await GetItemAsync(item.Name);
+                    dataFetchedItem = await GetItemAsync(item);
                     if (dataFetchedItem == null)
                     {
                         mainForm.IncrementToolStripProgressBarValue();
@@ -140,13 +140,25 @@ namespace RoItemKakakuChecker
         }
 
 
-        public async Task<Item> GetItemAsync(string itemName)
+        public async Task<Item> GetItemAsync(Item it)
         {
-            Item item = await GetItemGeneralInfo(itemName);
-            if (item == null)
+            Item item;
+            // アイテムIDが存在する場合
+            if (it.ItemId != 0)
             {
-                return null;
+                item = it;
             }
+            // アイテム名を元に検索して、かつアイテムIDを発見できない場合
+            else
+            {
+                item = await GetItemGeneralInfo(it.Name);
+                if (item == null)
+                {
+                    return null;
+                }
+            }
+
+
             Item priceInfo = await GetItemPriceInfo(item);
             return priceInfo;
         }
@@ -276,6 +288,11 @@ namespace RoItemKakakuChecker
                 if (response.IsSuccessStatusCode)
                 {
                     string json = await response.Content.ReadAsStringAsync();
+                    // 販売不可アイテム
+                    if (json == "\"none\"")
+                    {
+                        return item;
+                    }
                     var parsedJson = JsonObject.Parse(json);
 
                     item.EachPrice = Convert.ToInt64(parsedJson["median"].ToString());

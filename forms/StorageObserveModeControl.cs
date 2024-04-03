@@ -282,24 +282,24 @@ namespace RoItemKakakuChecker
                     else
                     {
 
-                        byte[] b_slot1 = new byte[2];
-                        Array.Copy(item, 15, b_slot1, 0, 2);
-                        i_slot1 = BitConverter.ToInt16(b_slot1, 0);
+                        byte[] b_slot1 = new byte[4];
+                        Array.Copy(item, 15, b_slot1, 0, 3);
+                        i_slot1 = BitConverter.ToInt32(b_slot1, 0);
                         storageItem.Slot1ItemId = i_slot1;
 
-                        byte[] b_slot2 = new byte[2];
-                        Array.Copy(item, 19, b_slot2, 0, 2);
-                        i_slot2 = BitConverter.ToInt16(b_slot2, 0);
+                        byte[] b_slot2 = new byte[4];
+                        Array.Copy(item, 19, b_slot2, 0, 3);
+                        i_slot2 = BitConverter.ToInt32(b_slot2, 0);
                         storageItem.Slot2ItemId = i_slot2;
 
-                        byte[] b_slot3 = new byte[2];
-                        Array.Copy(item, 23, b_slot3, 0, 2);
-                        i_slot3 = BitConverter.ToInt16(b_slot3, 0);
+                        byte[] b_slot3 = new byte[4];
+                        Array.Copy(item, 23, b_slot3, 0, 3);
+                        i_slot3 = BitConverter.ToInt32(b_slot3, 0);
                         storageItem.Slot3ItemId = i_slot3;
 
-                        byte[] b_slot4 = new byte[2];
-                        Array.Copy(item, 27, b_slot4, 0, 2);
-                        i_slot4 = BitConverter.ToInt16(b_slot4, 0);
+                        byte[] b_slot4 = new byte[4];
+                        Array.Copy(item, 27, b_slot4, 0, 3);
+                        i_slot4 = BitConverter.ToInt32(b_slot4, 0);
                         storageItem.Slot4ItemId = i_slot4;
 
                         byte[] b_op1Key = new byte[2];

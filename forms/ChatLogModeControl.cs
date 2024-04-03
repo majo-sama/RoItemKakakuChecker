@@ -197,7 +197,14 @@ namespace RoItemKakakuChecker
                 return;
             }
 
-            // LoadCache(items);
+            foreach (var item in items)
+            {
+                mainForm.itemIdNameMap.ValueKeyMap.TryGetValue(item.Name, out int id);
+                if (id != 0)
+                {
+                    item.ItemId = id;
+                }
+            }
 
 
             ApplyDataGridView(items);
