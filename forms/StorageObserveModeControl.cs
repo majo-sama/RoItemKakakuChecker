@@ -626,5 +626,10 @@ namespace RoItemKakakuChecker
 
             MessageBox.Show(text, "ヘルプ");
         }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = new List<Item>(); });
+        }
     }
 }
