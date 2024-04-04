@@ -41,7 +41,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioChatMessage = new System.Windows.Forms.RadioButton();
             this.chatObserveModeControl1 = new RoItemKakakuChecker.forms.ChatObserveModeControl();
-            this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl(this);
+            this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();

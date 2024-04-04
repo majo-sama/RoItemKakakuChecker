@@ -23,11 +23,14 @@ namespace RoItemKakakuChecker
         private static bool observing = false;
         private const string RO_STORAGE_SERVER_IP = "18.182.57.";
 
+        public void SetMainForm(Form parent)
+        {
+            this.mainForm = parent as MainForm;
+        }
 
-        public StorageObserveModeControl(Form parent)
+        public StorageObserveModeControl()
         {
             InitializeComponent();
-            this.mainForm = parent as MainForm;
 
             this.btnObserve.Text = "倉庫監視 開始";
 
@@ -619,6 +622,7 @@ namespace RoItemKakakuChecker
             text += "3. 「倉庫監視 停止」ボタンを押下します。\n";
             text += "注意：このツールはRO公式ツールが使用しているAPIを利用するため、大量のデータを頻繁に再取得することは避けてください。\n";
             text += "（『「X」日以内にサーバーから取得したデータは再取得しない』で大きめの数字を指定することを推奨します。）\n";
+            text += "監視が有効な状態のときに倉庫を複数回開くと 開いた回数だけデータが追加されます。必要な時のみ監視を有効にしてください。\n";
 
             MessageBox.Show(text, "ヘルプ");
         }

@@ -35,6 +35,8 @@ namespace RoItemKakakuChecker
             InitializeComponent();
             //this.TopMost = true;
             this.SizeGripStyle = SizeGripStyle.Show;
+            storageObserveModeControl1.SetMainForm(this);
+            chatObserveModeControl1.SetMainForm(this);
         }
 
 
@@ -134,7 +136,7 @@ namespace RoItemKakakuChecker
 
         public void UpdateToolStripLabel(string text)
         {
-            toolStripStatusLabel.Text = text;
+            this.Invoke(new Action(() => { toolStripStatusLabel.Text = text; }));
         }
 
         public void UpdateToolStripProgressBarSetting(int min, int max)

@@ -11,14 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
 using System.Reflection;
+using RoItemKakakuChecker.Properties;
+using System.IO;
+using System.Text.Json;
 
 namespace RoItemKakakuChecker.forms
 {
     public partial class ChatObserveModeControl : UserControl
     {
-
+        private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
         private bool isObserving = false;
+
+        public void SetMainForm(MainForm mainForm)
+        {
+            this.mainForm = mainForm;
+        }
 
         public ChatObserveModeControl()
         {
@@ -39,7 +47,7 @@ namespace RoItemKakakuChecker.forms
             dataGridView.EnableHeadersVisualStyles = false;
         }
 
-        private void btnObserveChat_Click(object sender, EventArgs e)
+        private async void btnObserveChat_Click(object sender, EventArgs e)
         {
             // 停止ボタン
             if (isObserving)
@@ -52,7 +60,7 @@ namespace RoItemKakakuChecker.forms
             {
                 isObserving = true;
                 btnObserveChat.Text = "チャット監視 停止";
-                ObserveChatMessage();
+                await ObserveChatMessage();
             }
         }
 
@@ -69,6 +77,8 @@ namespace RoItemKakakuChecker.forms
             socket.IOControl(IOControlCode.ReceiveAll, ib, ob); //SIO_RCVALL
             byte[] buf = new byte[28682];
             int i = 0;
+
+            mainForm.UpdateToolStripLabel("チャットメッセージの監視を開始します。");
 
             await Task.Run(() =>
             {
@@ -110,18 +120,24 @@ namespace RoItemKakakuChecker.forms
                         appendMode = !hasPshFlag;
                         if (appendMode)
                         {
-                            nextIndex = nextIndex + body.Length;
+                            nextIndex += body.Length;
                         }
 
                         // 終端パケットまで読んだら解析
                         if (hasPshFlag)
                         {
-                            Analyze(joinedBody);
+                            var chatLine = Analyze(joinedBody);
+                            if (chatLine != null)
+                            {
+                                AppendToGridView(chatLine);
+                                AppendToLogFile(chatLine);
+                            }
                         }
                     }
 
                     if (!isObserving)
                     {
+                        mainForm.UpdateToolStripLabel("チャットメッセージの監視を停止しました。");
                         break;
                     }
                 }
@@ -129,30 +145,33 @@ namespace RoItemKakakuChecker.forms
         }
 
         private string nextPacketChatType = null;
-        private void Analyze(byte[] data)
+        private ChatLogEntity Analyze(byte[] data)
         {
+            // ギルド・PTチャットは2パケットに分かれる
             if (data[0] == 0x09 && data[1] == 0x01)
             {
                 nextPacketChatType = "party";
-                return;
+                return null;
             }
-            // TODO: 多分これ間違ってる！！！！！！！！！
-            else if (data[0] == 0x71 && data[1] == 0x01)
+            else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
-                return;
+                return null;
             }
 
             string sjisStr = "";
+            var chatLine = new ChatLogEntity();
             if (nextPacketChatType == "party")
             {
                 // PTチャット2パケット目はヘッダ無し
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                chatLine.MessageType = "Party";
             }
             else if (nextPacketChatType == "guild")
             {
                 // ギルドチャット2パケット目はヘッダ無し
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                chatLine.MessageType = "Guild";
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
@@ -160,6 +179,7 @@ namespace RoItemKakakuChecker.forms
                 var textdata = new byte[data.Length - 4];
                 Array.Copy(data, 4, textdata, 0, data.Length - 4);
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                chatLine.MessageType = "Public";
             }
             else if (data[0] == 0xde && data[1] == 0x09)
             {
@@ -167,14 +187,20 @@ namespace RoItemKakakuChecker.forms
                 var textdata = new byte[data.Length - 6];
                 Array.Copy(data, 6, textdata, 0, data.Length - 6);
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                chatLine.MessageType = "Whisper";
             }
             else
             {
+                // チャット以外のパケットは無視
                 nextPacketChatType = null;
-                return;
+                return null;
             }
-            sjisStr = sjisStr.TrimEnd('\0');
             nextPacketChatType = null;
+
+            chatLine.Message = sjisStr.TrimEnd('\0');
+            chatLine.DateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            return chatLine;
         }
 
 
@@ -191,6 +217,50 @@ namespace RoItemKakakuChecker.forms
             else if (b == 17)
                 return "UDP";
             return "Other";
+        }
+
+        private void AppendToGridView(ChatLogEntity chatLine)
+        {
+            if (chatLogEntityBindingSource.DataSource.GetType() != typeof(List<ChatLogEntity>))
+            {
+                dataGridView.Invoke((MethodInvoker)delegate { chatLogEntityBindingSource.DataSource = new List<ChatLogEntity>(); });
+                
+            }
+            var list = chatLogEntityBindingSource.DataSource as List<ChatLogEntity>;
+            dataGridView.Invoke((MethodInvoker)delegate
+            {
+                list.Add(chatLine);
+                chatLogEntityBindingSource.DataSource = list;
+                chatLogEntityBindingSource.ResetBindings(true);
+            });
+            
+        }
+
+        private void AppendToLogFile(ChatLogEntity chatLine)
+        {
+            var dir = "chatlog";
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            var fileName = $"chatlog_{date}.txt";
+            Directory.CreateDirectory(dir);
+            using (var writer = new StreamWriter($@"{dir}\{fileName}", true, Encoding.UTF8))
+            {
+                string text = $"{chatLine.DateTimeStr}\t{chatLine.MessageType}\t{chatLine.Message}";
+                writer.WriteLine(text);
+                mainForm.UpdateToolStripLabel($@"受信したメッセージは {dir}\{fileName} に自動保存されます。");
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string text = "";
+            text += @"チャットメッセージ取得モードは、メッセージの監視中に受信したメッセージ（通常・パーティ・ギルド・Wis）を表示し、同時に外部ファイルに保存するものです。
+チャットルームや天の声などには対応していません。またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
+おまけ機能のため、継続して利用する場合は類似の別のツールを使うことを推奨します。
+この機能は、作者が通常/PT/ギルド チャットの色の見分けが付かず困った時のために作りました。
+必要なときのみ監視状態を有効にしてください。";
+
+
+            MessageBox.Show(text, "ヘルプ");
         }
     }
 }
