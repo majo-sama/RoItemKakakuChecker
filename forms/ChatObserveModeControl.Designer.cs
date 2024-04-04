@@ -31,12 +31,13 @@
             this.components = new System.ComponentModel.Container();
             this.btnObserveChat = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.btnHelp = new System.Windows.Forms.Button();
-            this.chatLogEntityBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dateTimeStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.messageTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chatLogEntityBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
@@ -73,24 +74,6 @@
             this.dataGridView.Size = new System.Drawing.Size(511, 449);
             this.dataGridView.TabIndex = 1;
             // 
-            // btnHelp
-            // 
-            this.btnHelp.Location = new System.Drawing.Point(456, 9);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(75, 23);
-            this.btnHelp.TabIndex = 2;
-            this.btnHelp.Text = "ヘルプ";
-            this.btnHelp.UseVisualStyleBackColor = true;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
-            // chatLogEntityBindingSource
-            // 
-            this.chatLogEntityBindingSource.DataSource = typeof(RoItemKakakuChecker.ChatLogEntity);
-            // 
-            // itemBindingSource
-            // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
-            // 
             // dateTimeStrDataGridViewTextBoxColumn
             // 
             this.dateTimeStrDataGridViewTextBoxColumn.DataPropertyName = "DateTimeStr";
@@ -119,10 +102,39 @@
             this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
             this.messageDataGridViewTextBoxColumn.ReadOnly = true;
             // 
+            // chatLogEntityBindingSource
+            // 
+            this.chatLogEntityBindingSource.DataSource = typeof(RoItemKakakuChecker.ChatLogEntity);
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(456, 9);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(75, 23);
+            this.btnHelp.TabIndex = 2;
+            this.btnHelp.Text = "ヘルプ";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(133, 9);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 3;
+            this.btnClear.Text = "表示のクリア";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // ChatObserveModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.btnObserveChat);
@@ -145,5 +157,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dateTimeStrDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn messageTypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button btnClear;
     }
 }

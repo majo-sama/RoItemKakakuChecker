@@ -262,5 +262,14 @@ namespace RoItemKakakuChecker.forms
 
             MessageBox.Show(text, "ヘルプ");
         }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            dataGridView.Invoke((MethodInvoker)delegate
+            {
+                chatLogEntityBindingSource.DataSource = new List<ChatLogEntity>();
+                chatLogEntityBindingSource.ResetBindings(true);
+            });
+        }
     }
 }
