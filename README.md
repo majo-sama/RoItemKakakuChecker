@@ -8,6 +8,10 @@
 
 - [RoItemKakakuChecker_1.2.1.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.2.1/RoItemKakakuChecker_1.2.1.zip)
 
+### バージョンアップ方法
+
+新しくダウンロードしたZIPファイル内の `RoItemKakakuChecker.exe` を、今まで使用していたバージョンのフォルダに上書きしてください。
+
 ## 機能・使い方
 
 ### チャットログからアイテムを確認モード
