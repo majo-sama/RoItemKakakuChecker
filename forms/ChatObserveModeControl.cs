@@ -88,8 +88,8 @@ namespace RoItemKakakuChecker.forms
 
             await Task.Run(() =>
             {
-                byte[] joinedBody = new byte[28682*2];
-                int nextIndex = 0;
+                byte[] joinedBody = new byte[0];// = new byte[28682*2];
+                //int nextIndex = 0;
                 bool appendMode = false;
                 while (true)
                 {
@@ -106,10 +106,11 @@ namespace RoItemKakakuChecker.forms
 
                     if (protocol == "TCP" && srcIp.StartsWith(RO_CHAT_SERVER_IP))
                     {
+                        
                         if (!appendMode)
                         {
-                            joinedBody = new byte[28682];
-                            nextIndex = 0;
+                            //joinedBody = new byte[28682];
+                            //nextIndex = 0;
                         }
 
                         var bodySize = len - 40; // IPヘッダ 20bytes, TCPヘッダ 20bytes
@@ -118,21 +119,23 @@ namespace RoItemKakakuChecker.forms
 
                         byte[] body = new byte[bodySize];
                         Array.Copy(buf, 40, body, 0, bodySize); // bodyにヘッダを除いた本体をコピー
-                        var str = BitConverter.ToString(body);
 
                         // bodyに今まで貯めた分も含めてコピー
                         // 終端パケットかどうかはPSHを見て判断する
-                        Array.Copy(body, 0, joinedBody, nextIndex, body.Length);
+                        joinedBody = joinedBody.Concat(body).ToArray();
+                        //Array.Copy(body, 0, joinedBody, nextIndex, body.Length);
+
                         appendMode = !hasPshFlag;
-                        if (appendMode)
-                        {
-                            nextIndex += body.Length;
-                        }
+                        //if (appendMode)
+                        //{
+                        //    nextIndex += body.Length;
+                        //}
 
                         // 終端パケットまで読んだら解析
                         if (hasPshFlag)
                         {
                             var chatLine = Analyze(joinedBody);
+                            joinedBody = new byte[0];
                             if (chatLine != null)
                             {
                                 AppendToGridView(chatLine);
@@ -164,17 +167,17 @@ namespace RoItemKakakuChecker.forms
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
-                //// 1パケットに詰め込まれている場合
-                //// 滅多にないが…
-                //if (data.Length > 8)
-                //{
-                //    hasExtraHeader = true;
-                //}
-                //// 2パケットに分かれている場合
-                //else
-                //{
+                // 1パケットに詰め込まれている場合
+                // 滅多にないが…
+                if (data.Length > 8)
+                {
+                    hasExtraHeader = true;
+                }
+                // 2パケットに分かれている場合
+                else
+                {
                     return null;
-                //}
+                }
 
             }
 
@@ -188,23 +191,31 @@ namespace RoItemKakakuChecker.forms
             }
             else if (nextPacketChatType == "guild")
             {
-                //if (hasExtraHeader)
-                //{
-                //    // なぜか1パケットに詰め込まれている場合
-                //    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 8, data.Length - 8);
-                //}
-                //else
-                //{
+                if (hasExtraHeader)
+                {
+                    // なぜか1パケットに詰め込まれている場合
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 4, data.Length - 4);
+                }
+                else
+                {
                     // ギルドチャット2パケット目は通常はヘッダ無し
                     sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
-                    chatLine.MessageType = "Guild";
-                //}
+                }
+                chatLine.MessageType = "Guild";
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
                 // 全体チャットは4バイトのヘッダ有り
                 var textdata = new byte[data.Length - 4];
                 Array.Copy(data, 4, textdata, 0, data.Length - 4);
+                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                chatLine.MessageType = "Public";
+            }
+            else if (data[0] == 0x8d && data[1] == 0x00)
+            {
+                // 全体チャット別パターン
+                var textdata = new byte[data.Length - 8];
+                Array.Copy(data, 8, textdata, 0, data.Length - 8);
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
                 chatLine.MessageType = "Public";
             }
