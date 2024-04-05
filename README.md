@@ -6,7 +6,7 @@
 
 ## ダウンロード
 
-- [RoItemKakakuChecker_1.2.0.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.2.0/RoItemKakakuChecker_1.2.0.zip)
+- [RoItemKakakuChecker_1.2.1.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.2.1/RoItemKakakuChecker_1.2.1.zip)
 
 ## 機能・使い方
 
