@@ -460,6 +460,7 @@ namespace RoItemKakakuChecker
                 }
                 catch (Exception e)
                 {
+                    mainForm.LogError($"AnalyzeEquips: Failed to parse a packet: {BitConverter.ToString(item)}, Exception: {e.Message}");
                     continue;
                 }
             }
@@ -521,6 +522,7 @@ namespace RoItemKakakuChecker
                 }
                 catch (Exception ex)
                 {
+                    mainForm.LogError($"AnalyzeItems: Failed to parse a packet: {BitConverter.ToString(item)}, Exception: {ex.Message}");
                     continue;
                 }
 

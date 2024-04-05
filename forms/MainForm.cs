@@ -115,18 +115,24 @@ namespace RoItemKakakuChecker
                     this.chatLogModeControl.Show();
                     this.storageObserveModeControl1.Hide();
                     this.chatObserveModeControl1.Hide();
+                    btnStop.Show();
+                    toolStripDropDownButton.Enabled = true;
                 }
                 else if (radio.Name == "radioButton_storage")
                 {
                     this.storageObserveModeControl1.Show();
                     this.chatLogModeControl.Hide();
                     this.chatObserveModeControl1.Hide();
+                    btnStop.Show();
+                    toolStripDropDownButton.Enabled = true;
                 }
                 else
                 {
                     this.chatObserveModeControl1.Show();
                     this.storageObserveModeControl1.Hide();
                     this.chatLogModeControl.Hide();
+                    btnStop.Hide();
+                    toolStripDropDownButton.Enabled = false;
                 }
             }
             return;
@@ -171,6 +177,190 @@ namespace RoItemKakakuChecker
         private void toolStripDropDownButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        public void LogError(string str)
+        {
+            var dir = "ErrorLog";
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+            var fileName = $"errorlog_{date}.txt";
+            Directory.CreateDirectory(dir);
+            using (var writer = new StreamWriter($@"{dir}\{fileName}", true, Encoding.UTF8))
+            {
+                string text = $"{DateTime.Now.ToString()} {str}";
+                writer.WriteLine(text);
+                UpdateToolStripLabel($@"エラーログが {dir}\{fileName} に出力されました。");
+            }
+        }
+
+        private void 結果をCSVファイルに出力_通常_Click(object sender, EventArgs e)
+        {
+            if (radioButton_chatLog.Checked || radioButton_storage.Checked)
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<Item> list;
+                if (radioButton_chatLog.Checked)
+                {
+                    list = chatLogModeControl.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                else
+                {
+                    list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
+                }
+
+                sb.AppendLine("ItemID,アイテム名,個数,単体価格(中央値),合計金額,URL");
+                foreach (var item in list)
+                {
+                    sb.Append(item.ItemId.ToString());
+                    sb.Append(",");
+                    sb.Append(item.Name);
+                    sb.Append(",");
+                    sb.Append(item.Count);
+                    sb.Append(",");
+                    sb.Append(item.EachPrice.ToString());
+                    sb.Append(",");
+                    sb.Append(item.TotalPrice);
+                    sb.Append(",");
+                    sb.Append($"https://rotool.gungho.jp/item/{item.ItemId}/0/");
+                    sb.Append("\n");
+                }
+                OutputCsv(sb.ToString());
+            }
+
+
+
+        }
+
+        private void 結果をCSVファイルに出力_簡易_Click(object sender, EventArgs e)
+        {
+            if (radioButton_chatLog.Checked || radioButton_storage.Checked)
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<Item> list;
+                if (radioButton_chatLog.Checked)
+                {
+                    list = chatLogModeControl.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                else
+                {
+                    list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                sb.AppendLine("アイテム名,個数,単体価格(中央値),合計金額");
+                foreach (var item in list)
+                {
+                    sb.Append(item.Name);
+                    sb.Append(",");
+                    sb.Append(item.Count);
+                    sb.Append(",");
+                    sb.Append(item.EachPrice.ToString());
+                    sb.Append(",");
+                    sb.Append(item.TotalPrice);
+                    sb.Append("\n");
+                }
+
+                OutputCsv(sb.ToString());
+            }
+        }
+
+        private void 結果をExcel形式でクリップボードにコピー_通常_Click(object sender, EventArgs e)
+        {
+            if (radioButton_chatLog.Checked || radioButton_storage.Checked)
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<Item> list;
+                if (radioButton_chatLog.Checked)
+                {
+                    list = chatLogModeControl.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                else
+                {
+                    list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                foreach (var item in list)
+                {
+                    sb.Append(item.ItemId.ToString());
+                    sb.Append("\t");
+                    sb.Append(item.Name);
+                    sb.Append("\t");
+                    sb.Append(item.Count);
+                    sb.Append("\t");
+                    sb.Append(item.EachPrice.ToString());
+                    sb.Append("\t");
+                    sb.Append(item.TotalPrice);
+                    sb.Append("\t");
+                    sb.Append($"https://rotool.gungho.jp/item/{item.ItemId}/0/");
+                    if (item != list.Last())
+                    {
+                        sb.Append("\n");
+                    }
+                }
+                Clipboard.SetText(sb.ToString());
+                UpdateToolStripLabel("クリップボードにコピーしました。");
+            }
+        }
+
+        private void 結果をExcel形式でクリップボードにコピー_簡易_Click(object sender, EventArgs e)
+        {
+            if (radioButton_chatLog.Checked || radioButton_storage.Checked)
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<Item> list;
+                if (radioButton_chatLog.Checked)
+                {
+                    list = chatLogModeControl.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                else
+                {
+                    list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                foreach (var item in list)
+                {
+                    sb.Append(item.Name);
+                    sb.Append("\t");
+                    sb.Append(item.Count);
+                    sb.Append("\t");
+                    sb.Append(item.EachPrice.ToString());
+                    sb.Append("\t");
+                    sb.Append(item.TotalPrice);
+
+                    if (item != list.Last())
+                    {
+                        sb.Append("\n");
+                    }
+                }
+                Clipboard.SetText(sb.ToString());
+                UpdateToolStripLabel("クリップボードにコピーしました。");
+            }
+        }
+
+
+
+        private void OutputCsv(string csv)
+        {
+            var dialog = new SaveFileDialog();
+            dialog.FileName = "kakaku.csv";
+            dialog.InitialDirectory = Environment.CurrentDirectory;
+            dialog.Filter = "CSVファイル(*.csv)|*.csv";
+            dialog.FilterIndex = 1;
+            dialog.Title = "保存先のファイルを指定してください。";
+            dialog.RestoreDirectory = true;
+            dialog.OverwritePrompt = true;
+            dialog.CheckPathExists = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var writer = new StreamWriter(dialog.FileName, false, Encoding.UTF8))
+                    {
+                        writer.Write(csv);
+                        UpdateToolStripLabel("ファイルを出力しました。");
+                    }
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 

@@ -249,7 +249,6 @@ namespace RoItemKakakuChecker
         private System.Windows.Forms.Button btnFetchKakaku;
         private System.Windows.Forms.Label labelApiLimit;
         private System.Windows.Forms.ComboBox comboApiLimit;
-        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.BindingSource itemBindingSource;
         private DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
@@ -258,5 +257,6 @@ namespace RoItemKakakuChecker
         private DataGridViewTextBoxColumn TotalPrice;
         private DataGridViewLinkColumn linkDataGridViewTextBoxColumn;
         private Button btnClear;
+        public DataGridView dataGridView;
     }
 }

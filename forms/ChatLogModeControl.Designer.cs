@@ -39,16 +39,16 @@
             this.labelApiLimit = new System.Windows.Forms.Label();
             this.comboApiLimit = new System.Windows.Forms.ComboBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.btnLoadChatLog = new System.Windows.Forms.Button();
-            this.btnChatDir = new System.Windows.Forms.Button();
-            this.txtChatDir = new System.Windows.Forms.TextBox();
-            this.labelChatDir = new System.Windows.Forms.Label();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eachPriceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.linkDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnLoadChatLog = new System.Windows.Forms.Button();
+            this.btnChatDir = new System.Windows.Forms.Button();
+            this.txtChatDir = new System.Windows.Forms.TextBox();
+            this.labelChatDir = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -134,47 +134,6 @@
             this.dataGridView.Size = new System.Drawing.Size(591, 412);
             this.dataGridView.TabIndex = 4;
             // 
-            // btnLoadChatLog
-            // 
-            this.btnLoadChatLog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnLoadChatLog.Location = new System.Drawing.Point(400, 3);
-            this.btnLoadChatLog.Name = "btnLoadChatLog";
-            this.btnLoadChatLog.Size = new System.Drawing.Size(75, 23);
-            this.btnLoadChatLog.TabIndex = 15;
-            this.btnLoadChatLog.Text = "ログ読込";
-            this.btnLoadChatLog.UseVisualStyleBackColor = true;
-            this.btnLoadChatLog.Click += new System.EventHandler(this.btnLoadChatLog_Click);
-            // 
-            // btnChatDir
-            // 
-            this.btnChatDir.Location = new System.Drawing.Point(319, 3);
-            this.btnChatDir.Name = "btnChatDir";
-            this.btnChatDir.Size = new System.Drawing.Size(75, 23);
-            this.btnChatDir.TabIndex = 14;
-            this.btnChatDir.Text = "参照";
-            this.btnChatDir.UseVisualStyleBackColor = true;
-            this.btnChatDir.Click += new System.EventHandler(this.btnChatDir_Click);
-            // 
-            // txtChatDir
-            // 
-            this.txtChatDir.Location = new System.Drawing.Point(76, 3);
-            this.txtChatDir.Name = "txtChatDir";
-            this.txtChatDir.Size = new System.Drawing.Size(237, 19);
-            this.txtChatDir.TabIndex = 13;
-            // 
-            // labelChatDir
-            // 
-            this.labelChatDir.AutoSize = true;
-            this.labelChatDir.Location = new System.Drawing.Point(14, 6);
-            this.labelChatDir.Name = "labelChatDir";
-            this.labelChatDir.Size = new System.Drawing.Size(55, 12);
-            this.labelChatDir.TabIndex = 12;
-            this.labelChatDir.Text = "チャットログ";
-            // 
-            // itemBindingSource
-            // 
-            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
-            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -239,6 +198,47 @@
             this.linkDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.linkDataGridViewTextBoxColumn.Width = 55;
             // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            // 
+            // btnLoadChatLog
+            // 
+            this.btnLoadChatLog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnLoadChatLog.Location = new System.Drawing.Point(400, 3);
+            this.btnLoadChatLog.Name = "btnLoadChatLog";
+            this.btnLoadChatLog.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadChatLog.TabIndex = 15;
+            this.btnLoadChatLog.Text = "ログ読込";
+            this.btnLoadChatLog.UseVisualStyleBackColor = true;
+            this.btnLoadChatLog.Click += new System.EventHandler(this.btnLoadChatLog_Click);
+            // 
+            // btnChatDir
+            // 
+            this.btnChatDir.Location = new System.Drawing.Point(319, 3);
+            this.btnChatDir.Name = "btnChatDir";
+            this.btnChatDir.Size = new System.Drawing.Size(75, 23);
+            this.btnChatDir.TabIndex = 14;
+            this.btnChatDir.Text = "参照";
+            this.btnChatDir.UseVisualStyleBackColor = true;
+            this.btnChatDir.Click += new System.EventHandler(this.btnChatDir_Click);
+            // 
+            // txtChatDir
+            // 
+            this.txtChatDir.Location = new System.Drawing.Point(76, 3);
+            this.txtChatDir.Name = "txtChatDir";
+            this.txtChatDir.Size = new System.Drawing.Size(237, 19);
+            this.txtChatDir.TabIndex = 13;
+            // 
+            // labelChatDir
+            // 
+            this.labelChatDir.AutoSize = true;
+            this.labelChatDir.Location = new System.Drawing.Point(14, 6);
+            this.labelChatDir.Name = "labelChatDir";
+            this.labelChatDir.Size = new System.Drawing.Size(55, 12);
+            this.labelChatDir.TabIndex = 12;
+            this.labelChatDir.Text = "チャットログ";
+            // 
             // ChatLogModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -269,7 +269,6 @@
         private System.Windows.Forms.Button btnFetchKakaku;
         private System.Windows.Forms.Label labelApiLimit;
         private System.Windows.Forms.ComboBox comboApiLimit;
-        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnLoadChatLog;
         private System.Windows.Forms.Button btnChatDir;
         private System.Windows.Forms.TextBox txtChatDir;
@@ -280,5 +279,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn eachPriceDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalPrice;
         private System.Windows.Forms.DataGridViewLinkColumn linkDataGridViewTextBoxColumn;
+        public System.Windows.Forms.DataGridView dataGridView;
     }
 }

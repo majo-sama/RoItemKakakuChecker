@@ -51,6 +51,10 @@ namespace RoItemKakakuChecker
 
         }
 
+
+
+
+
         private void DataGridView_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -391,127 +395,7 @@ namespace RoItemKakakuChecker
             MessageBox.Show(text, "ヘルプ");
         }
 
-        private void 結果をExcel形式でクリップボードにコピー簡易ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            var list = dataGridView.DataSource as IEnumerable<Item>;
-            foreach (var item in list)
-            {
-                sb.Append(item.Name);
-                sb.Append("\t");
-                sb.Append(item.Count);
-                sb.Append("\t");
-                sb.Append(item.EachPrice.ToString());
-                sb.Append("\t");
-                sb.Append(item.TotalPrice);
 
-                if (item != list.Last())
-                {
-                    sb.Append("\n");
-                }
-            }
-            Clipboard.SetText(sb.ToString());
-            mainForm.UpdateToolStripLabel("クリップボードにコピーしました。");
-        }
-
-        private void 結果をクリップボードにコピーToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            var list = dataGridView.DataSource as IEnumerable<Item>;
-            foreach (var item in list)
-            {
-                sb.Append(item.ItemId.ToString());
-                sb.Append("\t");
-                sb.Append(item.Name);
-                sb.Append("\t");
-                sb.Append(item.Count);
-                sb.Append("\t");
-                sb.Append(item.EachPrice.ToString());
-                sb.Append("\t");
-                sb.Append(item.TotalPrice);
-                sb.Append("\t");
-                sb.Append($"https://rotool.gungho.jp/item/{item.ItemId}/0/");
-                if (item != list.Last())
-                {
-                    sb.Append("\n");
-                }
-            }
-            Clipboard.SetText(sb.ToString());
-            mainForm.UpdateToolStripLabel("クリップボードにコピーしました。");
-
-        }
-
-        private void 結果をCSVファイルに出力簡易ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            var list = dataGridView.DataSource as IEnumerable<Item>;
-            sb.AppendLine("アイテム名,個数,単体価格(中央値),合計金額");
-            foreach (var item in list)
-            {
-                sb.Append(item.Name);
-                sb.Append(",");
-                sb.Append(item.Count);
-                sb.Append(",");
-                sb.Append(item.EachPrice.ToString());
-                sb.Append(",");
-                sb.Append(item.TotalPrice);
-                sb.Append("\n");
-            }
-
-            OutputCsv(sb.ToString());
-        }
-
-        private void 結果をCSVファイルに出力ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            var list = dataGridView.DataSource as IEnumerable<Item>;
-
-            sb.AppendLine("ItemID,アイテム名,個数,単体価格(中央値),合計金額,URL");
-            foreach (var item in list)
-            {
-                sb.Append(item.ItemId.ToString());
-                sb.Append(",");
-                sb.Append(item.Name);
-                sb.Append(",");
-                sb.Append(item.Count);
-                sb.Append(",");
-                sb.Append(item.EachPrice.ToString());
-                sb.Append(",");
-                sb.Append(item.TotalPrice);
-                sb.Append(",");
-                sb.Append($"https://rotool.gungho.jp/item/{item.ItemId}/0/");
-                sb.Append("\n");
-            }
-            OutputCsv(sb.ToString());
-        }
-
-        private void OutputCsv(string csv)
-        {
-            var dialog = new SaveFileDialog();
-            dialog.FileName = "kakaku.csv";
-            dialog.InitialDirectory = Environment.CurrentDirectory;
-            dialog.Filter = "CSVファイル(*.csv)|*.csv";
-            dialog.FilterIndex = 1;
-            dialog.Title = "保存先のファイルを指定してください。";
-            dialog.RestoreDirectory = true;
-            dialog.OverwritePrompt = true;
-            dialog.CheckPathExists = true;
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    using (var writer = new StreamWriter(dialog.FileName, false, Encoding.UTF8))
-                    {
-                        writer.Write(csv);
-                        mainForm.UpdateToolStripLabel("ファイルを出力しました。");
-                    }
-                }
-                catch (IOException ex)
-                {
-                    MessageBox.Show(ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
 
         private void label1_Click(object sender, EventArgs e)
         {

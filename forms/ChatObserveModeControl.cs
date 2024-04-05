@@ -45,7 +45,36 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 230, 230);
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(230, 230, 230);
             dataGridView.EnableHeadersVisualStyles = false;
+            dataGridView.RowsAdded += DataGridView_RowsAdded;
         }
+
+
+        private void DataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+
+            if (e.RowIndex >= 0)
+            {
+                var entity = dgv.Rows[e.RowIndex].DataBoundItem as ChatLogEntity;
+                if (entity.MessageType == "Party")
+                {
+                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.IndianRed;
+                }
+                else if (entity.MessageType == "Guild")
+                {
+                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Green;
+                }
+                else if (entity.MessageType == "Whisper")
+                {
+                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Goldenrod;
+                }
+                else
+                {
+                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
+                }
+            }
+        }
+
 
         private async void btnObserveChat_Click(object sender, EventArgs e)
         {
