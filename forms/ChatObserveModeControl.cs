@@ -93,61 +93,71 @@ namespace RoItemKakakuChecker.forms
                 bool appendMode = false;
                 while (true)
                 {
-                    IAsyncResult iares = socket.BeginReceive(buf, 0, buf.Length, SocketFlags.None, null, null);
-                    var len = socket.EndReceive(iares);
 
-                    var srcIp = Ip(buf, 12);
-                    var protocol = Proto(buf[9]);
-                    var dstIp = Ip(buf, 16);
-                    var ttl = buf[8];
-                    var flags = buf[33];
-                    var flagPsh = 8;
-                    var hasPshFlag = (flags & flagPsh) != 0;
-
-                    if (protocol == "TCP" && srcIp.StartsWith(RO_CHAT_SERVER_IP))
+                    try
                     {
-                        
-                        if (!appendMode)
+
+
+                        IAsyncResult iares = socket.BeginReceive(buf, 0, buf.Length, SocketFlags.None, null, null);
+                        var len = socket.EndReceive(iares);
+
+                        var srcIp = Ip(buf, 12);
+                        var protocol = Proto(buf[9]);
+                        var dstIp = Ip(buf, 16);
+                        var ttl = buf[8];
+                        var flags = buf[33];
+                        var flagPsh = 8;
+                        var hasPshFlag = (flags & flagPsh) != 0;
+
+                        if (protocol == "TCP" && srcIp.StartsWith(RO_CHAT_SERVER_IP))
                         {
-                            //joinedBody = new byte[28682];
-                            //nextIndex = 0;
-                        }
 
-                        var bodySize = len - 40; // IPヘッダ 20bytes, TCPヘッダ 20bytes
-
-
-
-                        byte[] body = new byte[bodySize];
-                        Array.Copy(buf, 40, body, 0, bodySize); // bodyにヘッダを除いた本体をコピー
-
-                        // bodyに今まで貯めた分も含めてコピー
-                        // 終端パケットかどうかはPSHを見て判断する
-                        joinedBody = joinedBody.Concat(body).ToArray();
-                        //Array.Copy(body, 0, joinedBody, nextIndex, body.Length);
-
-                        appendMode = !hasPshFlag;
-                        //if (appendMode)
-                        //{
-                        //    nextIndex += body.Length;
-                        //}
-
-                        // 終端パケットまで読んだら解析
-                        if (hasPshFlag)
-                        {
-                            var chatLine = Analyze(joinedBody);
-                            joinedBody = new byte[0];
-                            if (chatLine != null)
+                            if (!appendMode)
                             {
-                                AppendToGridView(chatLine);
-                                AppendToLogFile(chatLine);
+                                //joinedBody = new byte[28682];
+                                //nextIndex = 0;
+                            }
+
+                            var bodySize = len - 40; // IPヘッダ 20bytes, TCPヘッダ 20bytes
+
+
+
+                            byte[] body = new byte[bodySize];
+                            Array.Copy(buf, 40, body, 0, bodySize); // bodyにヘッダを除いた本体をコピー
+
+                            // bodyに今まで貯めた分も含めてコピー
+                            // 終端パケットかどうかはPSHを見て判断する
+                            joinedBody = joinedBody.Concat(body).ToArray();
+                            //Array.Copy(body, 0, joinedBody, nextIndex, body.Length);
+
+                            appendMode = !hasPshFlag;
+                            //if (appendMode)
+                            //{
+                            //    nextIndex += body.Length;
+                            //}
+
+                            // 終端パケットまで読んだら解析
+                            if (hasPshFlag)
+                            {
+                                var chatLine = Analyze(joinedBody);
+                                joinedBody = new byte[0];
+                                if (chatLine != null)
+                                {
+                                    AppendToGridView(chatLine);
+                                    AppendToLogFile(chatLine);
+                                }
                             }
                         }
-                    }
 
-                    if (!isObserving)
+                        if (!isObserving)
+                        {
+                            mainForm.UpdateToolStripLabel("会話メッセージの監視を停止しました。");
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        mainForm.UpdateToolStripLabel("会話メッセージの監視を停止しました。");
-                        break;
+                        mainForm.LogError(ex.Message + "\n" + ex.StackTrace + "\n" + BitConverter.ToString(joinedBody));
                     }
                 }
             });
