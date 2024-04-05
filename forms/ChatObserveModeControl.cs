@@ -45,36 +45,13 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 230, 230);
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(230, 230, 230);
             dataGridView.EnableHeadersVisualStyles = false;
-            dataGridView.RowsAdded += DataGridView_RowsAdded;
+            dataGridView.SelectionChanged += DataGridView_SelectionChanged;
         }
 
-
-        private void DataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            DataGridView dgv = (DataGridView)sender;
-
-            if (e.RowIndex >= 0)
-            {
-                var entity = dgv.Rows[e.RowIndex].DataBoundItem as ChatLogEntity;
-                if (entity.MessageType == "Party")
-                {
-                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.IndianRed;
-                }
-                else if (entity.MessageType == "Guild")
-                {
-                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Green;
-                }
-                else if (entity.MessageType == "Whisper")
-                {
-                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Goldenrod;
-                }
-                else
-                {
-                    dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
-                }
-            }
+            dataGridView.ClearSelection();
         }
-
 
         private async void btnObserveChat_Click(object sender, EventArgs e)
         {
@@ -111,7 +88,7 @@ namespace RoItemKakakuChecker.forms
 
             await Task.Run(() =>
             {
-                byte[] joinedBody = new byte[28682];
+                byte[] joinedBody = new byte[28682*2];
                 int nextIndex = 0;
                 bool appendMode = false;
                 while (true)
@@ -176,6 +153,8 @@ namespace RoItemKakakuChecker.forms
         private string nextPacketChatType = null;
         private ChatLogEntity Analyze(byte[] data)
         {
+            bool hasExtraHeader = false;
+
             // ギルド・PTチャットは2パケットに分かれる
             if (data[0] == 0x09 && data[1] == 0x01)
             {
@@ -185,7 +164,18 @@ namespace RoItemKakakuChecker.forms
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
-                return null;
+                // 1パケットに詰め込まれている場合
+                // 滅多にないが…
+                if (data.Length > 8)
+                {
+                    hasExtraHeader = true;
+                }
+                // 2パケットに分かれている場合
+                else
+                {
+                    return null;
+                }
+
             }
 
             string sjisStr = "";
@@ -198,9 +188,17 @@ namespace RoItemKakakuChecker.forms
             }
             else if (nextPacketChatType == "guild")
             {
-                // ギルドチャット2パケット目はヘッダ無し
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
-                chatLine.MessageType = "Guild";
+                if (hasExtraHeader)
+                {
+                    // なぜか1パケットに詰め込まれている場合
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 8, data.Length - 8);
+                }
+                else
+                {
+                    // ギルドチャット2パケット目は通常はヘッダ無し
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                    chatLine.MessageType = "Guild";
+                }
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
@@ -259,8 +257,32 @@ namespace RoItemKakakuChecker.forms
             dataGridView.Invoke((MethodInvoker)delegate
             {
                 list.Add(chatLine);
-                chatLogEntityBindingSource.DataSource = list;
-                chatLogEntityBindingSource.ResetBindings(true);
+                //chatLogEntityBindingSource.DataSource = list;
+                chatLogEntityBindingSource.ResetBindings(false);
+
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    var entity = row.DataBoundItem as ChatLogEntity;
+                    
+                    if (entity.MessageType == "Party")
+                    {
+                        row.DefaultCellStyle.ForeColor = Color.IndianRed;
+                    }
+                    else if (entity.MessageType == "Guild")
+                    {
+                        row.DefaultCellStyle.ForeColor = Color.Green;
+                    }
+                    else if (entity.MessageType == "Whisper")
+                    {
+                        row.DefaultCellStyle.ForeColor = Color.Goldenrod;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
+                }
+
+                dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
             });
             
         }
@@ -297,7 +319,7 @@ namespace RoItemKakakuChecker.forms
             dataGridView.Invoke((MethodInvoker)delegate
             {
                 chatLogEntityBindingSource.DataSource = new List<ChatLogEntity>();
-                chatLogEntityBindingSource.ResetBindings(true);
+                chatLogEntityBindingSource.ResetBindings(false);
             });
         }
     }

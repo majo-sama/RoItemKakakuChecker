@@ -59,7 +59,61 @@ namespace RoItemKakakuChecker
             dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 230, 230);
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(230, 230, 230);
             dataGridView.EnableHeadersVisualStyles = false;
+
+            this.Load += StorageObserveModeControl_Load;
         }
+
+        private void StorageObserveModeControl_Load(object sender, EventArgs e)
+        {
+            bool isSucceeded = mainForm.settings.ReadSettings();
+
+            if (isSucceeded)
+            {
+                switch (mainForm.settings.ApiLimit)
+                {
+                    case 0: comboApiLimit.SelectedIndex = 0; break;
+                    case 1: comboApiLimit.SelectedIndex = 1; break;
+                    case 2: comboApiLimit.SelectedIndex = 2; break;
+                    case 3: comboApiLimit.SelectedIndex = 3; break;
+                    case 5: comboApiLimit.SelectedIndex = 4; break;
+                    case 10: comboApiLimit.SelectedIndex = 5; break;
+                    case 20: comboApiLimit.SelectedIndex = 6; break;
+                    case 30: comboApiLimit.SelectedIndex = 7; break;
+                    default: comboApiLimit.SelectedIndex = 0; break;
+                }
+            }
+            else
+            {
+                comboApiLimit.SelectedIndex = 5;
+            }
+
+            comboApiLimit.SelectedValueChanged += ComboApiLimit_SelectedValueChanged; ;
+            btnFetchKakaku.Enabled = false;
+            UpdateApiLimitMessageStatusLabel();
+        }
+
+        private void ComboApiLimit_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UpdateApiLimitMessageStatusLabel();
+            mainForm.settings.SaveSettings(Convert.ToInt32(comboApiLimit.SelectedItem.ToString()), mainForm.chatLogModeControl.txtChatDir.Text);
+        }
+
+
+        private void UpdateApiLimitMessageStatusLabel()
+        {
+            if (Convert.ToInt32(comboApiLimit.SelectedItem) < 3)
+            {
+                mainForm.UpdateToolStripLabel("注意: 大量のデータを頻繁に再取得することは避けてください。ガンホーに怒られますよ！");
+
+            }
+            else
+            {
+                mainForm.UpdateToolStripLabel("");
+            }
+        }
+
+
+
 
         private void DataGridView_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
