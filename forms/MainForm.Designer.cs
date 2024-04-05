@@ -165,7 +165,7 @@
             this.radioChatMessage.Size = new System.Drawing.Size(124, 16);
             this.radioChatMessage.TabIndex = 14;
             this.radioChatMessage.TabStop = true;
-            this.radioChatMessage.Text = "チャットメッセージ取得";
+            this.radioChatMessage.Text = "会話メッセージ取得";
             this.radioChatMessage.UseVisualStyleBackColor = true;
             // 
             // chatObserveModeControl1

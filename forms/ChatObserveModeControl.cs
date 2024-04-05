@@ -107,7 +107,7 @@ namespace RoItemKakakuChecker.forms
             byte[] buf = new byte[28682];
             int i = 0;
 
-            mainForm.UpdateToolStripLabel("チャットメッセージの監視を開始します。");
+            mainForm.UpdateToolStripLabel("会話メッセージの監視を開始します。");
 
             await Task.Run(() =>
             {
@@ -166,7 +166,7 @@ namespace RoItemKakakuChecker.forms
 
                     if (!isObserving)
                     {
-                        mainForm.UpdateToolStripLabel("チャットメッセージの監視を停止しました。");
+                        mainForm.UpdateToolStripLabel("会話メッセージの監視を停止しました。");
                         break;
                     }
                 }
@@ -282,7 +282,7 @@ namespace RoItemKakakuChecker.forms
         private void btnHelp_Click(object sender, EventArgs e)
         {
             string text = "";
-            text += @"チャットメッセージ取得モードは、メッセージの監視中に受信したメッセージ（通常・パーティ・ギルド・Wis）を表示し、同時に外部ファイルに保存するものです。
+            text += @"会話メッセージ取得モードは、メッセージの監視中に受信したメッセージ（通常・パーティ・ギルド・Wis）を表示し、同時に外部ファイルに保存するものです。
 チャットルームや天の声などには対応していません。またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
 おまけ機能のため、継続して利用する場合は類似の別のツールを使うことを推奨します。
 この機能は、作者が通常/PT/ギルド チャットの色の見分けが付かず困った時のために作りました。
