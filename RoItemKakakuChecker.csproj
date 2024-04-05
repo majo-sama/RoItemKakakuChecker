@@ -14,6 +14,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,8 +32,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,13 +67,14 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Costura, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -251,20 +252,50 @@
   <ItemGroup>
     <Compile Include="ApiCaller.cs" />
     <Compile Include="AppSettingsEntity.cs" />
+    <Compile Include="ChatLogEntity.cs" />
+    <Compile Include="forms\ChatLogModeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\ChatLogModeControl.Designer.cs">
+      <DependentUpon>ChatLogModeControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChatLogReader.cs" />
+    <Compile Include="forms\ChatObserveModeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\ChatObserveModeControl.Designer.cs">
+      <DependentUpon>ChatObserveModeControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Item.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ItemIdNameMap.cs" />
+    <Compile Include="OptionIdNameMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="SortableBindingList.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <Compile Include="forms\StorageObserveModeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\StorageObserveModeControl.Designer.cs">
+      <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="forms\ChatLogModeControl.resx">
+      <DependentUpon>ChatLogModeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ChatObserveModeControl.resx">
+      <DependentUpon>ChatObserveModeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\StorageObserveModeControl.resx">
+      <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -275,8 +306,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\ChatLogEntity.datasource" />
     <None Include="Properties\DataSources\Item.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
