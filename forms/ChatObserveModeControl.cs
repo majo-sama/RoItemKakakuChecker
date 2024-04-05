@@ -153,6 +153,8 @@ namespace RoItemKakakuChecker.forms
         private string nextPacketChatType = null;
         private ChatLogEntity Analyze(byte[] data)
         {
+            bool hasExtraHeader = false;
+
             // ギルド・PTチャットは2パケットに分かれる
             if (data[0] == 0x09 && data[1] == 0x01)
             {
@@ -162,7 +164,18 @@ namespace RoItemKakakuChecker.forms
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
-                return null;
+                // 1パケットに詰め込まれている場合
+                // 滅多にないが…
+                if (data.Length > 8)
+                {
+                    hasExtraHeader = true;
+                }
+                // 2パケットに分かれている場合
+                else
+                {
+                    return null;
+                }
+
             }
 
             string sjisStr = "";
@@ -175,9 +188,17 @@ namespace RoItemKakakuChecker.forms
             }
             else if (nextPacketChatType == "guild")
             {
-                // ギルドチャット2パケット目はヘッダ無し
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
-                chatLine.MessageType = "Guild";
+                if (hasExtraHeader)
+                {
+                    // なぜか1パケットに詰め込まれている場合
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 8, data.Length - 8);
+                }
+                else
+                {
+                    // ギルドチャット2パケット目は通常はヘッダ無し
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                    chatLine.MessageType = "Guild";
+                }
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
