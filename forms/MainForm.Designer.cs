@@ -229,7 +229,7 @@
         private System.Windows.Forms.RadioButton radioButton_chatLog;
         private System.Windows.Forms.RadioButton radioButton_storage;
         private System.Windows.Forms.GroupBox groupBox1;
-        private ChatLogModeControl chatLogModeControl;
+        public ChatLogModeControl chatLogModeControl;
         private StorageObserveModeControl storageObserveModeControl1;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_簡易;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力_通常;

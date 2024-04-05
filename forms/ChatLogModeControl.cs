@@ -97,7 +97,7 @@ namespace RoItemKakakuChecker
             }
             else
             {
-                comboApiLimit.SelectedIndex = 3;
+                comboApiLimit.SelectedIndex = 5;
             }
 
             comboApiLimit.SelectedValueChanged += ComboApiLimit_SelectedValueChanged;

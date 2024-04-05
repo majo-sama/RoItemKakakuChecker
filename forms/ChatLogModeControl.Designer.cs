@@ -271,7 +271,7 @@
         private System.Windows.Forms.ComboBox comboApiLimit;
         private System.Windows.Forms.Button btnLoadChatLog;
         private System.Windows.Forms.Button btnChatDir;
-        private System.Windows.Forms.TextBox txtChatDir;
+        public System.Windows.Forms.TextBox txtChatDir;
         private System.Windows.Forms.Label labelChatDir;
         private System.Windows.Forms.BindingSource itemBindingSource;
         private System.Windows.Forms.DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
