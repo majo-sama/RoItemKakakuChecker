@@ -164,17 +164,17 @@ namespace RoItemKakakuChecker.forms
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
-                // 1パケットに詰め込まれている場合
-                // 滅多にないが…
-                if (data.Length > 8)
-                {
-                    hasExtraHeader = true;
-                }
-                // 2パケットに分かれている場合
-                else
-                {
+                //// 1パケットに詰め込まれている場合
+                //// 滅多にないが…
+                //if (data.Length > 8)
+                //{
+                //    hasExtraHeader = true;
+                //}
+                //// 2パケットに分かれている場合
+                //else
+                //{
                     return null;
-                }
+                //}
 
             }
 
@@ -188,17 +188,17 @@ namespace RoItemKakakuChecker.forms
             }
             else if (nextPacketChatType == "guild")
             {
-                if (hasExtraHeader)
-                {
-                    // なぜか1パケットに詰め込まれている場合
-                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 8, data.Length - 8);
-                }
-                else
-                {
+                //if (hasExtraHeader)
+                //{
+                //    // なぜか1パケットに詰め込まれている場合
+                //    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 8, data.Length - 8);
+                //}
+                //else
+                //{
                     // ギルドチャット2パケット目は通常はヘッダ無し
                     sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
                     chatLine.MessageType = "Guild";
-                }
+                //}
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
