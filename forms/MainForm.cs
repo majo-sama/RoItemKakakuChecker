@@ -35,7 +35,6 @@ namespace RoItemKakakuChecker
             InitializeComponent();
             //this.TopMost = true;
             this.SizeGripStyle = SizeGripStyle.Show;
-            storageObserveModeControl1.SetMainForm(this);
             chatObserveModeControl1.SetMainForm(this);
         }
 
@@ -43,6 +42,9 @@ namespace RoItemKakakuChecker
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            storageObserveModeControl1.SetMainForm(this);
+
+
             // 
             // chatLogModeControl
             // 
