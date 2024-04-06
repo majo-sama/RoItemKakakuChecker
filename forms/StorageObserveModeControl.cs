@@ -132,12 +132,13 @@ namespace RoItemKakakuChecker
 
         private async void btnObserve_Click(object sender, EventArgs e)
         {
-
+            // 停止ボタン押下時
             if (observing)
             {
                 stopFlag = true;
                 observing = false;
                 this.btnObserve.Text = "倉庫監視 開始";
+                btnFetchKakaku.Enabled = true;
                 return;
             }
 
