@@ -26,6 +26,9 @@ namespace RoItemKakakuChecker.forms
         public void SetMainForm(MainForm mainForm)
         {
             this.mainForm = mainForm;
+
+            bool isSucceeded = mainForm.settings.ReadSettings();
+
         }
 
         public ChatObserveModeControl()
@@ -46,6 +49,7 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(230, 230, 230);
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.SelectionChanged += DataGridView_SelectionChanged;
+
         }
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
@@ -81,8 +85,7 @@ namespace RoItemKakakuChecker.forms
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
             socket.IOControl(IOControlCode.ReceiveAll, ib, ob); //SIO_RCVALL
-            byte[] buf = new byte[28682];
-            int i = 0;
+            byte[] buf = new byte[1024*64];
 
             mainForm.UpdateToolStripLabel("会話メッセージの監視を開始します。");
 
@@ -164,6 +167,7 @@ namespace RoItemKakakuChecker.forms
         }
 
         private string nextPacketChatType = null;
+        private int nextPacketTextLength = -1;
         private ChatLogEntity Analyze(byte[] data)
         {
             bool hasExtraHeader = false;
@@ -172,20 +176,34 @@ namespace RoItemKakakuChecker.forms
             if (data[0] == 0x09 && data[1] == 0x01)
             {
                 nextPacketChatType = "party";
+                nextPacketTextLength = (int)data[2] - 8;
+                if (mainForm.settings.DebugMode == 1)
+                {
+                    mainForm.LogError("Party(Header): " + BitConverter.ToString(data));
+                }
                 return null;
             }
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
                 nextPacketChatType = "guild";
+                nextPacketTextLength = (int)data[2] - 4;
                 // 1パケットに詰め込まれている場合
                 // 滅多にないが…
                 if (data.Length > 8)
                 {
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Guild(Header 1/1 packet): " + BitConverter.ToString(data));
+                    }
                     hasExtraHeader = true;
                 }
                 // 2パケットに分かれている場合
                 else
                 {
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Guild(Header 1/2 packet): " + BitConverter.ToString(data));
+                    }
                     return null;
                 }
 
@@ -195,8 +213,9 @@ namespace RoItemKakakuChecker.forms
             var chatLine = new ChatLogEntity();
             if (nextPacketChatType == "party")
             {
+                byte[] textdata = data.Take(nextPacketTextLength).ToArray();
                 // PTチャット2パケット目はヘッダ無し
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
                 chatLine.MessageType = "Party";
             }
             else if (nextPacketChatType == "guild")
@@ -204,49 +223,76 @@ namespace RoItemKakakuChecker.forms
                 if (hasExtraHeader)
                 {
                     // なぜか1パケットに詰め込まれている場合
-                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 4, data.Length - 4);
+                    byte[] textdata = data.Skip(4).Take(nextPacketTextLength).ToArray();
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+
+                    //sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data, 4, data.Length - 4);
                 }
                 else
                 {
                     // ギルドチャット2パケット目は通常はヘッダ無し
-                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(data);
+                    byte[] textdata = data.Take(nextPacketTextLength).ToArray();
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
                 }
                 chatLine.MessageType = "Guild";
             }
             else if (data[0] == 0x8e && data[1] == 0x00)
             {
                 // 全体チャットは4バイトのヘッダ有り
-                var textdata = new byte[data.Length - 4];
-                Array.Copy(data, 4, textdata, 0, data.Length - 4);
+                //var textdata = new byte[data.Length - 4];
+                //Array.Copy(data, 4, textdata, 0, data.Length - 4);
+                //sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+
+                int textLength = (int)data[2] - 4;
+                var textdata = data.Skip(4).Take(textLength).ToArray();
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
                 chatLine.MessageType = "Public";
             }
             else if (data[0] == 0x8d && data[1] == 0x00)
             {
                 // 全体チャット別パターン
-                var textdata = new byte[data.Length - 8];
-                Array.Copy(data, 8, textdata, 0, data.Length - 8);
+                //var textdata = new byte[data.Length - 8];
+                //Array.Copy(data, 8, textdata, 0, data.Length - 8);
+                int textLength = (int)data[2] - 8;
+                var textdata = data.Skip(8).Take(textLength).ToArray();
                 sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
                 chatLine.MessageType = "Public";
             }
             else if (data[0] == 0xde && data[1] == 0x09)
             {
-                // WISは6バイトのヘッダ有り
-                var textdata = new byte[data.Length - 6];
-                Array.Copy(data, 6, textdata, 0, data.Length - 6);
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                // WISは8バイトのヘッダ有り
+
+                int lengthWithHeader = (int)data[2];
+
+                // キャラクター名が25バイト固定
+                byte[] charName = data.Skip(8).Take(25).ToArray();
+                string sjisCharName = Encoding.GetEncoding("Shift-JIS").GetString(charName).TrimEnd('\0');
+
+                byte[] message = data.Skip(33).Take(lengthWithHeader - 33).ToArray();
+                string sjisMessage = Encoding.GetEncoding("Shift-JIS").GetString(message);
+
+                sjisStr = sjisCharName + " : " + sjisMessage;
                 chatLine.MessageType = "Whisper";
             }
             else
             {
                 // チャット以外のパケットは無視
                 nextPacketChatType = null;
+                nextPacketTextLength = -1;
                 return null;
             }
             nextPacketChatType = null;
+            nextPacketTextLength = -1;
 
             chatLine.Message = sjisStr.TrimEnd('\0');
             chatLine.DateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+
+            if (mainForm.settings.DebugMode == 1)
+            {
+                mainForm.LogError($"Message {chatLine.DateTimeStr} {chatLine.MessageType} {chatLine.Message}\n" + BitConverter.ToString(data));
+            }
+
 
             return chatLine;
         }

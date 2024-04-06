@@ -11,5 +11,6 @@ namespace RoItemKakakuChecker
         public string ChatLogDir { get; set; } = "";
 
         public int ApiLimit { get; set; } = 0;
+        public int DebugMode {  get; set; } = 0;
     }
 }

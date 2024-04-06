@@ -18,6 +18,7 @@ namespace RoItemKakakuChecker
 
         public int ApiLimit { get { return settings.ApiLimit; } }
         public string ChatLogDir { get { return settings.ChatLogDir; } }
+        public int DebugMode { get { return settings.DebugMode; } }
 
         public bool ReadSettings()
         {
@@ -35,6 +36,7 @@ namespace RoItemKakakuChecker
                         AppSettingsEntity settings = JsonSerializer.Deserialize<AppSettingsEntity>(sr.ReadToEnd());
                         this.settings.ApiLimit = settings.ApiLimit;
                         this.settings.ChatLogDir = settings.ChatLogDir;
+                        this.settings.DebugMode = settings.DebugMode;
                         return true;
                     }
                 }
