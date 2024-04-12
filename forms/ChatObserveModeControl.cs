@@ -14,6 +14,7 @@ using System.Reflection;
 using RoItemKakakuChecker.Properties;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace RoItemKakakuChecker.forms
 {
@@ -177,11 +178,28 @@ namespace RoItemKakakuChecker.forms
             {
                 nextPacketChatType = "party";
                 nextPacketTextLength = (int)data[2] - 8;
-                if (mainForm.settings.DebugMode == 1)
+
+                // 1パケットに詰め込まれている場合
+                // 滅多にないが…
+                if (data.Length > 8)
                 {
-                    mainForm.LogError("Party(Header): " + BitConverter.ToString(data));
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Party(Header 1/1 packet): " + BitConverter.ToString(data));
+                    }
+                    hasExtraHeader = true;
                 }
-                return null;
+                // 2パケットに分かれている場合
+                else
+                {
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Party(Header): " + BitConverter.ToString(data));
+                    }
+                    return null;
+                }
+
+
             }
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
@@ -213,9 +231,20 @@ namespace RoItemKakakuChecker.forms
             var chatLine = new ChatLogEntity();
             if (nextPacketChatType == "party")
             {
-                byte[] textdata = data.Take(nextPacketTextLength).ToArray();
-                // PTチャット2パケット目はヘッダ無し
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                if (hasExtraHeader)
+                {
+                    // なぜか1パケットに詰め込まれている場合
+                    byte[] textdata = data.Skip(8).Take(nextPacketTextLength).ToArray();
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                }
+                else
+                {
+                    byte[] textdata = data.Take(nextPacketTextLength).ToArray();
+                    // PTチャット2パケット目はヘッダ無し
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                }
+
+
                 chatLine.MessageType = "Party";
             }
             else if (nextPacketChatType == "guild")
@@ -284,7 +313,10 @@ namespace RoItemKakakuChecker.forms
             nextPacketChatType = null;
             nextPacketTextLength = -1;
 
-            chatLine.Message = sjisStr.TrimEnd('\0');
+            //chatLine.Message = sjisStr.TrimEnd('\0');
+            sjisStr = sjisStr.TrimEnd('\0');
+            chatLine.Message = Regex.Replace(sjisStr, @"<ITEML>.*</ITEML>", "＜ITEM＞");
+
             chatLine.DateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
 
