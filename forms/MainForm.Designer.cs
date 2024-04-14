@@ -37,13 +37,13 @@
             this.結果をCSVファイルに出力_通常 = new System.Windows.Forms.ToolStripMenuItem();
             this.結果をCSVファイルに出力_簡易 = new System.Windows.Forms.ToolStripMenuItem();
             this.結果をExcel形式でクリップボードにコピー_通常 = new System.Windows.Forms.ToolStripMenuItem();
+            this.結果をExcel形式でクリップボードにコピー_簡易 = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButton_chatLog = new System.Windows.Forms.RadioButton();
             this.radioButton_storage = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioChatMessage = new System.Windows.Forms.RadioButton();
             this.chatObserveModeControl1 = new RoItemKakakuChecker.forms.ChatObserveModeControl();
             this.storageObserveModeControl1 = new RoItemKakakuChecker.StorageObserveModeControl();
-            this.結果をExcel形式でクリップボードにコピー_簡易 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -123,6 +123,13 @@
             this.結果をExcel形式でクリップボードにコピー_通常.Text = "結果をExcel形式でクリップボードにコピー";
             this.結果をExcel形式でクリップボードにコピー_通常.Click += new System.EventHandler(this.結果をExcel形式でクリップボードにコピー_通常_Click);
             // 
+            // 結果をExcel形式でクリップボードにコピー_簡易
+            // 
+            this.結果をExcel形式でクリップボードにコピー_簡易.Name = "結果をExcel形式でクリップボードにコピー_簡易";
+            this.結果をExcel形式でクリップボードにコピー_簡易.Size = new System.Drawing.Size(293, 22);
+            this.結果をExcel形式でクリップボードにコピー_簡易.Text = "結果をExcel形式でクリップボードにコピー(簡易)";
+            this.結果をExcel形式でクリップボードにコピー_簡易.Click += new System.EventHandler(this.結果をExcel形式でクリップボードにコピー_簡易_Click);
+            // 
             // radioButton_chatLog
             // 
             this.radioButton_chatLog.AutoSize = true;
@@ -162,7 +169,7 @@
             this.radioChatMessage.AutoSize = true;
             this.radioChatMessage.Location = new System.Drawing.Point(295, 15);
             this.radioChatMessage.Name = "radioChatMessage";
-            this.radioChatMessage.Size = new System.Drawing.Size(124, 16);
+            this.radioChatMessage.Size = new System.Drawing.Size(116, 16);
             this.radioChatMessage.TabIndex = 14;
             this.radioChatMessage.TabStop = true;
             this.radioChatMessage.Text = "会話メッセージ取得";
@@ -187,13 +194,6 @@
             this.storageObserveModeControl1.Name = "storageObserveModeControl1";
             this.storageObserveModeControl1.Size = new System.Drawing.Size(542, 412);
             this.storageObserveModeControl1.TabIndex = 15;
-            // 
-            // 結果をExcel形式でクリップボードにコピー_簡易
-            // 
-            this.結果をExcel形式でクリップボードにコピー_簡易.Name = "結果をExcel形式でクリップボードにコピー_簡易";
-            this.結果をExcel形式でクリップボードにコピー_簡易.Size = new System.Drawing.Size(293, 22);
-            this.結果をExcel形式でクリップボードにコピー_簡易.Text = "結果をExcel形式でクリップボードにコピー(簡易)";
-            this.結果をExcel形式でクリップボードにコピー_簡易.Click += new System.EventHandler(this.結果をExcel形式でクリップボードにコピー_簡易_Click);
             // 
             // MainForm
             // 
@@ -220,7 +220,6 @@
         #endregion
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton;
         private System.Windows.Forms.ToolStripMenuItem 結果をCSVファイルに出力ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 結果をクリップボードにコピーToolStripMenuItem;
@@ -238,6 +237,7 @@
         public System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.ToolStripMenuItem 結果をExcel形式でクリップボードにコピー_通常;
         private System.Windows.Forms.ToolStripMenuItem 結果をExcel形式でクリップボードにコピー_簡易;
+        public System.Windows.Forms.StatusStrip statusStrip1;
     }
 }
 

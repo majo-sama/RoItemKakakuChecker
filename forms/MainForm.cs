@@ -87,9 +87,7 @@ namespace RoItemKakakuChecker
             this.Controls.Add(this.storageObserveModeControl1);
             this.Controls.Add(this.chatObserveModeControl1);
 
-
-
-
+            btnStop.Click += BtnStop_Click;
 
 
             string cmdDelete = "netsh advfirewall firewall delete rule name=\"RoItemKakakuChecker\"";
@@ -114,7 +112,14 @@ namespace RoItemKakakuChecker
             p.Start();
         }
 
-
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            if (isFetching)
+            {
+                stopFlag = true;
+                isFetching = false;
+            }
+        }
 
         private void RadioButton_chatLog_CheckedChanged(object sender, EventArgs e)
         {
@@ -219,6 +224,12 @@ namespace RoItemKakakuChecker
                     list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
                 }
 
+                if (list == null || list.Count() == 0)
+                {
+                    UpdateToolStripLabel($@"エラー: 出力対象のデータが存在しません。");
+                    return;
+                }
+
                 sb.AppendLine("ItemID,アイテム名,個数,単体価格(中央値),合計金額,URL");
                 foreach (var item in list)
                 {
@@ -256,6 +267,11 @@ namespace RoItemKakakuChecker
                 {
                     list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
                 }
+                if (list == null || list.Count() == 0)
+                {
+                    UpdateToolStripLabel($@"エラー: 出力対象のデータが存在しません。");
+                    return;
+                }
                 sb.AppendLine("アイテム名,個数,単体価格(中央値),合計金額");
                 foreach (var item in list)
                 {
@@ -287,6 +303,12 @@ namespace RoItemKakakuChecker
                 {
                     list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
                 }
+                if (list == null || list.Count() == 0)
+                {
+                    UpdateToolStripLabel($@"エラー: 出力対象のデータが存在しません。");
+                    return;
+                }
+
                 foreach (var item in list)
                 {
                     sb.Append(item.ItemId.ToString());
@@ -323,6 +345,11 @@ namespace RoItemKakakuChecker
                 else
                 {
                     list = storageObserveModeControl1.dataGridView.DataSource as IEnumerable<Item>;
+                }
+                if (list == null || list.Count() == 0)
+                {
+                    UpdateToolStripLabel($@"エラー: 出力対象のデータが存在しません。");
+                    return;
                 }
                 foreach (var item in list)
                 {
