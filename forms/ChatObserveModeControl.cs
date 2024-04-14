@@ -15,6 +15,10 @@ using RoItemKakakuChecker.Properties;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Speech.Synthesis;
+
 
 namespace RoItemKakakuChecker.forms
 {
@@ -51,6 +55,14 @@ namespace RoItemKakakuChecker.forms
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.SelectionChanged += DataGridView_SelectionChanged;
 
+
+            var toolTipWord = new ToolTip();
+            toolTipWord.AutoPopDelay = 5000;
+            toolTipWord.InitialDelay = 100;
+            toolTipWord.ReshowDelay = 100;
+            var text = "指定したワードに応じて読み上げを行います。\n通常・PT・ギルド・WISの全てに対して反応します。\n複数のワードを指定する場合はセミコロンで区切ってください。\n（例: おはよう;こんにちは;こんばんは）";
+            toolTipWord.SetToolTip(this.checkBoxWord, text);
+            toolTipWord.SetToolTip(this.textBoxWord, text);
         }
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
@@ -86,7 +98,7 @@ namespace RoItemKakakuChecker.forms
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
             socket.IOControl(IOControlCode.ReceiveAll, ib, ob); //SIO_RCVALL
-            byte[] buf = new byte[1024*64];
+            byte[] buf = new byte[1024 * 64];
 
             mainForm.UpdateToolStripLabel("会話メッセージの監視を開始します。");
 
@@ -149,6 +161,8 @@ namespace RoItemKakakuChecker.forms
                                 {
                                     AppendToGridView(chatLine);
                                     AppendToLogFile(chatLine);
+
+                                    Speak(chatLine);
                                 }
                             }
                         }
@@ -350,7 +364,7 @@ namespace RoItemKakakuChecker.forms
             if (chatLogEntityBindingSource.DataSource.GetType() != typeof(List<ChatLogEntity>))
             {
                 dataGridView.Invoke((MethodInvoker)delegate { chatLogEntityBindingSource.DataSource = new List<ChatLogEntity>(); });
-                
+
             }
             var list = chatLogEntityBindingSource.DataSource as List<ChatLogEntity>;
             dataGridView.Invoke((MethodInvoker)delegate
@@ -362,7 +376,7 @@ namespace RoItemKakakuChecker.forms
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
                     var entity = row.DataBoundItem as ChatLogEntity;
-                    
+
                     if (entity.MessageType == "Party")
                     {
                         row.DefaultCellStyle.ForeColor = Color.IndianRed;
@@ -383,7 +397,7 @@ namespace RoItemKakakuChecker.forms
 
                 dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
             });
-            
+
         }
 
         private void AppendToLogFile(ChatLogEntity chatLine)
@@ -421,5 +435,24 @@ namespace RoItemKakakuChecker.forms
                 chatLogEntityBindingSource.ResetBindings(false);
             });
         }
+
+        private void Speak(ChatLogEntity chatLine)
+        {
+            var separator = new char[] { ';', '；' };
+            var words = textBoxWord.Text.Split(separator).ToList();
+            var chatBody = chatLine.Message.Split(new string[] { " : " }, StringSplitOptions.None);
+
+            if ((chatLine.MessageType == "Public" && checkBoxPublic.Checked) ||
+                (chatLine.MessageType == "Party" && checkBoxParty.Checked) ||
+                (chatLine.MessageType == "Guild" && checkBoxGuild.Checked) ||
+                (chatLine.MessageType == "Whisper" && checkBoxWhisper.Checked) ||
+                (!string.IsNullOrWhiteSpace(textBoxWord.Text) && words.Any(w => chatBody[1].Contains(w) && checkBoxWord.Checked)))
+            {
+                mainForm.speaker.SpeakerName = chatBody[0];
+                mainForm.speaker.MessageBody = chatBody[1];
+                mainForm.speaker.Speak();
+            }
+        }
+
     }
 }

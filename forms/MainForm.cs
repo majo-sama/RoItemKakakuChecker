@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -25,7 +28,7 @@ namespace RoItemKakakuChecker
         public bool isFetching = false;
         public ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
-
+        public Speaker speaker;
 
 
         public MainForm()
@@ -36,9 +39,15 @@ namespace RoItemKakakuChecker
             //this.TopMost = true;
             this.SizeGripStyle = SizeGripStyle.Show;
             chatObserveModeControl1.SetMainForm(this);
+            speaker = new Speaker();
+
+            Application.ApplicationExit += Application_ApplicationExit;
         }
 
-
+        private void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            speaker.Dispose();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -364,6 +373,10 @@ namespace RoItemKakakuChecker
                 }
             }
         }
+
+
+
+
     }
 
 }
