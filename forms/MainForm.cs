@@ -26,7 +26,7 @@ namespace RoItemKakakuChecker
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
         public Speaker speaker;
 
-        private const string VERSION = "1.3.1";
+        private const string VERSION = "1.3.2";
 
 
         public MainForm()
@@ -177,8 +177,8 @@ namespace RoItemKakakuChecker
                     var url = "https://api.github.com/repos/majo-sama/RoItemKakakuChecker/releases/latest";
 
                     client.DefaultRequestHeaders.Accept.Clear();
-                    var byteArray = Encoding.ASCII.GetBytes(":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");
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    //var byteArray = Encoding.ASCII.GetBytes(":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");
+                    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RoItemKakakuChecker");
 
@@ -219,8 +219,8 @@ namespace RoItemKakakuChecker
                 using (HttpClient zipClient = new HttpClient())
                 {
                     zipClient.DefaultRequestHeaders.Accept.Clear();
-                    var bytes = Encoding.ASCII.GetBytes(":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");
-                    zipClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(bytes));
+                    //var bytes = Encoding.ASCII.GetBytes(":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");
+                    //zipClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(bytes));
                     zipClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
                     zipClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RoItemKakakuChecker");
                     using (HttpResponseMessage zipResponse = await zipClient.GetAsync(zipUrl))
