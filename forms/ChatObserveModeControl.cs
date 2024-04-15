@@ -14,6 +14,11 @@ using System.Reflection;
 using RoItemKakakuChecker.Properties;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Speech.Synthesis;
+
 
 namespace RoItemKakakuChecker.forms
 {
@@ -27,8 +32,17 @@ namespace RoItemKakakuChecker.forms
         {
             this.mainForm = mainForm;
 
-            bool isSucceeded = mainForm.settings.ReadSettings();
 
+            bool isSucceeded = mainForm.settings.ReadSettings();
+            if (isSucceeded)
+            {
+                checkBoxPublic.Checked = mainForm.settings.SpeechPublic;
+                checkBoxParty.Checked = mainForm.settings.SpeechParty;
+                checkBoxGuild.Checked = mainForm.settings.SpeechGuild;
+                checkBoxWhisper.Checked = mainForm.settings.SpeechWhisper;
+                checkBoxWord.Checked = mainForm.settings.SpeechWord;
+                textBoxWord.Text = mainForm.settings.SpeechKeyWord;
+            }
         }
 
         public ChatObserveModeControl()
@@ -50,7 +64,24 @@ namespace RoItemKakakuChecker.forms
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.SelectionChanged += DataGridView_SelectionChanged;
 
+
+            var toolTipWord = new ToolTip();
+            toolTipWord.AutoPopDelay = 5000;
+            toolTipWord.InitialDelay = 100;
+            toolTipWord.ReshowDelay = 100;
+            var text = "指定したワードに応じて読み上げを行います。\n通常・PT・ギルド・WISの全てに対して反応します。\n複数のワードを指定する場合はセミコロンで区切ってください。\n（例: おはよう;こんにちは;こんばんは）";
+            toolTipWord.SetToolTip(this.checkBoxWord, text);
+            toolTipWord.SetToolTip(this.textBoxWord, text);
+
+            checkBoxPublic.CheckedChanged += (sender, e) => mainForm.settings.SpeechPublic = checkBoxPublic.Checked;
+            checkBoxParty.CheckedChanged += (sender, e) => mainForm.settings.SpeechParty = checkBoxParty.Checked;
+            checkBoxGuild.CheckedChanged += (sender, e) => mainForm.settings.SpeechGuild = checkBoxGuild.Checked;
+            checkBoxWhisper.CheckedChanged += (sender, e) => mainForm.settings.SpeechWhisper = checkBoxWhisper.Checked;
+            checkBoxWord.CheckedChanged += (sender, e) => mainForm.settings.SpeechWord = checkBoxWord.Checked;
+            textBoxWord.LostFocus += (sender, e) => mainForm.settings.SpeechKeyWord = textBoxWord.Text;
         }
+
+
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
@@ -85,7 +116,7 @@ namespace RoItemKakakuChecker.forms
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
             socket.IOControl(IOControlCode.ReceiveAll, ib, ob); //SIO_RCVALL
-            byte[] buf = new byte[1024*64];
+            byte[] buf = new byte[1024 * 64];
 
             mainForm.UpdateToolStripLabel("会話メッセージの監視を開始します。");
 
@@ -148,6 +179,11 @@ namespace RoItemKakakuChecker.forms
                                 {
                                     AppendToGridView(chatLine);
                                     AppendToLogFile(chatLine);
+
+                                    if (mainForm.speaker.Enabled)
+                                    {
+                                        Speak(chatLine);
+                                    }
                                 }
                             }
                         }
@@ -177,11 +213,28 @@ namespace RoItemKakakuChecker.forms
             {
                 nextPacketChatType = "party";
                 nextPacketTextLength = (int)data[2] - 8;
-                if (mainForm.settings.DebugMode == 1)
+
+                // 1パケットに詰め込まれている場合
+                // 滅多にないが…
+                if (data.Length > 8)
                 {
-                    mainForm.LogError("Party(Header): " + BitConverter.ToString(data));
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Party(Header 1/1 packet): " + BitConverter.ToString(data));
+                    }
+                    hasExtraHeader = true;
                 }
-                return null;
+                // 2パケットに分かれている場合
+                else
+                {
+                    if (mainForm.settings.DebugMode == 1)
+                    {
+                        mainForm.LogError("Party(Header): " + BitConverter.ToString(data));
+                    }
+                    return null;
+                }
+
+
             }
             else if (data[0] == 0x7f && data[1] == 0x01)
             {
@@ -213,9 +266,20 @@ namespace RoItemKakakuChecker.forms
             var chatLine = new ChatLogEntity();
             if (nextPacketChatType == "party")
             {
-                byte[] textdata = data.Take(nextPacketTextLength).ToArray();
-                // PTチャット2パケット目はヘッダ無し
-                sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                if (hasExtraHeader)
+                {
+                    // なぜか1パケットに詰め込まれている場合
+                    byte[] textdata = data.Skip(8).Take(nextPacketTextLength).ToArray();
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                }
+                else
+                {
+                    byte[] textdata = data.Take(nextPacketTextLength).ToArray();
+                    // PTチャット2パケット目はヘッダ無し
+                    sjisStr = Encoding.GetEncoding("Shift-JIS").GetString(textdata);
+                }
+
+
                 chatLine.MessageType = "Party";
             }
             else if (nextPacketChatType == "guild")
@@ -284,7 +348,10 @@ namespace RoItemKakakuChecker.forms
             nextPacketChatType = null;
             nextPacketTextLength = -1;
 
-            chatLine.Message = sjisStr.TrimEnd('\0');
+            //chatLine.Message = sjisStr.TrimEnd('\0');
+            sjisStr = sjisStr.TrimEnd('\0');
+            chatLine.Message = Regex.Replace(sjisStr, @"<ITEML>.*</ITEML>", "＜ITEM＞");
+
             chatLine.DateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
 
@@ -318,7 +385,7 @@ namespace RoItemKakakuChecker.forms
             if (chatLogEntityBindingSource.DataSource.GetType() != typeof(List<ChatLogEntity>))
             {
                 dataGridView.Invoke((MethodInvoker)delegate { chatLogEntityBindingSource.DataSource = new List<ChatLogEntity>(); });
-                
+
             }
             var list = chatLogEntityBindingSource.DataSource as List<ChatLogEntity>;
             dataGridView.Invoke((MethodInvoker)delegate
@@ -330,7 +397,7 @@ namespace RoItemKakakuChecker.forms
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
                     var entity = row.DataBoundItem as ChatLogEntity;
-                    
+
                     if (entity.MessageType == "Party")
                     {
                         row.DefaultCellStyle.ForeColor = Color.IndianRed;
@@ -351,7 +418,7 @@ namespace RoItemKakakuChecker.forms
 
                 dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
             });
-            
+
         }
 
         private void AppendToLogFile(ChatLogEntity chatLine)
@@ -389,5 +456,24 @@ namespace RoItemKakakuChecker.forms
                 chatLogEntityBindingSource.ResetBindings(false);
             });
         }
+
+        private void Speak(ChatLogEntity chatLine)
+        {
+            var separator = new char[] { ';', '；' };
+            var words = textBoxWord.Text.Split(separator).ToList();
+            var chatBody = chatLine.Message.Split(new string[] { " : " }, StringSplitOptions.None);
+
+            if ((chatLine.MessageType == "Public" && checkBoxPublic.Checked) ||
+                (chatLine.MessageType == "Party" && checkBoxParty.Checked) ||
+                (chatLine.MessageType == "Guild" && checkBoxGuild.Checked) ||
+                (chatLine.MessageType == "Whisper" && checkBoxWhisper.Checked) ||
+                (!string.IsNullOrWhiteSpace(textBoxWord.Text) && words.Any(w => chatBody[1].Contains(w) && checkBoxWord.Checked)))
+            {
+                mainForm.speaker.SpeakerName = chatBody[0];
+                mainForm.speaker.MessageBody = chatBody[1];
+                mainForm.speaker.Speak();
+            }
+        }
+
     }
 }

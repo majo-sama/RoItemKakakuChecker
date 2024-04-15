@@ -685,5 +685,6 @@ namespace RoItemKakakuChecker
         {
             dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = new List<Item>(); });
         }
+
     }
 }

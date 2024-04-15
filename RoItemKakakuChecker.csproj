@@ -88,6 +88,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Semver, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Semver.2.3.0\lib\net452\Semver.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.AppContext.4.3.0\lib\net463\System.AppContext.dll</HintPath>
@@ -218,6 +221,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -285,6 +289,7 @@
     <Compile Include="forms\StorageObserveModeControl.Designer.cs">
       <DependentUpon>StorageObserveModeControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Speaker.cs" />
     <EmbeddedResource Include="forms\ChatLogModeControl.resx">
       <DependentUpon>ChatLogModeControl.cs</DependentUpon>
     </EmbeddedResource>

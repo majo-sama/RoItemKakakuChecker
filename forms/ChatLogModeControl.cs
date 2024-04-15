@@ -137,7 +137,7 @@ namespace RoItemKakakuChecker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnChatDir_Click(object sender, EventArgs e)
+        public void btnChatDir_Click(object sender, EventArgs e)
         {
             using (var openFileDialog = new OpenFileDialog()
             {
@@ -328,14 +328,6 @@ namespace RoItemKakakuChecker
         }
 
 
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            if (mainForm.isFetching)
-            {
-                mainForm.stopFlag = true;
-                mainForm.isFetching = false;
-            }
-        }
 
         private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
