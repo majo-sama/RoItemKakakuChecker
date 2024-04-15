@@ -27,7 +27,12 @@ namespace RoItemKakakuChecker
             synthesizerForBody = CreateSpeechSynthesizer(100, 0);
 
             synthesizerForName.SpeakCompleted += (sender, e) => {
-                synthesizerForBody.SpeakAsync(MessageBody);
+                string body = MessageBody;
+                if (MessageBody == null)
+                {
+                    return;
+                }
+                synthesizerForBody.SpeakAsync(body);
                 SpeakerName = null;
                 MessageBody = null;
             };
@@ -35,6 +40,7 @@ namespace RoItemKakakuChecker
 
         public void Speak()
         {
+            string name = SpeakerName;
             if (SpeakerName == null || MessageBody == null)
             {
                 return;
@@ -42,7 +48,7 @@ namespace RoItemKakakuChecker
             synthesizerForName.SpeakAsyncCancelAll();
             synthesizerForBody.SpeakAsyncCancelAll();
 
-            synthesizerForName.SpeakAsync(SpeakerName);
+            synthesizerForName.SpeakAsync(name);
         }
 
 
