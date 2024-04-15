@@ -32,8 +32,17 @@ namespace RoItemKakakuChecker.forms
         {
             this.mainForm = mainForm;
 
-            bool isSucceeded = mainForm.settings.ReadSettings();
 
+            bool isSucceeded = mainForm.settings.ReadSettings();
+            if (isSucceeded)
+            {
+                checkBoxPublic.Checked = mainForm.settings.SpeechPublic;
+                checkBoxParty.Checked = mainForm.settings.SpeechParty;
+                checkBoxGuild.Checked = mainForm.settings.SpeechGuild;
+                checkBoxWhisper.Checked = mainForm.settings.SpeechWhisper;
+                checkBoxWord.Checked = mainForm.settings.SpeechWord;
+                textBoxWord.Text = mainForm.settings.SpeechKeyWord;
+            }
         }
 
         public ChatObserveModeControl()
@@ -63,7 +72,16 @@ namespace RoItemKakakuChecker.forms
             var text = "指定したワードに応じて読み上げを行います。\n通常・PT・ギルド・WISの全てに対して反応します。\n複数のワードを指定する場合はセミコロンで区切ってください。\n（例: おはよう;こんにちは;こんばんは）";
             toolTipWord.SetToolTip(this.checkBoxWord, text);
             toolTipWord.SetToolTip(this.textBoxWord, text);
+
+            checkBoxPublic.CheckedChanged += (sender, e) => mainForm.settings.SpeechPublic = checkBoxPublic.Checked;
+            checkBoxParty.CheckedChanged += (sender, e) => mainForm.settings.SpeechParty = checkBoxParty.Checked;
+            checkBoxGuild.CheckedChanged += (sender, e) => mainForm.settings.SpeechGuild = checkBoxGuild.Checked;
+            checkBoxWhisper.CheckedChanged += (sender, e) => mainForm.settings.SpeechWhisper = checkBoxWhisper.Checked;
+            checkBoxWord.CheckedChanged += (sender, e) => mainForm.settings.SpeechWord = checkBoxWord.Checked;
+            textBoxWord.LostFocus += (sender, e) => mainForm.settings.SpeechKeyWord = textBoxWord.Text;
         }
+
+
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
@@ -162,7 +180,10 @@ namespace RoItemKakakuChecker.forms
                                     AppendToGridView(chatLine);
                                     AppendToLogFile(chatLine);
 
-                                    Speak(chatLine);
+                                    if (mainForm.speaker.Enabled)
+                                    {
+                                        Speak(chatLine);
+                                    }
                                 }
                             }
                         }

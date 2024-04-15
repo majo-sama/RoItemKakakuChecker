@@ -19,6 +19,12 @@ namespace RoItemKakakuChecker
         public int ApiLimit { get { return settings.ApiLimit; } }
         public string ChatLogDir { get { return settings.ChatLogDir; } }
         public int DebugMode { get { return settings.DebugMode; } }
+        public bool SpeechPublic { get { return settings.SpeechPublic; } set { this.settings.SpeechPublic = value; CreateOrUpdateFile(); } }
+        public bool SpeechParty { get { return settings.SpeechParty; } set { this.settings.SpeechParty = value; CreateOrUpdateFile(); } }
+        public bool SpeechGuild { get { return settings.SpeechGuild; } set { this.settings.SpeechGuild = value; CreateOrUpdateFile(); } }
+        public bool SpeechWhisper { get { return settings.SpeechWhisper; } set { this.settings.SpeechWhisper = value; CreateOrUpdateFile(); } }
+        public bool SpeechWord { get { return settings.SpeechWord; } set { this.settings.SpeechWord = value; CreateOrUpdateFile(); } }
+        public string SpeechKeyWord { get { return settings.SpeechKeyWord; } set { this.settings.SpeechKeyWord = value; CreateOrUpdateFile(); } }
 
         public bool ReadSettings()
         {
@@ -37,6 +43,12 @@ namespace RoItemKakakuChecker
                         this.settings.ApiLimit = settings.ApiLimit;
                         this.settings.ChatLogDir = settings.ChatLogDir;
                         this.settings.DebugMode = settings.DebugMode;
+                        this.settings.SpeechPublic = settings.SpeechPublic;
+                        this.settings.SpeechParty = settings.SpeechParty;
+                        this.settings.SpeechGuild = settings.SpeechGuild;
+                        this.settings.SpeechWhisper = settings.SpeechWhisper;
+                        this.settings.SpeechWord = settings.SpeechWord;
+                        this.settings.SpeechKeyWord = settings.SpeechKeyWord;
                         return true;
                     }
                 }
@@ -66,6 +78,7 @@ namespace RoItemKakakuChecker
             this.settings.ChatLogDir = path;
             CreateOrUpdateFile();
         }
+
 
         private void CreateOrUpdateFile()
         {

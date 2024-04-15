@@ -18,6 +18,8 @@ namespace RoItemKakakuChecker
         public string SpeakerName { get; set; }
         public string MessageBody { get; set; }
 
+        public bool Enabled { get { return synthesizerForName != null && synthesizerForBody != null; } }
+
 
         public Speaker()
         {
@@ -55,6 +57,10 @@ namespace RoItemKakakuChecker
             CultureInfo cultureInfo = Application.CurrentCulture;
             // voicesに使用でききる音声合成エンジンが格納される
             ReadOnlyCollection<InstalledVoice> voices = sz.GetInstalledVoices(cultureInfo);
+            if (voices == null || voices.Count == 0)
+            {
+                return null;
+            }
             sz.SelectVoice(voices[0].VoiceInfo.Name);
             return sz;
         }

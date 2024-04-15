@@ -12,5 +12,11 @@ namespace RoItemKakakuChecker
 
         public int ApiLimit { get; set; } = 0;
         public int DebugMode {  get; set; } = 0;
+        public bool SpeechPublic { get; set; } = false;
+        public bool SpeechParty { get; set; } = false;
+        public bool SpeechGuild { get; set; } = false;
+        public bool SpeechWhisper { get; set; } = false;
+        public bool SpeechWord { get; set; } = false;
+        public string SpeechKeyWord { get; set; } = "";
     }
 }
