@@ -98,8 +98,8 @@
             this.結果をExcel形式でクリップボードにコピー_簡易});
             this.toolStripDropDownButton.Margin = new System.Windows.Forms.Padding(0, 2, 10, 0);
             this.toolStripDropDownButton.Name = "toolStripDropDownButton";
-            this.toolStripDropDownButton.Size = new System.Drawing.Size(44, 20);
-            this.toolStripDropDownButton.Text = "出力";
+            this.toolStripDropDownButton.Size = new System.Drawing.Size(65, 20);
+            this.toolStripDropDownButton.Text = "表を出力";
             this.toolStripDropDownButton.Click += new System.EventHandler(this.toolStripDropDownButton_Click);
             // 
             // 結果をCSVファイルに出力_通常
@@ -159,7 +159,7 @@
             this.groupBox1.Controls.Add(this.radioButton_storage);
             this.groupBox1.Location = new System.Drawing.Point(18, 8);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(495, 38);
+            this.groupBox1.Size = new System.Drawing.Size(508, 38);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "モード選択";

@@ -87,6 +87,9 @@ namespace RoItemKakakuChecker
             this.Controls.Add(this.storageObserveModeControl1);
             this.Controls.Add(this.chatObserveModeControl1);
 
+
+            this.Size = new Size(690, 600);
+
             btnStop.Click += BtnStop_Click;
 
 
@@ -133,6 +136,9 @@ namespace RoItemKakakuChecker
                     this.chatObserveModeControl1.Hide();
                     btnStop.Show();
                     toolStripDropDownButton.Enabled = true;
+                    toolStripDropDownButton.Visible = true;
+                    toolStripProgressBar.Visible = true;
+
                 }
                 else if (radio.Name == "radioButton_storage")
                 {
@@ -141,6 +147,10 @@ namespace RoItemKakakuChecker
                     this.chatObserveModeControl1.Hide();
                     btnStop.Show();
                     toolStripDropDownButton.Enabled = true;
+                    toolStripDropDownButton.Visible = true;
+                    toolStripProgressBar.Visible = true;
+
+
                 }
                 else
                 {
@@ -149,6 +159,9 @@ namespace RoItemKakakuChecker
                     this.chatLogModeControl.Hide();
                     btnStop.Hide();
                     toolStripDropDownButton.Enabled = false;
+                    toolStripDropDownButton.Visible = false;
+                    toolStripProgressBar.Visible = false;
+
                 }
             }
             return;
