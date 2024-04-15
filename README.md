@@ -1,5 +1,5 @@
 # -
-# RO価格確認機 1.3.0
+# RO価格確認機 1.3.1
 
 このツールは、チャットログまたは受信パケットに含まれるアイテム獲得メッセージを抽出して これを素にRO公式ツールが使用しているAPIから価格情報するもの（＋おまけ）です。
 
@@ -7,7 +7,7 @@
 
 ## ダウンロード
 
-- [RoItemKakakuChecker.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.3.0/RoItemKakakuChecker.zip)
+- [RoItemKakakuChecker.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.3.1/RoItemKakakuChecker.zip)
 
 ### バージョンアップ方法
 
@@ -81,6 +81,8 @@
 
 ## 変更履歴
 
+- v1.3.1
+  - Microsoft Defender にマルウェアとして誤検知される問題を修正
 - v1.3.0
   - 会話メッセージ取得時、稀にPTチャットの内容が正常に表示されない問題を修正
   - 会話メッセージ取得時、メッセージにアイテムが添付されている際に これを省略表示するよう修正
