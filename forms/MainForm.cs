@@ -13,7 +13,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Compression;
-
+using NetFwTypeLib;
 
 namespace RoItemKakakuChecker
 {
@@ -26,7 +26,7 @@ namespace RoItemKakakuChecker
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
         public Speaker speaker;
 
-        private const string VERSION = "1.3.0";
+        private const string VERSION = "1.3.1";
 
 
         public MainForm()
@@ -90,32 +90,75 @@ namespace RoItemKakakuChecker
 
             btnStop.Click += BtnStop_Click;
 
-
-            string cmdDelete = "netsh advfirewall firewall delete rule name=\"RoItemKakakuChecker\"";
-            string exePath = Assembly.GetEntryAssembly().Location;
-            string cmdAdd = $"netsh advfirewall firewall add rule name=\"RoItemKakakuChecker\" dir=in action=allow program=\"{exePath}\" enable=yes";
-
-            //Processオブジェクトを作成
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
-
-            //ComSpec(cmd.exe)のパスを取得して、FileNameプロパティに指定
-            p.StartInfo.FileName = System.Environment.GetEnvironmentVariable("ComSpec");
-            //出力を読み取れるようにする
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardInput = false;
-            //ウィンドウを表示しないようにする
-            p.StartInfo.CreateNoWindow = true;
-            //コマンドラインを指定（"/c"は実行後閉じるために必要）
-            p.StartInfo.Arguments = $@"/c {cmdDelete} & {cmdAdd}";
-
-            //起動
-            p.Start();
+            //RemoveFirewallException();
+            ////CheckFirewallException();
+            AddFirewallException();
 
             this.Text = "RO価格確認機 v" + VERSION;
 
 
             await AutoUpdate();
+        }
+
+
+        static bool CheckFirewallException()
+        {
+            var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
+            INetFwMgr manager = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
+            bool isExceptionAllowed = false;
+
+            // ファイアーウォールの例外リストを取得
+            foreach (INetFwAuthorizedApplication app in manager.LocalPolicy.CurrentProfile.AuthorizedApplications)
+            {
+                if (app.ProcessImageFileName.ToLower() == exePath.ToLower())
+                {
+                    isExceptionAllowed = true;
+                    break;
+                }
+            }
+
+            return isExceptionAllowed;
+        }
+
+        static void RemoveFirewallException()
+        {
+            var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var appName = "RoItemKakakuChecker";
+            Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
+            INetFwMgr manager = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
+
+            // ファイアーウォールの例外リストから指定されたアプリケーションを削除
+            INetFwAuthorizedApplications apps = manager.LocalPolicy.CurrentProfile.AuthorizedApplications;
+            foreach (INetFwAuthorizedApplication app in apps)
+            {
+                if (app.Name == appName)
+                {
+                    apps.Remove(app.ProcessImageFileName);
+                }
+            }
+        }
+
+        static void AddFirewallException()
+        {
+
+            //Type tNetFwPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+            //INetFwPolicy2 fwPolicy2 = (INetFwPolicy2)Activator.CreateInstance(tNetFwPolicy2);
+            //var currentProfiles = fwPolicy2.CurrentProfileTypes;
+
+            // Let's create a new rule
+
+            INetFwRule2 inboundRule = (INetFwRule2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            inboundRule.Enabled = true;
+            //inboundRule.Profiles = currentProfiles;
+            inboundRule.Profiles = 2 | 4;
+            inboundRule.Name = "RoItemKakakuChecker";
+            inboundRule.ApplicationName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            // Now add the rule
+
+            INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+            firewallPolicy.Rules.Remove("RoItemkakakuChecker");
+            firewallPolicy.Rules.Add(inboundRule);
         }
 
         private async Task<string> AutoUpdate()
