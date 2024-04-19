@@ -26,7 +26,7 @@ namespace RoItemKakakuChecker
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
         public Speaker speaker;
 
-        private const string VERSION = "1.3.3";
+        private const string VERSION = "1.3.4";
 
 
         public MainForm()

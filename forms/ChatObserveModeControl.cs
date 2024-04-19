@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Speech.Synthesis;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace RoItemKakakuChecker.forms
@@ -475,5 +476,14 @@ namespace RoItemKakakuChecker.forms
             }
         }
 
+        private void buttonYomiageSetting_Click(object sender, EventArgs e)
+        {
+            var yomiageForm = new YomiageSettingForm(mainForm.speaker);
+            DialogResult res = yomiageForm.ShowDialog();
+
+            if (res == DialogResult.OK)
+            {
+            }
+        }
     }
 }
