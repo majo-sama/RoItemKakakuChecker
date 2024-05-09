@@ -90,8 +90,6 @@ namespace RoItemKakakuChecker
 
             btnStop.Click += BtnStop_Click;
 
-            //RemoveFirewallException();
-            ////CheckFirewallException();
             AddFirewallException();
 
             this.Text = "RO価格確認機 v" + VERSION;
@@ -101,52 +99,10 @@ namespace RoItemKakakuChecker
         }
 
 
-        static bool CheckFirewallException()
-        {
-            var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
-            INetFwMgr manager = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
-            bool isExceptionAllowed = false;
-
-            // ファイアーウォールの例外リストを取得
-            foreach (INetFwAuthorizedApplication app in manager.LocalPolicy.CurrentProfile.AuthorizedApplications)
-            {
-                if (app.ProcessImageFileName.ToLower() == exePath.ToLower())
-                {
-                    isExceptionAllowed = true;
-                    break;
-                }
-            }
-
-            return isExceptionAllowed;
-        }
-
-        static void RemoveFirewallException()
-        {
-            var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            var appName = "RoItemKakakuChecker";
-            Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
-            INetFwMgr manager = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
-
-            // ファイアーウォールの例外リストから指定されたアプリケーションを削除
-            INetFwAuthorizedApplications apps = manager.LocalPolicy.CurrentProfile.AuthorizedApplications;
-            foreach (INetFwAuthorizedApplication app in apps)
-            {
-                if (app.Name == appName)
-                {
-                    apps.Remove(app.ProcessImageFileName);
-                }
-            }
-        }
-
         static void AddFirewallException()
         {
 
-            //Type tNetFwPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
-            //INetFwPolicy2 fwPolicy2 = (INetFwPolicy2)Activator.CreateInstance(tNetFwPolicy2);
-            //var currentProfiles = fwPolicy2.CurrentProfileTypes;
-
-            // Let's create a new rule
+            // create a new rule
 
             INetFwRule2 inboundRule = (INetFwRule2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
             inboundRule.Enabled = true;
