@@ -175,7 +175,7 @@ namespace RoItemKakakuChecker.forms
                             {
                                 var chatLine = Analyze(joinedBody);
                                 joinedBody = new byte[0];
-                                if (chatLine != null)
+                                if (chatLine != null && chatLine.Message.Contains(" : "))
                                 {
                                     AppendToGridView(chatLine);
                                     AppendToLogFile(chatLine);
@@ -390,6 +390,9 @@ namespace RoItemKakakuChecker.forms
             var list = chatLogEntityBindingSource.DataSource as List<ChatLogEntity>;
             dataGridView.Invoke((MethodInvoker)delegate
             {
+                
+                var rowIdx = dataGridView.FirstDisplayedScrollingRowIndex;
+                
                 list.Add(chatLine);
                 //chatLogEntityBindingSource.DataSource = list;
                 chatLogEntityBindingSource.ResetBindings(false);
@@ -416,7 +419,8 @@ namespace RoItemKakakuChecker.forms
                     }
                 }
 
-                dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
+                //dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
+                dataGridView.FirstDisplayedScrollingRowIndex = rowIdx + 1;
             });
 
         }
@@ -469,8 +473,8 @@ namespace RoItemKakakuChecker.forms
                 (chatLine.MessageType == "Whisper" && checkBoxWhisper.Checked) ||
                 (!string.IsNullOrWhiteSpace(textBoxWord.Text) && words.Any(w => chatBody[1].Contains(w) && checkBoxWord.Checked)))
             {
-                mainForm.speaker.SpeakerName = chatBody[0];
-                mainForm.speaker.MessageBody = chatBody[1];
+
+                mainForm.speaker.Message = chatBody[0] + "、" + chatBody[1];
                 mainForm.speaker.Speak();
             }
         }
