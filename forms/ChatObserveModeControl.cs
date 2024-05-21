@@ -210,6 +210,7 @@ namespace RoItemKakakuChecker.forms
 
         private string nextPacketChatType = null;
         private int nextPacketTextLength = -1;
+        private byte[] previousMdTaikiPacket = null;
         private ChatLogEntity Analyze(byte[] data)
         {
             bool hasExtraHeader = false;
@@ -346,25 +347,30 @@ namespace RoItemKakakuChecker.forms
             }
             else if (data[0] == 0xcc && data[1] == 0x02)
             {
-                // MD待機人数が減った時
-                byte[] taikiArr = { 0, 0, 0, 0 };
-                taikiArr[0] = data[2];
-                taikiArr[1] = data[3];
-                int taiki = BitConverter.ToInt32(taikiArr, 0);
- 
-
-                var now = DateTime.Now;
-                if (now > lastYomiageTime.AddSeconds(30))
+                // 複数人で入退場したとき、同一パケットが複数回届く場合があるため、この対策
+                if (!data.SequenceEqual(previousMdTaikiPacket))
                 {
-                    lastYomiageTime = now;
+                    // MD待機人数が減った時
+                    byte[] taikiArr = { 0, 0, 0, 0 };
+                    taikiArr[0] = data[2];
+                    taikiArr[1] = data[3];
+                    int taiki = BitConverter.ToInt32(taikiArr, 0);
 
-                    if (checkBoxMdYomiage.Checked && taiki <= numericUpDownMdYomiage.Value)
+
+                    var now = DateTime.Now;
+                    if (now > lastYomiageTime.AddSeconds(30))
                     {
-                        mainForm.speaker2.Message = $"MD待機、あと {taiki} です!";
-                        mainForm.speaker2.Speak();
-                    }
-                }
+                        lastYomiageTime = now;
 
+                        if (checkBoxMdYomiage.Checked && taiki <= numericUpDownMdYomiage.Value)
+                        {
+                            mainForm.speaker2.Message = $"MD 待機、あと {taiki} っ！";
+                            mainForm.speaker2.Speak();
+                        }
+                    }
+
+                    previousMdTaikiPacket = data;
+                }
             }
             else if (data[0] == 0xcd && data[1] == 0x02)
             {
