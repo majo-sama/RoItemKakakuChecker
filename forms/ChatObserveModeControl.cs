@@ -27,6 +27,7 @@ namespace RoItemKakakuChecker.forms
         private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
         private bool isObserving = false;
+        private DateTime lastYomiageTime = DateTime.MinValue;
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -42,6 +43,8 @@ namespace RoItemKakakuChecker.forms
                 checkBoxWhisper.Checked = mainForm.settings.SpeechWhisper;
                 checkBoxWord.Checked = mainForm.settings.SpeechWord;
                 textBoxWord.Text = mainForm.settings.SpeechKeyWord;
+                checkBoxMdYomiage.Checked = mainForm.settings.EnableMdYomiage;
+                numericUpDownMdYomiage.Value = mainForm.settings.MdYomiageMax;
             }
         }
 
@@ -79,6 +82,9 @@ namespace RoItemKakakuChecker.forms
             checkBoxWhisper.CheckedChanged += (sender, e) => mainForm.settings.SpeechWhisper = checkBoxWhisper.Checked;
             checkBoxWord.CheckedChanged += (sender, e) => mainForm.settings.SpeechWord = checkBoxWord.Checked;
             textBoxWord.LostFocus += (sender, e) => mainForm.settings.SpeechKeyWord = textBoxWord.Text;
+
+            checkBoxMdYomiage.CheckedChanged += (sender, e) => mainForm.settings.EnableMdYomiage = checkBoxMdYomiage.Checked;
+            numericUpDownMdYomiage.ValueChanged += (sender, e) => mainForm.settings.MdYomiageMax = (int)numericUpDownMdYomiage.Value;
         }
 
 
@@ -337,6 +343,38 @@ namespace RoItemKakakuChecker.forms
 
                 sjisStr = sjisCharName + " : " + sjisMessage;
                 chatLine.MessageType = "Whisper";
+            }
+            else if (data[0] == 0xcc && data[1] == 0x02)
+            {
+                // MD待機人数が減った時
+                byte[] taikiArr = { 0, 0, 0, 0 };
+                taikiArr[0] = data[2];
+                taikiArr[1] = data[3];
+                int taiki = BitConverter.ToInt32(taikiArr, 0);
+ 
+
+                var now = DateTime.Now;
+                if (now > lastYomiageTime.AddSeconds(30))
+                {
+                    lastYomiageTime = now;
+
+                    if (checkBoxMdYomiage.Checked && taiki <= numericUpDownMdYomiage.Value)
+                    {
+                        mainForm.speaker2.Message = $"MD待機、あと {taiki} です!";
+                        mainForm.speaker2.Speak();
+                    }
+                }
+
+            }
+            else if (data[0] == 0xcd && data[1] == 0x02)
+            {
+                // MDが開いたとき
+                if (checkBoxMdYomiage.Checked)
+                {
+                    mainForm.speaker2.Message = $"MDがあきました!";
+                    mainForm.speaker2.Speak();
+                }
+
             }
             else
             {

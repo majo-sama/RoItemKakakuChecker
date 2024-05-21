@@ -28,6 +28,15 @@ namespace RoItemKakakuChecker
             };
         }
 
+        public Speaker(int volume, int speed)
+        {
+            synthesizer = CreateSpeechSynthesizer(volume, speed);
+
+            synthesizer.SpeakCompleted += (sender, e) => {
+                Message = null;
+            };
+        }
+
         public void Speak()
         {
             string message = Message;

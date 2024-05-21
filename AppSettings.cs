@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RoItemKakakuChecker
 {
@@ -25,6 +26,9 @@ namespace RoItemKakakuChecker
         public bool SpeechWhisper { get { return settings.SpeechWhisper; } set { this.settings.SpeechWhisper = value; CreateOrUpdateFile(); } }
         public bool SpeechWord { get { return settings.SpeechWord; } set { this.settings.SpeechWord = value; CreateOrUpdateFile(); } }
         public string SpeechKeyWord { get { return settings.SpeechKeyWord; } set { this.settings.SpeechKeyWord = value; CreateOrUpdateFile(); } }
+        public bool EnableMdYomiage { get { return settings.EnableMdYomiage; } set { this.settings.EnableMdYomiage = value; CreateOrUpdateFile(); } }
+        public int MdYomiageMax { get { return settings.MdYomiageMax; } set {  this.settings.MdYomiageMax = value; CreateOrUpdateFile(); } }
+
 
         public bool ReadSettings()
         {
@@ -49,6 +53,8 @@ namespace RoItemKakakuChecker
                         this.settings.SpeechWhisper = settings.SpeechWhisper;
                         this.settings.SpeechWord = settings.SpeechWord;
                         this.settings.SpeechKeyWord = settings.SpeechKeyWord;
+                        this.settings.EnableMdYomiage = settings.EnableMdYomiage;
+                        this.settings.MdYomiageMax = settings.MdYomiageMax;
                         return true;
                     }
                 }
