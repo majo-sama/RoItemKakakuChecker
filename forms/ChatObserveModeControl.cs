@@ -26,7 +26,6 @@ namespace RoItemKakakuChecker.forms
     {
         private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
-        private bool isObserving = false;
         private DateTime lastYomiageTime = DateTime.MinValue;
 
         public void SetMainForm(MainForm mainForm)
@@ -48,11 +47,10 @@ namespace RoItemKakakuChecker.forms
             }
         }
 
+
         public ChatObserveModeControl()
         {
             InitializeComponent();
-
-
 
             dataGridView.AllowUserToAddRows = false;
             dataGridView.AllowUserToResizeRows = false;
@@ -94,29 +92,14 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ClearSelection();
         }
 
-        private async void btnObserveChat_Click(object sender, EventArgs e)
-        {
-            // 停止ボタン
-            if (isObserving)
-            {
-                isObserving = false;
-                btnObserveChat.Text = "チャット監視 開始";
-            }
-            // 開始ボタン
-            else
-            {
-                isObserving = true;
-                btnObserveChat.Text = "チャット監視 停止";
-                await ObserveChatMessage();
-            }
-        }
 
-        private async Task ObserveChatMessage()
+        public Socket socket;
+        public async Task ObserveChatMessage()
         {
 
             var he = Dns.GetHostEntry(Dns.GetHostName());
             var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
             socket.Bind(new IPEndPoint(addr[0], 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
@@ -192,12 +175,6 @@ namespace RoItemKakakuChecker.forms
                                     }
                                 }
                             }
-                        }
-
-                        if (!isObserving)
-                        {
-                            mainForm.UpdateToolStripLabel("会話メッセージの監視を停止しました。");
-                            break;
                         }
                     }
                     catch (Exception ex)
@@ -487,10 +464,12 @@ namespace RoItemKakakuChecker.forms
         {
             string text = "";
             text += @"会話メッセージ取得モードは、メッセージの監視中に受信したメッセージ（通常・パーティ・ギルド・Wis）を表示し、同時に外部ファイルに保存するものです。
-チャットルームや天の声などには対応していません。またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
+チャットルームや天の声などには対応していません。（チャットルームは通常メッセージとして扱われます）
+またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
 おまけ機能のため、継続して利用する場合は類似の別のツールを使うことを推奨します。
 この機能は、作者が通常/PT/ギルド チャットの色の見分けが付かず困った時のために作りました。
-必要なときのみ監視状態を有効にしてください。";
+
+MD待機読み上げ機能は、数値を入力してチェックを付けると、MDの待機人数が指定した値以下に変化した際に音声で読み上げが行われます。";
 
 
             MessageBox.Show(text, "ヘルプ");
@@ -519,6 +498,9 @@ namespace RoItemKakakuChecker.forms
             {
 
                 mainForm.speaker.Message = chatBody[0] + "、" + chatBody[1];
+                System.Media.SystemSounds.Asterisk.Play();
+                Task.Delay(1000);
+
                 mainForm.speaker.Speak();
             }
         }

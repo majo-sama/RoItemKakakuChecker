@@ -46,8 +46,27 @@ namespace RoItemKakakuChecker
 
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
-            speaker.Dispose();
-            speaker2.Dispose();
+            try
+            {
+                speaker.Dispose();
+                speaker2.Dispose();
+            }
+            catch { }
+
+            try
+            {
+                chatObserveModeControl1.socket.Dispose();
+            }
+            catch { }
+
+            try
+            {
+                if (StorageObserveModeControl.observing)
+                {
+                    storageObserveModeControl1.socket.Dispose();
+                }
+            }
+            catch { }
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -99,6 +118,8 @@ namespace RoItemKakakuChecker
 
 
             await AutoUpdate();
+
+            await chatObserveModeControl1.ObserveChatMessage();
         }
 
 

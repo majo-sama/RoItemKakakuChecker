@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnObserveChat = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dateTimeStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.messageTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,16 +52,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMdYomiage)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnObserveChat
-            // 
-            this.btnObserveChat.Location = new System.Drawing.Point(20, 9);
-            this.btnObserveChat.Name = "btnObserveChat";
-            this.btnObserveChat.Size = new System.Drawing.Size(107, 23);
-            this.btnObserveChat.TabIndex = 0;
-            this.btnObserveChat.Text = "チャット監視 開始";
-            this.btnObserveChat.UseVisualStyleBackColor = true;
-            this.btnObserveChat.Click += new System.EventHandler(this.btnObserveChat_Click);
             // 
             // dataGridView
             // 
@@ -129,7 +118,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(133, 9);
+            this.btnClear.Location = new System.Drawing.Point(20, 8);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
             this.btnClear.TabIndex = 3;
@@ -263,7 +252,6 @@
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.btnObserveChat);
             this.Name = "ChatObserveModeControl";
             this.Size = new System.Drawing.Size(547, 502);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -276,8 +264,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnObserveChat;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.BindingSource chatLogEntityBindingSource;
         private System.Windows.Forms.BindingSource itemBindingSource;

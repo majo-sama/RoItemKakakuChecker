@@ -169,10 +169,10 @@
             this.radioChatMessage.AutoSize = true;
             this.radioChatMessage.Location = new System.Drawing.Point(295, 15);
             this.radioChatMessage.Name = "radioChatMessage";
-            this.radioChatMessage.Size = new System.Drawing.Size(116, 16);
+            this.radioChatMessage.Size = new System.Drawing.Size(193, 16);
             this.radioChatMessage.TabIndex = 14;
             this.radioChatMessage.TabStop = true;
-            this.radioChatMessage.Text = "会話メッセージ取得";
+            this.radioChatMessage.Text = "会話メッセージ取得＋MD待機通知";
             this.radioChatMessage.UseVisualStyleBackColor = true;
             // 
             // chatObserveModeControl1
