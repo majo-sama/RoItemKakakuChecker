@@ -187,7 +187,7 @@ namespace RoItemKakakuChecker.forms
 
         private string nextPacketChatType = null;
         private int nextPacketTextLength = -1;
-        private byte[] previousMdTaikiPacket = null;
+        private byte[] previousMdTaikiPacket = new byte[32];
         private ChatLogEntity Analyze(byte[] data)
         {
             bool hasExtraHeader = false;
@@ -325,7 +325,8 @@ namespace RoItemKakakuChecker.forms
             else if (data[0] == 0xcc && data[1] == 0x02)
             {
                 // 複数人で入退場したとき、同一パケットが複数回届く場合があるため、この対策
-                if (!data.SequenceEqual(previousMdTaikiPacket))
+
+                if (data[2] != previousMdTaikiPacket[2] || data[3] != previousMdTaikiPacket[3])
                 {
                     // MD待機人数が減った時
                     byte[] taikiArr = { 0, 0, 0, 0 };
@@ -335,7 +336,7 @@ namespace RoItemKakakuChecker.forms
 
 
                     var now = DateTime.Now;
-                    if (now > lastYomiageTime.AddSeconds(30))
+                    if (now > lastYomiageTime.AddSeconds(15))
                     {
                         lastYomiageTime = now;
 
@@ -351,13 +352,18 @@ namespace RoItemKakakuChecker.forms
             }
             else if (data[0] == 0xcd && data[1] == 0x02)
             {
-                // MDが開いたとき
-                if (checkBoxMdYomiage.Checked)
+                if (data[2] != previousMdTaikiPacket[2] || data[3] != previousMdTaikiPacket[3])
                 {
-                    mainForm.speaker2.Message = $"MDがあきました!";
-                    mainForm.speaker2.Speak();
-                }
 
+                    // MDが開いたとき
+                    if (checkBoxMdYomiage.Checked)
+                    {
+                        mainForm.speaker2.Message = $"MDがあきましたっ!";
+                        mainForm.speaker2.Speak();
+                    }
+
+                    previousMdTaikiPacket = data;
+                }
             }
             else
             {
