@@ -26,7 +26,7 @@ namespace RoItemKakakuChecker.forms
     {
         private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
-        private bool isObserving = false;
+        private DateTime lastYomiageTime = DateTime.MinValue;
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -42,14 +42,15 @@ namespace RoItemKakakuChecker.forms
                 checkBoxWhisper.Checked = mainForm.settings.SpeechWhisper;
                 checkBoxWord.Checked = mainForm.settings.SpeechWord;
                 textBoxWord.Text = mainForm.settings.SpeechKeyWord;
+                checkBoxMdYomiage.Checked = mainForm.settings.EnableMdYomiage;
+                numericUpDownMdYomiage.Value = mainForm.settings.MdYomiageMax;
             }
         }
+
 
         public ChatObserveModeControl()
         {
             InitializeComponent();
-
-
 
             dataGridView.AllowUserToAddRows = false;
             dataGridView.AllowUserToResizeRows = false;
@@ -79,6 +80,9 @@ namespace RoItemKakakuChecker.forms
             checkBoxWhisper.CheckedChanged += (sender, e) => mainForm.settings.SpeechWhisper = checkBoxWhisper.Checked;
             checkBoxWord.CheckedChanged += (sender, e) => mainForm.settings.SpeechWord = checkBoxWord.Checked;
             textBoxWord.LostFocus += (sender, e) => mainForm.settings.SpeechKeyWord = textBoxWord.Text;
+
+            checkBoxMdYomiage.CheckedChanged += (sender, e) => mainForm.settings.EnableMdYomiage = checkBoxMdYomiage.Checked;
+            numericUpDownMdYomiage.ValueChanged += (sender, e) => mainForm.settings.MdYomiageMax = (int)numericUpDownMdYomiage.Value;
         }
 
 
@@ -88,29 +92,14 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ClearSelection();
         }
 
-        private async void btnObserveChat_Click(object sender, EventArgs e)
-        {
-            // 停止ボタン
-            if (isObserving)
-            {
-                isObserving = false;
-                btnObserveChat.Text = "チャット監視 開始";
-            }
-            // 開始ボタン
-            else
-            {
-                isObserving = true;
-                btnObserveChat.Text = "チャット監視 停止";
-                await ObserveChatMessage();
-            }
-        }
 
-        private async Task ObserveChatMessage()
+        public Socket socket;
+        public async Task ObserveChatMessage()
         {
 
             var he = Dns.GetHostEntry(Dns.GetHostName());
             var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
             socket.Bind(new IPEndPoint(addr[0], 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
@@ -175,7 +164,7 @@ namespace RoItemKakakuChecker.forms
                             {
                                 var chatLine = Analyze(joinedBody);
                                 joinedBody = new byte[0];
-                                if (chatLine != null)
+                                if (chatLine != null && chatLine.Message.Contains(" : "))
                                 {
                                     AppendToGridView(chatLine);
                                     AppendToLogFile(chatLine);
@@ -186,12 +175,6 @@ namespace RoItemKakakuChecker.forms
                                     }
                                 }
                             }
-                        }
-
-                        if (!isObserving)
-                        {
-                            mainForm.UpdateToolStripLabel("会話メッセージの監視を停止しました。");
-                            break;
                         }
                     }
                     catch (Exception ex)
@@ -204,6 +187,7 @@ namespace RoItemKakakuChecker.forms
 
         private string nextPacketChatType = null;
         private int nextPacketTextLength = -1;
+        private byte[] previousMdTaikiPacket = new byte[32];
         private ChatLogEntity Analyze(byte[] data)
         {
             bool hasExtraHeader = false;
@@ -338,6 +322,49 @@ namespace RoItemKakakuChecker.forms
                 sjisStr = sjisCharName + " : " + sjisMessage;
                 chatLine.MessageType = "Whisper";
             }
+            else if (data[0] == 0xcc && data[1] == 0x02)
+            {
+                // 複数人で入退場したとき、同一パケットが複数回届く場合があるため、この対策
+
+                if (data[2] != previousMdTaikiPacket[2] || data[3] != previousMdTaikiPacket[3])
+                {
+                    // MD待機人数が減った時
+                    byte[] taikiArr = { 0, 0, 0, 0 };
+                    taikiArr[0] = data[2];
+                    taikiArr[1] = data[3];
+                    int taiki = BitConverter.ToInt32(taikiArr, 0);
+
+
+                    var now = DateTime.Now;
+                    if (now > lastYomiageTime.AddSeconds(15))
+                    {
+                        lastYomiageTime = now;
+
+                        if (checkBoxMdYomiage.Checked && taiki <= numericUpDownMdYomiage.Value)
+                        {
+                            mainForm.speaker2.Message = $"MD 待機、あと {taiki} っ！";
+                            mainForm.speaker2.Speak();
+                        }
+                    }
+
+                    previousMdTaikiPacket = data;
+                }
+            }
+            else if (data[0] == 0xcd && data[1] == 0x02)
+            {
+                if (data[2] != previousMdTaikiPacket[2] || data[3] != previousMdTaikiPacket[3])
+                {
+
+                    // MDが開いたとき
+                    if (checkBoxMdYomiage.Checked)
+                    {
+                        mainForm.speaker2.Message = $"MDがあきましたっ!";
+                        mainForm.speaker2.Speak();
+                    }
+
+                    previousMdTaikiPacket = data;
+                }
+            }
             else
             {
                 // チャット以外のパケットは無視
@@ -390,6 +417,9 @@ namespace RoItemKakakuChecker.forms
             var list = chatLogEntityBindingSource.DataSource as List<ChatLogEntity>;
             dataGridView.Invoke((MethodInvoker)delegate
             {
+                
+                var rowIdx = dataGridView.FirstDisplayedScrollingRowIndex;
+                
                 list.Add(chatLine);
                 //chatLogEntityBindingSource.DataSource = list;
                 chatLogEntityBindingSource.ResetBindings(false);
@@ -416,7 +446,8 @@ namespace RoItemKakakuChecker.forms
                     }
                 }
 
-                dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
+                //dataGridView.FirstDisplayedScrollingRowIndex = dataGridView.Rows.Count - 1;
+                dataGridView.FirstDisplayedScrollingRowIndex = rowIdx + 1;
             });
 
         }
@@ -439,10 +470,12 @@ namespace RoItemKakakuChecker.forms
         {
             string text = "";
             text += @"会話メッセージ取得モードは、メッセージの監視中に受信したメッセージ（通常・パーティ・ギルド・Wis）を表示し、同時に外部ファイルに保存するものです。
-チャットルームや天の声などには対応していません。またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
+チャットルームや天の声などには対応していません。（チャットルームは通常メッセージとして扱われます）
+またWisは受信メッセージのみ対応しています。（自身が発言したメッセージは記録されません）
 おまけ機能のため、継続して利用する場合は類似の別のツールを使うことを推奨します。
 この機能は、作者が通常/PT/ギルド チャットの色の見分けが付かず困った時のために作りました。
-必要なときのみ監視状態を有効にしてください。";
+
+MD待機読み上げ機能は、数値を入力してチェックを付けると、MDの待機人数が指定した値以下に変化した際に音声で読み上げが行われます。";
 
 
             MessageBox.Show(text, "ヘルプ");
@@ -469,8 +502,11 @@ namespace RoItemKakakuChecker.forms
                 (chatLine.MessageType == "Whisper" && checkBoxWhisper.Checked) ||
                 (!string.IsNullOrWhiteSpace(textBoxWord.Text) && words.Any(w => chatBody[1].Contains(w) && checkBoxWord.Checked)))
             {
-                mainForm.speaker.SpeakerName = chatBody[0];
-                mainForm.speaker.MessageBody = chatBody[1];
+
+                mainForm.speaker.Message = chatBody[0] + "、" + chatBody[1];
+                System.Media.SystemSounds.Asterisk.Play();
+                Task.Delay(1000);
+
                 mainForm.speaker.Speak();
             }
         }

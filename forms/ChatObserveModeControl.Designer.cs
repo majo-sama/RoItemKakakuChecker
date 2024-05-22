@@ -29,8 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnObserveChat = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dateTimeStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.messageTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chatLogEntityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.labelYomiage = new System.Windows.Forms.Label();
@@ -40,25 +43,15 @@
             this.checkBoxWhisper = new System.Windows.Forms.CheckBox();
             this.checkBoxWord = new System.Windows.Forms.CheckBox();
             this.textBoxWord = new System.Windows.Forms.TextBox();
-            this.dateTimeStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.messageTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chatLogEntityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.numericUpDownMdYomiage = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxMdYomiage = new System.Windows.Forms.CheckBox();
+            this.labelOnseiTsuchi = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMdYomiage)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnObserveChat
-            // 
-            this.btnObserveChat.Location = new System.Drawing.Point(20, 9);
-            this.btnObserveChat.Name = "btnObserveChat";
-            this.btnObserveChat.Size = new System.Drawing.Size(107, 23);
-            this.btnObserveChat.TabIndex = 0;
-            this.btnObserveChat.Text = "チャット監視 開始";
-            this.btnObserveChat.UseVisualStyleBackColor = true;
-            this.btnObserveChat.Click += new System.EventHandler(this.btnObserveChat_Click);
             // 
             // dataGridView
             // 
@@ -81,6 +74,38 @@
             this.dataGridView.Size = new System.Drawing.Size(511, 436);
             this.dataGridView.TabIndex = 1;
             // 
+            // dateTimeStrDataGridViewTextBoxColumn
+            // 
+            this.dateTimeStrDataGridViewTextBoxColumn.DataPropertyName = "DateTimeStr";
+            this.dateTimeStrDataGridViewTextBoxColumn.FillWeight = 120F;
+            this.dateTimeStrDataGridViewTextBoxColumn.HeaderText = "時刻";
+            this.dateTimeStrDataGridViewTextBoxColumn.Name = "dateTimeStrDataGridViewTextBoxColumn";
+            this.dateTimeStrDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dateTimeStrDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dateTimeStrDataGridViewTextBoxColumn.Width = 120;
+            // 
+            // messageTypeDataGridViewTextBoxColumn
+            // 
+            this.messageTypeDataGridViewTextBoxColumn.DataPropertyName = "MessageType";
+            this.messageTypeDataGridViewTextBoxColumn.FillWeight = 55F;
+            this.messageTypeDataGridViewTextBoxColumn.HeaderText = "種別";
+            this.messageTypeDataGridViewTextBoxColumn.Name = "messageTypeDataGridViewTextBoxColumn";
+            this.messageTypeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.messageTypeDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.messageTypeDataGridViewTextBoxColumn.Width = 55;
+            // 
+            // messageDataGridViewTextBoxColumn
+            // 
+            this.messageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
+            this.messageDataGridViewTextBoxColumn.HeaderText = "メッセージ";
+            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
+            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // chatLogEntityBindingSource
+            // 
+            this.chatLogEntityBindingSource.DataSource = typeof(RoItemKakakuChecker.ChatLogEntity);
+            // 
             // btnHelp
             // 
             this.btnHelp.Location = new System.Drawing.Point(456, 9);
@@ -93,7 +118,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(133, 9);
+            this.btnClear.Location = new System.Drawing.Point(20, 8);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
             this.btnClear.TabIndex = 3;
@@ -175,46 +200,48 @@
             this.textBoxWord.Size = new System.Drawing.Size(129, 19);
             this.textBoxWord.TabIndex = 10;
             // 
-            // dateTimeStrDataGridViewTextBoxColumn
-            // 
-            this.dateTimeStrDataGridViewTextBoxColumn.DataPropertyName = "DateTimeStr";
-            this.dateTimeStrDataGridViewTextBoxColumn.FillWeight = 120F;
-            this.dateTimeStrDataGridViewTextBoxColumn.HeaderText = "時刻";
-            this.dateTimeStrDataGridViewTextBoxColumn.Name = "dateTimeStrDataGridViewTextBoxColumn";
-            this.dateTimeStrDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateTimeStrDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dateTimeStrDataGridViewTextBoxColumn.Width = 120;
-            // 
-            // messageTypeDataGridViewTextBoxColumn
-            // 
-            this.messageTypeDataGridViewTextBoxColumn.DataPropertyName = "MessageType";
-            this.messageTypeDataGridViewTextBoxColumn.FillWeight = 55F;
-            this.messageTypeDataGridViewTextBoxColumn.HeaderText = "種別";
-            this.messageTypeDataGridViewTextBoxColumn.Name = "messageTypeDataGridViewTextBoxColumn";
-            this.messageTypeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.messageTypeDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.messageTypeDataGridViewTextBoxColumn.Width = 55;
-            // 
-            // messageDataGridViewTextBoxColumn
-            // 
-            this.messageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
-            this.messageDataGridViewTextBoxColumn.HeaderText = "メッセージ";
-            this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
-            this.messageDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // chatLogEntityBindingSource
-            // 
-            this.chatLogEntityBindingSource.DataSource = typeof(RoItemKakakuChecker.ChatLogEntity);
-            // 
             // itemBindingSource
             // 
             this.itemBindingSource.DataSource = typeof(RoItemKakakuChecker.Item);
+            // 
+            // numericUpDownMdYomiage
+            // 
+            this.numericUpDownMdYomiage.Location = new System.Drawing.Point(311, 10);
+            this.numericUpDownMdYomiage.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownMdYomiage.Name = "numericUpDownMdYomiage";
+            this.numericUpDownMdYomiage.Size = new System.Drawing.Size(40, 19);
+            this.numericUpDownMdYomiage.TabIndex = 12;
+            // 
+            // checkBoxMdYomiage
+            // 
+            this.checkBoxMdYomiage.AutoSize = true;
+            this.checkBoxMdYomiage.Location = new System.Drawing.Point(245, 12);
+            this.checkBoxMdYomiage.Name = "checkBoxMdYomiage";
+            this.checkBoxMdYomiage.Size = new System.Drawing.Size(65, 16);
+            this.checkBoxMdYomiage.TabIndex = 13;
+            this.checkBoxMdYomiage.Text = "MD待機";
+            this.checkBoxMdYomiage.UseVisualStyleBackColor = true;
+            // 
+            // labelOnseiTsuchi
+            // 
+            this.labelOnseiTsuchi.AutoSize = true;
+            this.labelOnseiTsuchi.Location = new System.Drawing.Point(355, 13);
+            this.labelOnseiTsuchi.Name = "labelOnseiTsuchi";
+            this.labelOnseiTsuchi.Size = new System.Drawing.Size(87, 12);
+            this.labelOnseiTsuchi.TabIndex = 14;
+            this.labelOnseiTsuchi.Text = "以下で音声通知";
             // 
             // ChatObserveModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.labelOnseiTsuchi);
+            this.Controls.Add(this.checkBoxMdYomiage);
+            this.Controls.Add(this.numericUpDownMdYomiage);
             this.Controls.Add(this.textBoxWord);
             this.Controls.Add(this.checkBoxWord);
             this.Controls.Add(this.checkBoxWhisper);
@@ -225,20 +252,18 @@
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.btnObserveChat);
             this.Name = "ChatObserveModeControl";
             this.Size = new System.Drawing.Size(547, 502);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMdYomiage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnObserveChat;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.BindingSource chatLogEntityBindingSource;
         private System.Windows.Forms.BindingSource itemBindingSource;
@@ -254,5 +279,8 @@
         private System.Windows.Forms.CheckBox checkBoxWhisper;
         private System.Windows.Forms.CheckBox checkBoxWord;
         private System.Windows.Forms.TextBox textBoxWord;
+        private System.Windows.Forms.NumericUpDown numericUpDownMdYomiage;
+        private System.Windows.Forms.CheckBox checkBoxMdYomiage;
+        private System.Windows.Forms.Label labelOnseiTsuchi;
     }
 }

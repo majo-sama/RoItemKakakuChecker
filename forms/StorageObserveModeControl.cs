@@ -20,7 +20,7 @@ namespace RoItemKakakuChecker
     {
         private MainForm mainForm;
         private static bool stopFlag = false;
-        private static bool observing = false;
+        public static bool observing = false;
         private const string RO_STORAGE_SERVER_IP = "18.182.57.";
 
         public void SetMainForm(Form parent)
@@ -130,6 +130,8 @@ namespace RoItemKakakuChecker
             }
         }
 
+
+        public Socket socket;
         private async void btnObserve_Click(object sender, EventArgs e)
         {
             // 停止ボタン押下時
@@ -150,7 +152,7 @@ namespace RoItemKakakuChecker
 
             var he = Dns.GetHostEntry(Dns.GetHostName());
             var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
             socket.Bind(new IPEndPoint(addr[0], 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };

@@ -13,42 +13,40 @@ namespace RoItemKakakuChecker
     public class Speaker
     {
 
-        private SpeechSynthesizer synthesizerForName;
-        private SpeechSynthesizer synthesizerForBody;
-        public string SpeakerName { get; set; }
-        public string MessageBody { get; set; }
+        private SpeechSynthesizer synthesizer;
+        public string Message { get; set; }
 
-        public bool Enabled { get { return synthesizerForName != null && synthesizerForBody != null; } }
+        public bool Enabled { get { return synthesizer != null; } }
 
 
         public Speaker()
         {
-            synthesizerForName = CreateSpeechSynthesizer(100, 2);
-            synthesizerForBody = CreateSpeechSynthesizer(100, 0);
+            synthesizer = CreateSpeechSynthesizer(100, 2);
 
-            synthesizerForName.SpeakCompleted += (sender, e) => {
-                string body = MessageBody;
-                if (MessageBody == null)
-                {
-                    return;
-                }
-                synthesizerForBody.SpeakAsync(body);
-                SpeakerName = null;
-                MessageBody = null;
+            synthesizer.SpeakCompleted += (sender, e) => {
+                Message = null;
+            };
+        }
+
+        public Speaker(int volume, int speed)
+        {
+            synthesizer = CreateSpeechSynthesizer(volume, speed);
+
+            synthesizer.SpeakCompleted += (sender, e) => {
+                Message = null;
             };
         }
 
         public void Speak()
         {
-            string name = SpeakerName;
-            if (SpeakerName == null || MessageBody == null)
+            string message = Message;
+            if (message == null || message.Length == 0)
             {
                 return;
             }
-            synthesizerForName.SpeakAsyncCancelAll();
-            synthesizerForBody.SpeakAsyncCancelAll();
+            synthesizer.SpeakAsyncCancelAll();
 
-            synthesizerForName.SpeakAsync(name);
+            synthesizer.SpeakAsync(message);
         }
 
 
@@ -73,8 +71,7 @@ namespace RoItemKakakuChecker
 
         public void Dispose()
         {
-            synthesizerForName.Dispose();
-            synthesizerForBody.Dispose();
+            synthesizer.Dispose();
         }
 
     }

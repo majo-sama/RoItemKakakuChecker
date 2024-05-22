@@ -25,8 +25,9 @@ namespace RoItemKakakuChecker
         public ItemIdNameMap itemIdNameMap = new ItemIdNameMap();
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
         public Speaker speaker;
+        public Speaker speaker2;
 
-        private const string VERSION = "1.3.3";
+        private const string VERSION = "1.4.0";
 
 
         public MainForm()
@@ -38,13 +39,34 @@ namespace RoItemKakakuChecker
             this.SizeGripStyle = SizeGripStyle.Show;
             chatObserveModeControl1.SetMainForm(this);
             speaker = new Speaker();
+            speaker2 = new Speaker(100, -2);
 
             System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
         }
 
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
-            speaker.Dispose();
+            try
+            {
+                speaker.Dispose();
+                speaker2.Dispose();
+            }
+            catch { }
+
+            try
+            {
+                chatObserveModeControl1.socket.Dispose();
+            }
+            catch { }
+
+            try
+            {
+                if (StorageObserveModeControl.observing)
+                {
+                    storageObserveModeControl1.socket.Dispose();
+                }
+            }
+            catch { }
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -96,6 +118,8 @@ namespace RoItemKakakuChecker
 
 
             await AutoUpdate();
+
+            await chatObserveModeControl1.ObserveChatMessage();
         }
 
 

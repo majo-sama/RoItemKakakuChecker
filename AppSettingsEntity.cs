@@ -18,5 +18,7 @@ namespace RoItemKakakuChecker
         public bool SpeechWhisper { get; set; } = false;
         public bool SpeechWord { get; set; } = false;
         public string SpeechKeyWord { get; set; } = "";
+        public bool EnableMdYomiage { get; set; } = false;
+        public int MdYomiageMax { get; set; } = 0;
     }
 }
