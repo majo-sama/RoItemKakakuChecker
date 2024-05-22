@@ -27,7 +27,7 @@ namespace RoItemKakakuChecker
         public Speaker speaker;
         public Speaker speaker2;
 
-        private const string VERSION = "1.3.3";
+        private const string VERSION = "1.4.0";
 
 
         public MainForm()
