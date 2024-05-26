@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Speech.Synthesis;
+using System.Net.NetworkInformation;
 
 
 namespace RoItemKakakuChecker.forms
@@ -92,15 +93,66 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ClearSelection();
         }
 
+        private List<MyNetworkInterface> GetMyNetworkInterfaces()
+        {
+            var he = Dns.GetHostEntry(Dns.GetHostName());
+            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
+
+
+            var myNetworkInterfaces = new List<MyNetworkInterface>();
+
+
+            var nicList = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface nic in nicList)
+            {
+                var ipProps = nic.GetIPProperties();
+
+
+                if (ipProps.UnicastAddresses.Count > 0)
+                {
+                    var list = ipProps.UnicastAddresses
+                        .Where(ipInfo => ipInfo.Address.AddressFamily == AddressFamily.InterNetwork)
+                        .Where(ipInfo => ipInfo.Address.ToString() != "127.0.0.1")
+                        .Where(ipInfo => addr.Any(ad => ad.Equals(ipInfo.Address)))
+                        .Select(ipInfo => new MyNetworkInterface(nic, ipInfo.Address));
+
+                    if (list != null)
+                    {
+                        myNetworkInterfaces.AddRange(list);
+                    }
+
+                }
+            }
+            return myNetworkInterfaces;
+        }
+
+        private IPAddress ChangeNetworkInterface(NetworkInterface networkInterface)
+        {
+
+            var interfaces = GetMyNetworkInterfaces();
+
+            if (networkInterface == null)
+            {
+                return interfaces[0].Address;
+            }
+            return null;
+        }
 
         public Socket socket;
         public async Task ObserveChatMessage()
         {
 
-            var he = Dns.GetHostEntry(Dns.GetHostName());
-            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
+
+
+
+            var ipAddr = ChangeNetworkInterface(null);
+
+
+
+
+
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
-            socket.Bind(new IPEndPoint(addr[0], 0));
+            socket.Bind(new IPEndPoint(ipAddr, 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };

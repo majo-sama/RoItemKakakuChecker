@@ -278,6 +278,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ItemIdNameMap.cs" />
+    <Compile Include="MyNetworkInterface.cs" />
     <Compile Include="OptionIdNameMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

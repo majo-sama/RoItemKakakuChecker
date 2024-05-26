@@ -47,6 +47,7 @@
             this.numericUpDownMdYomiage = new System.Windows.Forms.NumericUpDown();
             this.checkBoxMdYomiage = new System.Windows.Forms.CheckBox();
             this.labelOnseiTsuchi = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
@@ -235,10 +236,19 @@
             this.labelOnseiTsuchi.TabIndex = 14;
             this.labelOnseiTsuchi.Text = "以下で音声通知";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(101, 9);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(138, 20);
+            this.comboBox1.TabIndex = 15;
+            // 
             // ChatObserveModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.labelOnseiTsuchi);
             this.Controls.Add(this.checkBoxMdYomiage);
             this.Controls.Add(this.numericUpDownMdYomiage);
@@ -282,5 +292,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMdYomiage;
         private System.Windows.Forms.CheckBox checkBoxMdYomiage;
         private System.Windows.Forms.Label labelOnseiTsuchi;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
