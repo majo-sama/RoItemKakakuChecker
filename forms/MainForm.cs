@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Compression;
 using NetFwTypeLib;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Net;
 
 namespace RoItemKakakuChecker
 {
@@ -26,6 +29,7 @@ namespace RoItemKakakuChecker
         public OptionIdNameMap optionIdNameMap = new OptionIdNameMap();
         public Speaker speaker;
         public Speaker speaker2;
+        public List<MyNetworkInterface> networkInterfaces;
 
         private const string VERSION = "1.4.0";
 
@@ -33,6 +37,8 @@ namespace RoItemKakakuChecker
         public MainForm()
         {
             settings = new AppSettings();
+            networkInterfaces = GetMyNetworkInterfaces();
+
 
             InitializeComponent();
             //this.TopMost = true;
@@ -42,7 +48,47 @@ namespace RoItemKakakuChecker
             speaker2 = new Speaker(100, -2);
 
             System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
+
+            
+
         }
+
+
+
+
+        private List<MyNetworkInterface> GetMyNetworkInterfaces()
+        {
+            var he = Dns.GetHostEntry(Dns.GetHostName());
+            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
+
+
+            var myNetworkInterfaces = new List<MyNetworkInterface>();
+
+
+            var nicList = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface nic in nicList)
+            {
+                var ipProps = nic.GetIPProperties();
+
+
+                if (ipProps.UnicastAddresses.Count > 0)
+                {
+                    var list = ipProps.UnicastAddresses
+                        .Where(ipInfo => ipInfo.Address.AddressFamily == AddressFamily.InterNetwork)
+                        .Where(ipInfo => ipInfo.Address.ToString() != "127.0.0.1")
+                        .Where(ipInfo => addr.Any(ad => ad.Equals(ipInfo.Address)))
+                        .Select(ipInfo => new MyNetworkInterface(nic, ipInfo.Address));
+
+                    if (list != null)
+                    {
+                        myNetworkInterfaces.AddRange(list);
+                    }
+
+                }
+            }
+            return myNetworkInterfaces;
+        }
+
 
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
@@ -119,7 +165,11 @@ namespace RoItemKakakuChecker
 
             await AutoUpdate();
 
-            await chatObserveModeControl1.ObserveChatMessage();
+            if (networkInterfaces != null && networkInterfaces.Count > 0)
+            {
+                // デフォルトではI/Fリストの先頭のものを利用する
+                await chatObserveModeControl1.ObserveChatMessage(networkInterfaces[0]);
+            }
         }
 
 

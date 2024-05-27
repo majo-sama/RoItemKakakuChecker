@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Speech.Synthesis;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 
 namespace RoItemKakakuChecker.forms
@@ -28,6 +29,7 @@ namespace RoItemKakakuChecker.forms
         private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
         private DateTime lastYomiageTime = DateTime.MinValue;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -46,8 +48,19 @@ namespace RoItemKakakuChecker.forms
                 checkBoxMdYomiage.Checked = mainForm.settings.EnableMdYomiage;
                 numericUpDownMdYomiage.Value = mainForm.settings.MdYomiageMax;
             }
+
+            myNetworkInterfaceBindingSource.DataSource = mainForm.networkInterfaces;
+
+            comboBoxNetworkInterfaces.SelectedValueChanged += ComboBoxNetworkInterfaces_SelectedValueChanged;
         }
 
+        private async void ComboBoxNetworkInterfaces_SelectedValueChanged(object sender, EventArgs e)
+        {
+            cancellationTokenSource.Cancel();
+
+            var selectedInterface = comboBoxNetworkInterfaces.SelectedValue as MyNetworkInterface;
+            await ObserveChatMessage(selectedInterface);
+        }
 
         public ChatObserveModeControl()
         {
@@ -93,66 +106,12 @@ namespace RoItemKakakuChecker.forms
             dataGridView.ClearSelection();
         }
 
-        private List<MyNetworkInterface> GetMyNetworkInterfaces()
-        {
-            var he = Dns.GetHostEntry(Dns.GetHostName());
-            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
-
-
-            var myNetworkInterfaces = new List<MyNetworkInterface>();
-
-
-            var nicList = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface nic in nicList)
-            {
-                var ipProps = nic.GetIPProperties();
-
-
-                if (ipProps.UnicastAddresses.Count > 0)
-                {
-                    var list = ipProps.UnicastAddresses
-                        .Where(ipInfo => ipInfo.Address.AddressFamily == AddressFamily.InterNetwork)
-                        .Where(ipInfo => ipInfo.Address.ToString() != "127.0.0.1")
-                        .Where(ipInfo => addr.Any(ad => ad.Equals(ipInfo.Address)))
-                        .Select(ipInfo => new MyNetworkInterface(nic, ipInfo.Address));
-
-                    if (list != null)
-                    {
-                        myNetworkInterfaces.AddRange(list);
-                    }
-
-                }
-            }
-            return myNetworkInterfaces;
-        }
-
-        private IPAddress ChangeNetworkInterface(NetworkInterface networkInterface)
-        {
-
-            var interfaces = GetMyNetworkInterfaces();
-
-            if (networkInterface == null)
-            {
-                return interfaces[0].Address;
-            }
-            return null;
-        }
 
         public Socket socket;
-        public async Task ObserveChatMessage()
+        public async Task ObserveChatMessage(MyNetworkInterface networkInterface)
         {
-
-
-
-
-            var ipAddr = ChangeNetworkInterface(null);
-
-
-
-
-
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
-            socket.Bind(new IPEndPoint(ipAddr, 0));
+            socket.Bind(new IPEndPoint(networkInterface.Address, 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
@@ -171,6 +130,7 @@ namespace RoItemKakakuChecker.forms
 
                     try
                     {
+                        cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 
                         IAsyncResult iares = socket.BeginReceive(buf, 0, buf.Length, SocketFlags.None, null, null);
@@ -228,6 +188,10 @@ namespace RoItemKakakuChecker.forms
                                 }
                             }
                         }
+                    }
+                    catch (OperationCanceledException e)
+                    {
+                        cancellationTokenSource = new CancellationTokenSource();
                     }
                     catch (Exception ex)
                     {

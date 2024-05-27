@@ -47,11 +47,13 @@
             this.numericUpDownMdYomiage = new System.Windows.Forms.NumericUpDown();
             this.checkBoxMdYomiage = new System.Windows.Forms.CheckBox();
             this.labelOnseiTsuchi = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxNetworkInterfaces = new System.Windows.Forms.ComboBox();
+            this.myNetworkInterfaceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMdYomiage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myNetworkInterfaceBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView
@@ -236,19 +238,26 @@
             this.labelOnseiTsuchi.TabIndex = 14;
             this.labelOnseiTsuchi.Text = "以下で音声通知";
             // 
-            // comboBox1
+            // comboBoxNetworkInterfaces
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(101, 9);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(138, 20);
-            this.comboBox1.TabIndex = 15;
+            this.comboBoxNetworkInterfaces.DataSource = this.myNetworkInterfaceBindingSource;
+            this.comboBoxNetworkInterfaces.DisplayMember = "Name";
+            this.comboBoxNetworkInterfaces.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNetworkInterfaces.FormattingEnabled = true;
+            this.comboBoxNetworkInterfaces.Location = new System.Drawing.Point(101, 9);
+            this.comboBoxNetworkInterfaces.Name = "comboBoxNetworkInterfaces";
+            this.comboBoxNetworkInterfaces.Size = new System.Drawing.Size(138, 20);
+            this.comboBoxNetworkInterfaces.TabIndex = 15;
+            // 
+            // myNetworkInterfaceBindingSource
+            // 
+            this.myNetworkInterfaceBindingSource.DataSource = typeof(RoItemKakakuChecker.MyNetworkInterface);
             // 
             // ChatObserveModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.comboBoxNetworkInterfaces);
             this.Controls.Add(this.labelOnseiTsuchi);
             this.Controls.Add(this.checkBoxMdYomiage);
             this.Controls.Add(this.numericUpDownMdYomiage);
@@ -268,6 +277,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.chatLogEntityBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMdYomiage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myNetworkInterfaceBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -292,6 +302,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMdYomiage;
         private System.Windows.Forms.CheckBox checkBoxMdYomiage;
         private System.Windows.Forms.Label labelOnseiTsuchi;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxNetworkInterfaces;
+        private System.Windows.Forms.BindingSource myNetworkInterfaceBindingSource;
     }
 }

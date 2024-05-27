@@ -317,6 +317,7 @@
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\ChatLogEntity.datasource" />
     <None Include="Properties\DataSources\Item.datasource" />
+    <None Include="Properties\DataSources\MyNetworkInterface.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
