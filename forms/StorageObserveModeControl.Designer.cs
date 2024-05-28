@@ -49,8 +49,11 @@ namespace RoItemKakakuChecker
             this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.comboBoxNetworkInterfaces = new System.Windows.Forms.ComboBox();
+            this.myNetworkInterfaceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myNetworkInterfaceBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnObserve
@@ -221,10 +224,26 @@ namespace RoItemKakakuChecker
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
+            // comboBoxNetworkInterfaces
+            // 
+            this.comboBoxNetworkInterfaces.DataSource = this.myNetworkInterfaceBindingSource;
+            this.comboBoxNetworkInterfaces.DisplayMember = "Name";
+            this.comboBoxNetworkInterfaces.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNetworkInterfaces.FormattingEnabled = true;
+            this.comboBoxNetworkInterfaces.Location = new System.Drawing.Point(205, 4);
+            this.comboBoxNetworkInterfaces.Name = "comboBoxNetworkInterfaces";
+            this.comboBoxNetworkInterfaces.Size = new System.Drawing.Size(138, 20);
+            this.comboBoxNetworkInterfaces.TabIndex = 29;
+            // 
+            // myNetworkInterfaceBindingSource
+            // 
+            this.myNetworkInterfaceBindingSource.DataSource = typeof(RoItemKakakuChecker.MyNetworkInterface);
+            // 
             // StorageObserveModeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxNetworkInterfaces);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.label1);
@@ -237,6 +256,7 @@ namespace RoItemKakakuChecker
             this.Size = new System.Drawing.Size(555, 482);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myNetworkInterfaceBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -258,5 +278,7 @@ namespace RoItemKakakuChecker
         private DataGridViewLinkColumn linkDataGridViewTextBoxColumn;
         private Button btnClear;
         public DataGridView dataGridView;
+        private ComboBox comboBoxNetworkInterfaces;
+        private BindingSource myNetworkInterfaceBindingSource;
     }
 }

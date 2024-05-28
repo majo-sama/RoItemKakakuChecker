@@ -28,6 +28,8 @@ namespace RoItemKakakuChecker
         public string SpeechKeyWord { get { return settings.SpeechKeyWord; } set { this.settings.SpeechKeyWord = value; CreateOrUpdateFile(); } }
         public bool EnableMdYomiage { get { return settings.EnableMdYomiage; } set { this.settings.EnableMdYomiage = value; CreateOrUpdateFile(); } }
         public int MdYomiageMax { get { return settings.MdYomiageMax; } set {  this.settings.MdYomiageMax = value; CreateOrUpdateFile(); } }
+        public string NetworkInterfaceName { get { return settings.NetworkInterfaceName; } set {  this.settings.NetworkInterfaceName = value; CreateOrUpdateFile(); } }
+
 
 
         public bool ReadSettings()
@@ -55,6 +57,7 @@ namespace RoItemKakakuChecker
                         this.settings.SpeechKeyWord = settings.SpeechKeyWord;
                         this.settings.EnableMdYomiage = settings.EnableMdYomiage;
                         this.settings.MdYomiageMax = settings.MdYomiageMax;
+                        this.settings.NetworkInterfaceName = settings.NetworkInterfaceName;
                         return true;
                     }
                 }

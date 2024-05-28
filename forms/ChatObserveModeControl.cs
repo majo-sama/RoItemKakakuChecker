@@ -30,6 +30,8 @@ namespace RoItemKakakuChecker.forms
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
         private DateTime lastYomiageTime = DateTime.MinValue;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        public ComboBox ComboBoxNetworkInterfaces { get => comboBoxNetworkInterfaces; }
+        public BindingSource MyNetworkInterfaceBindingSource { get => myNetworkInterfaceBindingSource; }
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -49,18 +51,57 @@ namespace RoItemKakakuChecker.forms
                 numericUpDownMdYomiage.Value = mainForm.settings.MdYomiageMax;
             }
 
-            myNetworkInterfaceBindingSource.DataSource = mainForm.networkInterfaces;
 
-            comboBoxNetworkInterfaces.SelectedValueChanged += ComboBoxNetworkInterfaces_SelectedValueChanged;
+            comboBoxNetworkInterfaces.SelectedIndexChanged += ComboBoxNetworkInterfaces_SelectedIndexChanged;
+
+            Size maxSize = new Size(0, 0);
+            foreach (var nif in mainForm.networkInterfaces)
+            {
+                Size size = TextRenderer.MeasureText(nif.Name, comboBoxNetworkInterfaces.Font);
+                if (size.Width > maxSize.Width)
+                {
+                    maxSize = size;
+                }
+            }
+            comboBoxNetworkInterfaces.DropDownWidth = maxSize.Width + 20;
+
+
+            if (isSucceeded)
+            {
+                var comboItems = comboBoxNetworkInterfaces.Items;
+                int index = 0;
+                if (comboItems != null && comboItems.Count > 0)
+                {
+                    foreach (MyNetworkInterface ni in comboItems)
+                    {
+                        if (ni.Name == mainForm.settings.NetworkInterfaceName)
+                        {
+                            comboBoxNetworkInterfaces.SelectedIndex = index;
+                            break;
+                        }
+                        index++;
+                    }
+                }
+            }
         }
 
-        private async void ComboBoxNetworkInterfaces_SelectedValueChanged(object sender, EventArgs e)
+        private async void ComboBoxNetworkInterfaces_SelectedIndexChanged(object sender, EventArgs e)
         {
             cancellationTokenSource.Cancel();
 
             var selectedInterface = comboBoxNetworkInterfaces.SelectedValue as MyNetworkInterface;
+            if (selectedInterface == null)
+            {
+                mainForm.LogError("ネットワークI/Fの選択に失敗しました。");
+                return;
+            }
+            mainForm.StorageObserveModeControl.ComboBoxNetworkInterfaces.SelectedIndex = comboBoxNetworkInterfaces.SelectedIndex;
+
+            mainForm.settings.NetworkInterfaceName = selectedInterface.Name;
+
             await ObserveChatMessage(selectedInterface);
         }
+
 
         public ChatObserveModeControl()
         {

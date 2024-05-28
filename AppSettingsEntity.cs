@@ -20,5 +20,6 @@ namespace RoItemKakakuChecker
         public string SpeechKeyWord { get; set; } = "";
         public bool EnableMdYomiage { get; set; } = false;
         public int MdYomiageMax { get; set; } = 0;
+        public string NetworkInterfaceName { get; set; } = "";
     }
 }

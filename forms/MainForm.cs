@@ -17,6 +17,7 @@ using NetFwTypeLib;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
+using RoItemKakakuChecker.forms;
 
 namespace RoItemKakakuChecker
 {
@@ -33,6 +34,10 @@ namespace RoItemKakakuChecker
 
         private const string VERSION = "1.4.0";
 
+        public StorageObserveModeControl StorageObserveModeControl { get => storageObserveModeControl1; }
+        public ChatObserveModeControl ChatObserveModeControl { get => chatObserveModeControl1; }
+
+
 
         public MainForm()
         {
@@ -43,13 +48,16 @@ namespace RoItemKakakuChecker
             InitializeComponent();
             //this.TopMost = true;
             this.SizeGripStyle = SizeGripStyle.Show;
+            chatObserveModeControl1.MyNetworkInterfaceBindingSource.DataSource = networkInterfaces;
+            storageObserveModeControl1.MyNetworkInterfaceBindingSource.DataSource = networkInterfaces;
+
             chatObserveModeControl1.SetMainForm(this);
             speaker = new Speaker();
             speaker2 = new Speaker(100, -2);
 
             System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
 
-            
+
 
         }
 
@@ -366,7 +374,14 @@ namespace RoItemKakakuChecker
 
         public void UpdateToolStripLabel(string text)
         {
-            this.Invoke(new Action(() => { toolStripStatusLabel.Text = text; }));
+            try
+            {
+                this.Invoke(new Action(() => { toolStripStatusLabel.Text = text; }));
+            }
+            catch (Exception e)
+            {
+                // 終了時に例外が出る問題の対策
+            }
         }
 
         public void UpdateToolStripProgressBarSetting(int min, int max)
