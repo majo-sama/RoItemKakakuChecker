@@ -13,6 +13,7 @@ using System.IO;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Xml.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace RoItemKakakuChecker
 {
@@ -22,6 +23,11 @@ namespace RoItemKakakuChecker
         private static bool stopFlag = false;
         public static bool observing = false;
         private const string RO_STORAGE_SERVER_IP = "18.182.57.";
+        public MyNetworkInterface selectedNetworkInterface;
+        public ComboBox ComboBoxNetworkInterfaces { get => comboBoxNetworkInterfaces; }
+        public BindingSource MyNetworkInterfaceBindingSource { get => myNetworkInterfaceBindingSource; }
+
+
 
         public void SetMainForm(Form parent)
         {
@@ -52,7 +58,35 @@ namespace RoItemKakakuChecker
             comboApiLimit.SelectedValueChanged += ComboApiLimit_SelectedValueChanged; ;
             btnFetchKakaku.Enabled = false;
             UpdateApiLimitMessageStatusLabel();
+
+
+
+
+            comboBoxNetworkInterfaces.SelectedIndexChanged += ComboBoxNetworkInterfaces_SelectedIndexChanged;
+
+            Size maxSize = new Size(0, 0);
+            foreach (var nif in mainForm.networkInterfaces)
+            {
+                Size size = TextRenderer.MeasureText(nif.Name, comboBoxNetworkInterfaces.Font);
+                if (size.Width > maxSize.Width)
+                {
+                    maxSize = size;
+                }
+            }
+            comboBoxNetworkInterfaces.DropDownWidth = maxSize.Width + 20;
         }
+
+        private void ComboBoxNetworkInterfaces_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StopButtonClicked();
+
+            selectedNetworkInterface = comboBoxNetworkInterfaces.SelectedValue as MyNetworkInterface;
+
+            mainForm.ChatObserveModeControl.ComboBoxNetworkInterfaces.SelectedIndex = comboBoxNetworkInterfaces.SelectedIndex;
+        }
+
+
+
 
         public StorageObserveModeControl()
         {
@@ -131,16 +165,21 @@ namespace RoItemKakakuChecker
         }
 
 
+        private void StopButtonClicked()
+        {
+            stopFlag = true;
+            observing = false;
+            this.btnObserve.Text = "倉庫監視 開始";
+            btnFetchKakaku.Enabled = true;
+        }
+
         public Socket socket;
         private async void btnObserve_Click(object sender, EventArgs e)
         {
             // 停止ボタン押下時
             if (observing)
             {
-                stopFlag = true;
-                observing = false;
-                this.btnObserve.Text = "倉庫監視 開始";
-                btnFetchKakaku.Enabled = true;
+                StopButtonClicked();
                 return;
             }
 
@@ -150,10 +189,13 @@ namespace RoItemKakakuChecker
             observing = true;
             this.btnObserve.Text = "倉庫監視 停止";
 
-            var he = Dns.GetHostEntry(Dns.GetHostName());
-            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
+            if (selectedNetworkInterface == null)
+            {
+                selectedNetworkInterface = mainForm.networkInterfaces[0];
+            }
+
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
-            socket.Bind(new IPEndPoint(addr[0], 0));
+            socket.Bind(new IPEndPoint(selectedNetworkInterface.Address, 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
@@ -589,7 +631,8 @@ namespace RoItemKakakuChecker
             
             foreach (var item in storageItems)
             {
-                list.Add(item);
+                
+                dataGridView.Invoke((MethodInvoker)delegate { list.Add(item); });
             }
 
             dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });

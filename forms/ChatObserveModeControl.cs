@@ -18,6 +18,8 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Speech.Synthesis;
+using System.Net.NetworkInformation;
+using System.Threading;
 
 
 namespace RoItemKakakuChecker.forms
@@ -27,6 +29,9 @@ namespace RoItemKakakuChecker.forms
         private MainForm mainForm;
         private const string RO_CHAT_SERVER_IP = "18.182.57.";
         private DateTime lastYomiageTime = DateTime.MinValue;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        public ComboBox ComboBoxNetworkInterfaces { get => comboBoxNetworkInterfaces; }
+        public BindingSource MyNetworkInterfaceBindingSource { get => myNetworkInterfaceBindingSource; }
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -45,6 +50,56 @@ namespace RoItemKakakuChecker.forms
                 checkBoxMdYomiage.Checked = mainForm.settings.EnableMdYomiage;
                 numericUpDownMdYomiage.Value = mainForm.settings.MdYomiageMax;
             }
+
+
+            comboBoxNetworkInterfaces.SelectedIndexChanged += ComboBoxNetworkInterfaces_SelectedIndexChanged;
+
+            Size maxSize = new Size(0, 0);
+            foreach (var nif in mainForm.networkInterfaces)
+            {
+                Size size = TextRenderer.MeasureText(nif.Name, comboBoxNetworkInterfaces.Font);
+                if (size.Width > maxSize.Width)
+                {
+                    maxSize = size;
+                }
+            }
+            comboBoxNetworkInterfaces.DropDownWidth = maxSize.Width + 20;
+
+
+            if (isSucceeded)
+            {
+                var comboItems = comboBoxNetworkInterfaces.Items;
+                int index = 0;
+                if (comboItems != null && comboItems.Count > 0)
+                {
+                    foreach (MyNetworkInterface ni in comboItems)
+                    {
+                        if (ni.Name == mainForm.settings.NetworkInterfaceName)
+                        {
+                            comboBoxNetworkInterfaces.SelectedIndex = index;
+                            break;
+                        }
+                        index++;
+                    }
+                }
+            }
+        }
+
+        private async void ComboBoxNetworkInterfaces_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cancellationTokenSource.Cancel();
+
+            var selectedInterface = comboBoxNetworkInterfaces.SelectedValue as MyNetworkInterface;
+            if (selectedInterface == null)
+            {
+                mainForm.LogError("ネットワークI/Fの選択に失敗しました。");
+                return;
+            }
+            mainForm.StorageObserveModeControl.ComboBoxNetworkInterfaces.SelectedIndex = comboBoxNetworkInterfaces.SelectedIndex;
+
+            mainForm.settings.NetworkInterfaceName = selectedInterface.Name;
+
+            await ObserveChatMessage(selectedInterface);
         }
 
 
@@ -94,13 +149,10 @@ namespace RoItemKakakuChecker.forms
 
 
         public Socket socket;
-        public async Task ObserveChatMessage()
+        public async Task ObserveChatMessage(MyNetworkInterface networkInterface)
         {
-
-            var he = Dns.GetHostEntry(Dns.GetHostName());
-            var addr = he.AddressList.Where((h) => h.AddressFamily == AddressFamily.InterNetwork).ToList();
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
-            socket.Bind(new IPEndPoint(addr[0], 0));
+            socket.Bind(new IPEndPoint(networkInterface.Address, 0));
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AcceptConnection, 1);
             byte[] ib = new byte[] { 1, 0, 0, 0 };
             byte[] ob = new byte[] { 0, 0, 0, 0 };
@@ -119,6 +171,7 @@ namespace RoItemKakakuChecker.forms
 
                     try
                     {
+                        cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 
                         IAsyncResult iares = socket.BeginReceive(buf, 0, buf.Length, SocketFlags.None, null, null);
@@ -176,6 +229,10 @@ namespace RoItemKakakuChecker.forms
                                 }
                             }
                         }
+                    }
+                    catch (OperationCanceledException e)
+                    {
+                        cancellationTokenSource = new CancellationTokenSource();
                     }
                     catch (Exception ex)
                     {
