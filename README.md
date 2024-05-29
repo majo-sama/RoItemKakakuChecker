@@ -3,7 +3,7 @@
 
 このツールは、チャットログまたは受信パケットに含まれるアイテム獲得メッセージを抽出して これを素にRO公式ツールが使用しているAPIから価格情報するもの（＋おまけ）です。
 
-![image](https://github.com/majo-sama/RoItemKakakuChecker/assets/157029319/1b9122c6-482d-43fd-8e51-d7e4ea664b9d)
+![Animation](https://github.com/majo-sama/RoItemKakakuChecker/assets/157029319/62d2fc4a-22f0-478e-a71a-3c962c93080c)
 
 ## ダウンロード
 
