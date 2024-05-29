@@ -270,76 +270,60 @@ namespace RoItemKakakuChecker
 
         private void Analyze(byte[] data)
         {
-            // アイテム倉庫通常パターン
-            if (data[0] == 0x09 && data[1] == 0x0b)
+            // 謎ヘッダ除去
+            if (data[0] == 0x46 && data[1] == 0x04)
             {
-                // 各アイテムのバイト配列の一覧
-                var items = new List<byte[]>();
-                
-                int index = 5; // 5バイトのヘッダ
-                while (data.Length - index >= 34)
-                {
-                    byte[] item = new byte[34];
-                    Array.Copy(data, index, item, 0, 34); // アイテム1つ34バイト
-
-                    // dataは必要以上に大きく確保してあるため、
-                    // すべて0のとき、無駄なものとして無視する
-                    if (item.All(b => b == 0))
-                    {
-                        break;
-                    }
-
-                    items.Add(item);
-                    index += 34;
-                }
+                Analyze(data.Skip(14).ToArray());
+            }
+            // アイテム倉庫 ヘッダがある場合の除去
+            else if (data[0] == 0x08 && data[1] == 0x0b)
+            {
+                Analyze(data.Skip(14).ToArray());
+            }
+            // アイテム倉庫
+            else if (data[0] == 0x09 && data[1] == 0x0b)
+            {
+                var items = AnalyzeItemsOrEquipsDataArray(data, 5, 34);
                 AnalyzeItems(items);
             }
-            // アイテム倉庫 先頭にヘッダがあるパターン
-            else if (data[0] == 0x08 && data[1] == 0x0b && data[14] == 0x09 && data[15] == 0x0b)
-            {
-                // 各アイテムのバイト配列の一覧
-                var items = new List<byte[]>();
-                int index = 19; // 19バイトのヘッダ
-                while (data.Length - index >= 34)
-                {
-                    byte[] item = new byte[34];
-                    Array.Copy(data, index, item, 0, 34); // アイテム1つ34バイト
-                    // dataは必要以上に大きく確保してあるため、
-                    // すべて0のとき、無駄なものとして無視する
-                    if (item.All(b => b == 0))
-                    {
-                        break;
-                    }
-
-                    items.Add(item);
-                    index += 34;
-                }
-                AnalyzeItems(items);
-            }
-            // 装備品
+            // 装備品倉庫
             else if (data[0] == 0x39 && data[1] == 0x0b)
             {
-                // 各アイテムのバイト配列の一覧
-                var items = new List<byte[]>();
-                int index = 5; // 5バイトのヘッダ
-                while (data.Length - index >= 68)
-                {
-                    byte[] item = new byte[68];
-                    Array.Copy(data, index, item, 0, 68); // アイテム1つ68バイト
-                    // dataは必要以上に大きく確保してあるため、
-                    // すべて0のとき、無駄なものとして無視する
-                    if (item.All(b => b == 0))
-                    {
-                        break;
-                    }
-
-                    items.Add(item);
-                    index += 68;
-                }
+                var items = AnalyzeItemsOrEquipsDataArray(data, 5, 68);
                 AnalyzeEquips(items);
             }
-
         }
+
+        // アイテム・装備品データのみのバイト配列を取得する
+        private List<byte[]> AnalyzeItemsOrEquipsDataArray(byte[] data, int headerLength, int itemOrEquipDataLength)
+        {
+
+            var body = data.Skip(headerLength).ToArray();
+
+            // 各アイテムのバイト配列の一覧
+            var items = new List<byte[]>();
+
+            while (body.Length >= itemOrEquipDataLength)
+            {
+                // 謎データが来たら終わり
+                if (body.Length >= 2 && body[0] == 0x46 && body[1] == 0x04)
+                {
+                    break;
+                }
+
+                var itemData = body.Take(itemOrEquipDataLength);
+
+                // dataは必要以上に大きく確保してあるため、すべて0のとき、無駄なものとして無視する
+                if (itemData.All(b => b == 0))
+                {
+                    break;
+                }
+                items.Add(itemData.ToArray());
+                body = body.Skip(itemOrEquipDataLength).ToArray(); ;
+            }
+            return items;
+        }
+
 
         private void AnalyzeEquips(List<byte[]> equips)
         {
@@ -623,20 +607,19 @@ namespace RoItemKakakuChecker
                 }
 
             }
-            var list = dataGridView.DataSource as SortableBindingList<Item>;
-            if (list == null)
-            {
-                list = new SortableBindingList<Item>();
-            }
-            
-            foreach (var item in storageItems)
-            {
-                
-                dataGridView.Invoke((MethodInvoker)delegate { list.Add(item); });
-            }
 
-            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
-            
+
+            dataGridView.Invoke((MethodInvoker)delegate
+            {
+                var list = new SortableBindingList<Item>();
+
+                foreach (var item in storageItems)
+                {
+                    list.Add(item);
+                }
+                dataGridView.DataSource = list;
+            });
+
 
             return;
         }
@@ -728,7 +711,7 @@ namespace RoItemKakakuChecker
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = new List<Item>(); });
+            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = new SortableBindingList<Item>(); });
         }
 
     }
