@@ -32,7 +32,7 @@ namespace RoItemKakakuChecker
         public Speaker speaker2;
         public List<MyNetworkInterface> networkInterfaces;
 
-        private const string VERSION = "1.5.0";
+        private const string VERSION = "1.5.1";
 
         public StorageObserveModeControl StorageObserveModeControl { get => storageObserveModeControl1; }
         public ChatObserveModeControl ChatObserveModeControl { get => chatObserveModeControl1; }
