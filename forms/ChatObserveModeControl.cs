@@ -92,7 +92,6 @@ namespace RoItemKakakuChecker.forms
             var selectedInterface = comboBoxNetworkInterfaces.SelectedValue as MyNetworkInterface;
             if (selectedInterface == null)
             {
-                mainForm.LogError("ネットワークI/Fの選択に失敗しました。");
                 return;
             }
             mainForm.StorageObserveModeControl.ComboBoxNetworkInterfaces.SelectedIndex = comboBoxNetworkInterfaces.SelectedIndex;
