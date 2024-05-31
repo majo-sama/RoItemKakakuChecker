@@ -287,7 +287,16 @@ namespace RoItemKakakuChecker
             // アイテム倉庫 ヘッダがある場合の除去
             else if (data[0] == 0x08 && data[1] == 0x0b)
             {
-                Analyze(data.Skip(14).ToArray());
+
+                for (int i = 2; i < data.Length - 2; i++)
+                {
+                    if (data[i] == 0x09 && data[i + 1] == 0x0b)
+                    {
+                        Analyze(data.Skip(i).ToArray());
+                    }
+                }
+
+                //Analyze(data.Skip(14).ToArray());
 
 
                 // 09 0b がくるまでskipする必要がある
