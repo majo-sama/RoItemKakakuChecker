@@ -221,6 +221,7 @@ namespace RoItemKakakuChecker
                     var flagPsh = 8;
                     var hasPshFlag = (flags & flagPsh) != 0;
 
+
                     if (protocol == "TCP" && srcIp.StartsWith(RO_STORAGE_SERVER_IP))
                     {
                         if (!appendMode)
@@ -235,21 +236,29 @@ namespace RoItemKakakuChecker
 
                         byte[] body = new byte[bodySize];
                         Array.Copy(buf, 40, body, 0, bodySize); // bodyにヘッダを除いた本体をコピー
-                        var str = BitConverter.ToString(body);
 
                         // bodyに今まで貯めた分も含めてコピー
                         // 終端パケットかどうかはPSHを見て判断する
                         Array.Copy(body, 0, joinedBody, nextIndex, body.Length);
                         appendMode = !hasPshFlag;
-                        if (appendMode)
-                        {
+                        //if (appendMode)
+                        //{
                             nextIndex = nextIndex + body.Length;
-                        }
+                        //}
 
                         // 終端パケットまで読んだら解析
                         if (hasPshFlag)
                         {
-                            Analyze(joinedBody);
+
+
+
+                            // 末尾の予備用の領域を削除
+                            var data = joinedBody.Take(nextIndex + 1).ToArray();
+
+                            if (data.Length >= 39)
+                            {
+                                Analyze(data);
+                            }
                         }
 
 
@@ -279,18 +288,32 @@ namespace RoItemKakakuChecker
             else if (data[0] == 0x08 && data[1] == 0x0b)
             {
                 Analyze(data.Skip(14).ToArray());
+
+
+                // 09 0b がくるまでskipする必要がある
+
             }
             // アイテム倉庫
             else if (data[0] == 0x09 && data[1] == 0x0b)
             {
                 var items = AnalyzeItemsOrEquipsDataArray(data, 5, 34);
-                AnalyzeItems(items);
+                if (items.Count > 0)
+                {
+                    AnalyzeItems(items);
+                }
             }
             // 装備品倉庫
             else if (data[0] == 0x39 && data[1] == 0x0b)
             {
                 var items = AnalyzeItemsOrEquipsDataArray(data, 5, 68);
-                AnalyzeEquips(items);
+                if (items.Count > 0)
+                {
+                    AnalyzeEquips(items);
+                }
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -545,19 +568,22 @@ namespace RoItemKakakuChecker
                 }
             }
 
-            var list = dataGridView.DataSource as SortableBindingList<Item>;
-            if (list == null)
-            {
-                list = new SortableBindingList<Item>();
-            }
 
-            foreach (var item in storageItems)
+            dataGridView.Invoke((MethodInvoker)delegate
             {
-                
-                dataGridView.Invoke((MethodInvoker)delegate { list.Add(item); });
-            }
+                var list = dataGridView.DataSource as SortableBindingList<Item>;
+                if (list == null)
+                {
+                    list = new SortableBindingList<Item>();
+                    dataGridView.DataSource = list;
+                }
 
-            dataGridView.Invoke((MethodInvoker)delegate { dataGridView.DataSource = list; });
+                foreach (var item in storageItems)
+                {
+                    list.Add(item);
+                }
+            });
+
             return;
         }
 
@@ -611,13 +637,17 @@ namespace RoItemKakakuChecker
 
             dataGridView.Invoke((MethodInvoker)delegate
             {
-                var list = new SortableBindingList<Item>();
+                var list = dataGridView.DataSource as SortableBindingList<Item>;
+                if (list == null)
+                {
+                    list = new SortableBindingList<Item>();
+                    dataGridView.DataSource = list;
+                }
 
                 foreach (var item in storageItems)
                 {
                     list.Add(item);
                 }
-                dataGridView.DataSource = list;
             });
 
 
