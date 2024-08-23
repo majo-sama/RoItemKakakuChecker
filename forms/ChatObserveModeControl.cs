@@ -1,25 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Collections;
-using System.Reflection;
-using RoItemKakakuChecker.Properties;
-using System.IO;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Speech.Synthesis;
-using System.Net.NetworkInformation;
-using System.Threading;
 
 
 namespace RoItemKakakuChecker.forms
@@ -32,6 +22,8 @@ namespace RoItemKakakuChecker.forms
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public ComboBox ComboBoxNetworkInterfaces { get => comboBoxNetworkInterfaces; }
         public BindingSource MyNetworkInterfaceBindingSource { get => myNetworkInterfaceBindingSource; }
+
+        private List<string> ignoreChatList = new List<string>();
 
         public void SetMainForm(MainForm mainForm)
         {
@@ -83,6 +75,16 @@ namespace RoItemKakakuChecker.forms
                     }
                 }
             }
+
+            ApplyIgnoreList();
+        }
+
+        private void ApplyIgnoreList()
+        {
+
+            var list = File.ReadAllLines(Path.Combine(Application.StartupPath, "ignorelist.txt")).ToList();
+            ignoreChatList = list.Where(txt => txt != null && txt != "" && txt.Trim() != "").ToList();
+            return;
         }
 
         private async void ComboBoxNetworkInterfaces_SelectedIndexChanged(object sender, EventArgs e)
@@ -218,12 +220,15 @@ namespace RoItemKakakuChecker.forms
                                 joinedBody = new byte[0];
                                 if (chatLine != null && chatLine.Message.Contains(" : "))
                                 {
-                                    AppendToGridView(chatLine);
-                                    AppendToLogFile(chatLine);
-
-                                    if (mainForm.speaker.Enabled)
+                                    if (!ignoreChatList.Any(ignore => chatLine.Message.Contains(ignore)))
                                     {
-                                        Speak(chatLine);
+                                        AppendToGridView(chatLine);
+                                        AppendToLogFile(chatLine);
+
+                                        if (mainForm.speaker.Enabled)
+                                        {
+                                            Speak(chatLine);
+                                        }
                                     }
                                 }
                             }
