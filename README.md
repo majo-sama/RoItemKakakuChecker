@@ -7,7 +7,10 @@
 
 ## ダウンロード
 
-- [RoItemKakakuChecker.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.5.2/RoItemKakakuChecker.zip)
+- 通常版
+  - [RoItemKakakuChecker.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.6.0/RoItemKakakuChecker.zip)
+- ウィルス対策ソフト等にブロックされる場合はこちらを利用してください
+  - [RoItemKakakuChecker_debug.zip](https://github.com/majo-sama/RoItemKakakuChecker/releases/download/1.6.0/RoItemKakakuChecker_debug.zip)
 
 ### バージョンアップ方法
 
