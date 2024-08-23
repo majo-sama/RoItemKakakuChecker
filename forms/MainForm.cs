@@ -32,7 +32,7 @@ namespace RoItemKakakuChecker
         public Speaker speaker2;
         public List<MyNetworkInterface> networkInterfaces;
 
-        private const string VERSION = "1.5.2";
+        private const string VERSION = "1.6.0";
 
         public StorageObserveModeControl StorageObserveModeControl { get => storageObserveModeControl1; }
         public ChatObserveModeControl ChatObserveModeControl { get => chatObserveModeControl1; }
@@ -171,7 +171,7 @@ namespace RoItemKakakuChecker
             this.Text = "RO価格確認機 v" + VERSION;
 
 
-            await AutoUpdate();
+            //await AutoUpdate();
 
             if (networkInterfaces != null && networkInterfaces.Count > 0)
             {
